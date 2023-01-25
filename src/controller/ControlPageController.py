@@ -1,7 +1,3 @@
-
-
-
-
 from __init__ import app
 from flask import request
 

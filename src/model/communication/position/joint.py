@@ -1,4 +1,4 @@
-from Coordinate import Coordinate
+from coordinate import Coordinate
 
 class Joint(Coordinate):
     def __init__(self, coord: dict):

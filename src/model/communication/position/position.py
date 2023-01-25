@@ -1,5 +1,5 @@
-from Cartesian import Cartesian
-from Joint import Joint
+from cartesian import Cartesian
+from joint import Joint
 from datetime import datetime
 
 class Position:
