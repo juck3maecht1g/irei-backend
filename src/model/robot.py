@@ -1,1 +1,0 @@
-# syntaxprüfung mit regex
