@@ -9,21 +9,21 @@ class ControlPageController:
     action_list_handler = None
     experiment_config_handler = None
     
-
+    @staticmethod
     def set_file_navigator(given_file_navigator):
-        file_navigator = given_file_navigator
+        ControlPageController.file_navigator = given_file_navigator
 
     @staticmethod
     def set_alr_interface(given_alr_interface):
        ControlPageController.alr_interface = given_alr_interface
 
-
+    @staticmethod
     def set_experiment_config_handler(given_experiment_config_handler):
-        experiment_config_handler = given_experiment_config_handler
+        ControlPageController.experiment_config_handler = given_experiment_config_handler
 
-
+    @staticmethod
     def set_action_list_handler(given_action_list_handler):
-        action_list_handler = given_action_list_handler
+        ControlPageController.action_list_handler = given_action_list_handler
 
     
     marker_reset = "reset"
@@ -34,7 +34,7 @@ class ControlPageController:
     def post_reset():
         data = request.get_json()
         if data == ControlPageController.marker_reset:
-            ControlPageController.alr_interface.reset()
+            ControlPageController.alr_interface.reset_scene()
             return 'Done', 201
 
         else:
@@ -61,8 +61,8 @@ class ControlPageController:
     @staticmethod
     def post_cancel():
         data = request.get_json()
-        if data == marker_cancel:
-            alr_interface.cancel_logger()
+        if data == ControlPageController.marker_cancel:
+            alr_interface.cancel_log()
             return 'Done', 201
 
         else:
@@ -76,9 +76,9 @@ class ControlPageController:
     @staticmethod
     def post_stop():
         data = request.get_json()
-        if data == marker_stop:
-            result = alr_interface.stop_logger()
-            file_navigator.save_log(result)
+        if data == ControlPageController.marker_stop:
+            result = alr_interface.stop_log()
+            ControlPageController.file_navigator.save_log(result)
             return 'Done', 201
         else:
             return 'failed', 201
@@ -91,9 +91,9 @@ class ControlPageController:
     @staticmethod
     def post_execute_list():
         data = request.get_json()
-        if data == marker_exec_list:
-            exec_list = experiment_config_handler.get_active_list
-            actions = action_list_handler(exec_list)
+        if data == ControlPageController.marker_exec_list:
+            exec_list = ControlPageController.experiment_config_handler.get_active_list
+            actions = ControlPageController.action_list_handler(exec_list)
             for action in actions:
                 action.execute
 
@@ -109,8 +109,8 @@ class ControlPageController:
     @staticmethod
     def post_change_gripper_state():
         data = request.get_json()
-        if data == marker_change_gripper_state:
-            result = experiment_config_handler.get_execute_gripper()
+        if data == ControlPageController.marker_change_gripper_state:
+            result = ControlPageController.experiment_config_handler.get_execute_gripper()
             result.start(alr_interface)
             return 'Done', 201
         else:
@@ -124,20 +124,12 @@ class ControlPageController:
     @staticmethod
     def post_save_position():
         data = request.get_json()
-        if data == marker_save_position:
-            result = experiment_config_handler.get_save_position_robot()
+        if data == ControlPageController.marker_save_position:
+            result = ControlPageController.experiment_config_handler.get_save_position_robot()
             position = alr_interface.get_position(result)
-            experiment_config_handler.add_var(position)
+            ControlPageController.experiment_config_handler.add_var(position)
             return 'Done', 201
         else:
             return 'failed', 201
 
 
-
-
-
-    # do be deleted
-
-    def store(): 
-        with open(r'/home/sihi/irei-backend/testPrint.txt', 'w') as f:
-            f.write('start')
