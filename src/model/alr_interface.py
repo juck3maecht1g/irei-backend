@@ -1,3 +1,5 @@
+from model.position import Position
+
 class alr_interface:
     #cunstruktor
     active_experiment = None
@@ -8,11 +10,14 @@ class alr_interface:
     def start_log(self):
         self.active_experiment.start_log()
 
+
     def cancel_log(self):
         self.active_experiment.cancel_log()
         
+        
     def stop_log(self):
-        return self.active_experiment.stop_log()
+         #self.active_experiment.stop_log()
+         return {"log1": "234715623478568127"} # to be deleted
     
     def reset_scene(self):
         self.active_experiment.reset()
@@ -27,7 +32,7 @@ class alr_interface:
     def close_gripper(self, ip):
         self.active_experiment.close_gripper(ip)   
 
-    def approach_position(self, ip, position, is_cartesian):
+    def approach_position(self, ip, position, is_cartesian): # depending on how coordinates are served
         if is_cartesian:
             self.active_experiment.approach_cartesian(ip, position.get_cartesian)
         else: self.active_experiment.approach_joint(ip, position.get_joint)
@@ -35,6 +40,6 @@ class alr_interface:
     def save_posiiton(self, ip):
         cartesian = self.get_cartesian_position_of(ip)
         joint = self.get_joint_position_of(ip)
-        position = position(cartesian, joint)
+        position = Position(cartesian, joint)
 
-        return position
+        return {"wanttobePosition": "asdghlfgjsdkjfh"}

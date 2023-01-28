@@ -26,8 +26,8 @@ class controll_page_controller :
         action_list_handler = given_action_list_handler
 
     marker_reset = "reset"
-    @app.route("/" + marker_reset, methods=['POST'])
-    def post_data(alr_interface, marker_reset): 
+    @app.route("/api/" + marker_reset, methods=['POST'])
+    def post_reset(alr_interface, marker_reset): 
         data = request.get_json()
         if data == marker_reset :
             alr_interface.reset() 
@@ -38,8 +38,8 @@ class controll_page_controller :
             return 'failed', 201
     
     marker_start = "start"
-    @app.route("/" + marker_start, methods=['POST'])
-    def post_data(alr_interface, marker_start): 
+    @app.route("/api/" + marker_start, methods=['POST'])
+    def post_start(alr_interface, marker_start): 
         data = request.get_json()
         if data == marker_start :
             alr_interface.start_logger() 
@@ -50,8 +50,8 @@ class controll_page_controller :
             return 'failed', 201
     
     marker_cancel = "cancel"
-    @app.route("/" + marker_cancel, methods=['POST'])
-    def post_data(alr_interface, marker_cancel): 
+    @app.route("/api/" + marker_cancel, methods=['POST'])
+    def post_cancel(alr_interface, marker_cancel): 
         data = request.get_json()
         if data == marker_cancel :
             alr_interface.cancel_logger() 
@@ -62,8 +62,8 @@ class controll_page_controller :
             return 'failed', 201
     
     marker_stop = "stop"
-    @app.route("/" + marker_stop, methods=['POST'])
-    def post_data(alr_interface, file_navigator, marker_stop): 
+    @app.route("/api/" + marker_stop, methods=['POST'])
+    def post_stop(alr_interface, file_navigator, marker_stop): 
         data = request.get_json()
         if data == marker_stop :
             result = alr_interface.stop_logger() 
@@ -73,8 +73,8 @@ class controll_page_controller :
             return 'failed', 201
         
     marker_exec_list = "executeList"
-    @app.route("/" + marker_exec_list, methods=['POST'])
-    def post_data(alr_interface, experiment_config_handler,action_list_handler, marker_exec_list, ): 
+    @app.route("/api/" + marker_exec_list, methods=['POST'])
+    def post_execute_list(alr_interface, experiment_config_handler,action_list_handler, marker_exec_list, ): 
         data = request.get_json()
         if data == marker_exec_list :
             exec_list = experiment_config_handler.get_active_list
@@ -82,6 +82,31 @@ class controll_page_controller :
             for action in actions:
                 action.execute
          
+            return 'Done', 201
+        else :
+            return 'failed', 201
+        
+
+    marker_change_gripper_state = "execchangegripper"
+    @app.route("/api/" + marker_change_gripper_state, methods=['POST'])
+    def post_change_gripper_state(alr_interface, experiment_config_handler, marker_change_gripper_state): 
+        data = request.get_json()
+        if data == marker_change_gripper_state:
+            result = experiment_config_handler.get_execute_gripper()
+            result.start(alr_interface)
+            return 'Done', 201
+        else :
+            return 'failed', 201
+    
+
+    marker_save_position = "savePosition"
+    @app.route("/api/" + marker_save_position, methods=['POST'])
+    def post_save_position(alr_interface, experiment_config_handler, marker_save_position): 
+        data = request.get_json()
+        if data == marker_save_position:
+            result = experiment_config_handler.get_save_position_robot()
+            position = alr_interface.get_position(result)
+            experiment_config_handler.add_var(position)
             return 'Done', 201
         else :
             return 'failed', 201
