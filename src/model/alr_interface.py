@@ -7,7 +7,7 @@ class alr_interface:
     def __init__(self, active_experiment):
         self.active_experiment = active_experiment
         #self.active_experiment = active_experiment
-        pass
+        
         
 
     def start_log(self):

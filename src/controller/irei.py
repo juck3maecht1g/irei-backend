@@ -5,8 +5,7 @@ from src.model.fileStorrage.GlobalConfigHandler import GlobalConfigHandler
 from src.model.alr_interface import alr_interface
 
 from src.controller import choose_lr_controller 
-from src.controller import control_page_controller
-from src.controller import fetch_for_action 
+from src.controller.control_page_controller import ControlPageController
 from src.controller import file_path_manager 
 
 from src.controller.__init__  import app
@@ -39,8 +38,7 @@ def initialize():
 
 def setup_experiment(experiment):
     alr_interf = alr_interface(experiment)
-
-    control_page_controller.set_alr_interface(alr_interf)
+    ControlPageController.set_alr_interface(alr_interf)
     #fetch_for_action.set_alr_interface(alr_interf)
 
 
