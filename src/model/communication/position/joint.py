@@ -1,4 +1,4 @@
-from coordinate import Coordinate
+from src.model.communication.position.coordinate import Coordinate
 
 class Joint(Coordinate):
     def __init__(self, coord: dict):

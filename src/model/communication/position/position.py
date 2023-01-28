@@ -1,5 +1,5 @@
-from cartesian import Cartesian
-from joint import Joint
+from src.model.communication.position.cartesian import Cartesian
+from src.model.communication.position.joint import Joint
 from datetime import datetime
 
 class Position:

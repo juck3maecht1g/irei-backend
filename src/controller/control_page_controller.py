@@ -1,5 +1,5 @@
 
-from __init__ import app
+from src.controller.__init__  import app
 from flask import request
 
 
@@ -37,11 +37,12 @@ def post_reset():
         return 'failed', 201
 
 marker_start = "start"
-@app.route("/api/" + marker_start, methods=['Get','POST'])
+@app.route("/api/" + marker_start, methods=['POST'])
+@staticmethod
 def post_start(): 
-   
     data = request.get_json()
     if data == marker_start :
+        
         alr_interface.start_logger() 
         return 'Done', 201
 

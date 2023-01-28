@@ -1,4 +1,4 @@
-from __init__ import app
+from src.controller.__init__ import app
 
 experiment_config_handler = None
 global_config_handler = None
