@@ -10,7 +10,7 @@ CORS(app)
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
-import ControlPageController
+import control_page_controller
 
 @app.route("/test")
 def test():
