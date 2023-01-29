@@ -143,7 +143,7 @@ class ChooseLRController:
 
         # todo error condition
 
-    set_save_pos_marker = "setRobotsGripper"
+    set_save_pos_marker = "setSavePos"
 
     @app.route("/api/" + set_save_pos_marker, methods=['POST'])
     @staticmethod
