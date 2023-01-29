@@ -21,12 +21,14 @@ class ChooseLRController:
 
     @app.route("/api/" + lab_robots_marker)
     @staticmethod
-    def get_robots_ip_list():  # rem param
+    def get_robots_list():  # rem param
         if ChooseLRController.current_lab == None:
             return []
         to_return = []
         robots = ChooseLRController.current_lab.get_robots()
-        to_return.append(robots)
+        for robot in robots:
+            to_append = {"name" : robot.get_name, "ip": robot.get_ip}
+            to_return.append(to_append)
         # for robot in robots:
         #    to_return.append(robot.get_ip)
 
