@@ -27,8 +27,6 @@ class ControlPageController:
 
     
     marker_reset = "reset"
-
-
     @app.route("/api/" + marker_reset, methods=['POST'])
     @staticmethod
     def post_reset():
