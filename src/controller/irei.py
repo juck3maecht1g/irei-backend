@@ -1,4 +1,4 @@
-from src.model.fileStorrage.FileNavigator import FileNavigator
+from src.model.fileStorrage.PcDataHandler import FileNavigator
 from src.model.fileStorrage.ActionListHandler import ActionListHandler
 from src.model.fileStorrage.ExperimentConfigHandler import ExperimentConfigHandler 
 from src.model.fileStorrage.GlobalConfigHandler import GlobalConfigHandler
