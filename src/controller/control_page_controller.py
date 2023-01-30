@@ -155,7 +155,7 @@ class ControlPageController:
     marker_emergeny_stop = "emergency_stop"
     @app.route("/api/" + marker_emergeny_stop, methods=['POST'])
     @staticmethod
-    def post_cykle_modes():
+    def post_emergeny_stop():
         data = request.get_json()
         if data == ControlPageController.marker_emergeny_stop:
             result = ControlPageController.alr_interface.emergency_stop()
