@@ -130,4 +130,35 @@ class ControlPageController:
         else:
             return 'failed', 201
 
+    marker_cykle_modes = "modes"
+    @app.route("/api/" + marker_cykle_modes, methods=['POST'])
+    @staticmethod
+    def post_cykle_modes():
+        data = request.get_json()
+        if data == ControlPageController.marker_cykle_modes:
+            result = ControlPageController.experiment_config_handler.next_mode()
+            return 'Done', 201
+        else:
+            return 'failed', 201
 
+    marker_get_mode = "get_mode"
+    @app.route("/api/" + marker_get_mode)
+    @staticmethod
+    def get_mode():
+        data = request.get_json()
+        if data == ControlPageController.marker_get_mode:
+            result = ControlPageController.experiment_config_handler.get_mode()
+            return 'Done', 201
+        else:
+            return 'failed', 201
+
+    marker_emergeny_stop = "emergency_stop"
+    @app.route("/api/" + marker_emergeny_stop, methods=['POST'])
+    @staticmethod
+    def post_cykle_modes():
+        data = request.get_json()
+        if data == ControlPageController.marker_emergeny_stop:
+            result = ControlPageController.alr_interface.emergency_stop()
+            return 'Done', 201
+        else:
+            return 'failed', 201

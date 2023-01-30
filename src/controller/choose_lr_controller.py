@@ -1,7 +1,6 @@
 from src.controller.__init__ import app
 from flask import request
 from src.model.communication.physical.laboratory import Lab
-from src.controller.irei import get_registered_experiments, setup_experiment
 from src.model.communication.physical.robot import Robot
 from src.model.communication.physical.laboratory import Lab
 
@@ -92,6 +91,7 @@ class ChooseLRController:
     @app.route("/api/" + reg_exp_marker)
     @staticmethod
     def get_reg_exp():
+        from src.controller.irei import get_registered_experiments
         data = get_registered_experiments()
         to_return = []
         for exp in data:
@@ -103,6 +103,7 @@ class ChooseLRController:
     @app.route("/api/" + setup_exp_marker, methods=['POST'])
     @staticmethod
     def setup_exp():
+        from src.controller.irei import get_registered_experiments, setup_experiment
         data = request.get_json()
         if data in get_registered_experiments:
             setup_experiment(data)

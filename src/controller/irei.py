@@ -1,4 +1,4 @@
-from src.model.fileStorrage.PcDataHandler import FileNavigator
+from src.model.fileStorrage.PcDataHandler import PcDataHandler
 from src.model.fileStorrage.ActionListHandler import ActionListHandler
 from src.model.fileStorrage.ExperimentConfigHandler import ExperimentConfigHandler 
 from src.model.fileStorrage.GlobalConfigHandler import GlobalConfigHandler
@@ -14,7 +14,7 @@ from src.controller.__init__  import app
 _registered_experiments = []
 
 def initialize():
-    pc_data_handler = FileNavigator()
+    #pc_data_handler = PcDataHandler()
     action_list_handler = ActionListHandler()
     experiment_config_handler = ExperimentConfigHandler()
     global_config_handler = GlobalConfigHandler()

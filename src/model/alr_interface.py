@@ -48,3 +48,13 @@ class alr_interface:
         #position = Position(cartesian, joint)
         print("saved position in alr-sim")
         return {"wanttobePosition": "asdghlfgjsdkjfh"}
+    
+    def emergency_stop(self):
+        #self.active_experiment.emergency_stop()
+        print("experiment doew what ever is implemented for an emergency stop")
+
+    def mode(self, mode):
+        #self.active_experiment.set_mode(mode)
+        print("sets the experiment in the specified mode")
+
+    
