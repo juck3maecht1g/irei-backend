@@ -16,9 +16,9 @@ class alr_interface:
         #self.active_experiment.cancel_log()
         print("logging canceled")
         
-    def stop_log(self):
+    def stop_log():
          #self.active_experiment.stop_log()
-         print("logger stopped dict with data recived")
+         print("stop")
          return {"log1": "234715623478568127"} # to be deleted
     
     def reset_scene(self):

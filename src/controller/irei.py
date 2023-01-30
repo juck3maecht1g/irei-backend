@@ -23,7 +23,7 @@ def initialize():
     #choose_lr_controller.set_experiment_config_handler(experiment_config_handler)
 
     #control_page_controller.set_pc_data_handler(pc_data_handler)
-    #control_page_controller.set_experiment_config_handler(experiment_config_handler)
+    ControlPageController.set_experiment_config_handler(experiment_config_handler)
     #control_page_controller.set_action_list_handler(action_list_handler)
 
     #fetch_for_action.set_experiment_config_handler(experiment_config_handler)

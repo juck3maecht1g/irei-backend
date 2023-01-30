@@ -60,7 +60,7 @@ class ControlPageController:
     def post_cancel():
         data = request.get_json()
         if data == ControlPageController.marker_cancel:
-            alr_interface.cancel_log()
+            ControlPageController.alr_interface.cancel_log()
             return 'Done', 201
 
         else:
