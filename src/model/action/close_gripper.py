@@ -2,9 +2,10 @@
 
 class CloseGripper:
     key :str = "close_gripper"
-    chosen_robot :str
+    #chosen_robot :str
 
     def __init__ (self, robot_nr :str): 
+        self.key = CloseGripper.key
         self.chosen_robot = robot_nr
       
 
@@ -15,8 +16,8 @@ class CloseGripper:
     
 
 
-    def dictify (self, ip:str):
+    def dictify (self,):
         to_return = dict()
         to_return["key"] = self.key
-        to_return["ip"] = ip
+        to_return["chosen_robot"] = self.chosen_robot
         return to_return

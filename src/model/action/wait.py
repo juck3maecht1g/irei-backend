@@ -16,9 +16,9 @@ class Wait:
     
 
 
-    def dictify (self, ip:str):
+    def dictify (self):
         to_return = dict()
         to_return["key"] = self.key
-        to_return["ip"] = ip
+        to_return["chosen_robot"] = self.chosen_robot
         to_return["chosen_time"] = self.chosen_time
         return to_return
