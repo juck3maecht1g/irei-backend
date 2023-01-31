@@ -4,7 +4,7 @@ class CloseGripper:
     key :str = "close_gripper"
     #chosen_robot :str
 
-    def __init__ (self, robot_nr :str): 
+    def __init__ (self, robot_nr): 
         self.key = CloseGripper.key
         self.chosen_robot = robot_nr
       

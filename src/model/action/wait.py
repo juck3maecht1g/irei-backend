@@ -5,7 +5,7 @@ class Wait:
     chosen_robot :str
     chosen_time: str
 
-    def __init__ (self, robot_nr :str, time:str): 
+    def __init__ (self, robot_nr, time): 
         self.chosen_robot = robot_nr
         self.chosen_time= time
 

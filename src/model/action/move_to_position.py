@@ -6,7 +6,7 @@ class MoveToPosition:
     #coordinates: dict
     #is_cartesian: bool
 
-    def __init__ (self, robot_nr :str, coordinates: dict, is_cartesian:bool): 
+    def __init__ (self, robot_nr, coordinates: dict, is_cartesian:bool): 
         self.chosen_robot = robot_nr
         self.coordinates = coordinates
         self.is_cartesian = is_cartesian

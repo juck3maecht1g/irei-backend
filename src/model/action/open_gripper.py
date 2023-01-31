@@ -4,7 +4,7 @@ class OpenGripper:
     key :str = "open_gripper"
     #chosen_robot :str
 
-    def __init__ (self, robot_nr :str): 
+    def __init__ (self, robot_nr): 
         self.key = OpenGripper.key
         self.chosen_robot = robot_nr
       
