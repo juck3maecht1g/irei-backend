@@ -7,14 +7,13 @@ from wait import Wait
 class ListableFactory:
 
     def create_single_action(action :dict) :
-        match action.key:
-            case "close_gripper":
+        if action.key == "close_gripper" :
                 return CloseGripper(action.robot_nr)
-            case "custom":
+        elif action.key == "custom":
                 return CustomAction(action.robot_nr, action.action)
-            case "move" :
+        elif action.key == "move" :
                 return MoveToPosition(action.robot_nr, action.coordinates, action.is_cartesian)
-            case "open_gripper":
+        elif action.key == "open_gripper":
                 return OpenGripper(action.robot_nr)
-            case "wait":
+        elif action.key == "wait":
                 return Wait(action.robot_nr, action.time)

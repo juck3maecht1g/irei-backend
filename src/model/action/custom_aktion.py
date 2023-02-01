@@ -7,7 +7,7 @@ class CustomAction:
     #chosen_robot :str
     #chosen_action: str
 
-    def __init__ (self, robot_nr :str, action:str): 
+    def __init__ (self, robot_nr, action:str): 
         self.key = CustomAction.key
         self.chosen_robot = robot_nr
         self.chosen_action = action
