@@ -1,12 +1,10 @@
 from src.model.action.action import Action
-from src.model.communication.physical.robot import Robot
 
 
 class ListableAction(Action):
     
-    def __init__(self, exe_robots: list[Robot]) -> None:
-        self.exe_robots = exe_robots
+    def __init__(self, robot_nrs: list[int]) -> None:
+        self.robot_nrs = robot_nrs
 
-    def get_exe_robots(self) -> list[Robot]:
-        return self.exe_robots
-    
+    def get_robot_nrs(self) -> list[int]:
+        return self.robot_nrs

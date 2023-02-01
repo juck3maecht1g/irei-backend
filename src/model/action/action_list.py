@@ -1,5 +1,6 @@
 from src.model.action.action import Action
 
+
 class ActionList(Action):
     key: str = "action_list"
 
