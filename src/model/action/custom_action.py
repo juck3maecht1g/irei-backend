@@ -1,12 +1,13 @@
 from src.model.action.listable_action import ListableAction
 
-class CloseGripper(ListableAction):
-    key: str = "close_gripper"
 
-    def __init__(self, robot_nr: int) -> None: 
-        self.key = CloseGripper.key
+class CustomAction(ListableAction):
+    key: str = "custom"
+
+    def __init__(self, robot_nr: int, action: str) -> None: 
+        self.key = CustomAction.key
         self.robot_nr = robot_nr
-      
+        self.action = action
 
 
 
@@ -19,4 +20,5 @@ class CloseGripper(ListableAction):
         to_return = dict()
         to_return["key"] = self.key
         to_return["robot_nr"] = self.robot_nr
+        to_return["action"] = self.action
         return to_return

@@ -1,36 +1,35 @@
+from src.model.action.action import Action
 
-class ActionList:
-    key :str = "action_list"
-    #name:str
-    #content = []
+class ActionList(Action):
+    key: str = "action_list"
 
-    def __init__ (self, name :str): 
+    def __init__(self, name: str) -> None: 
         self.key = ActionList.key
         self.name = name
-        self.contend = []
+        self.content: list[Action] = []
       
 
     # switches places of two actions
-    def swap (self, first, second):
-        temp = self.contend[first]
-        self.contend[first] = self.contend[second]
-        self.contend[second] = temp
+    def swap(self, first: Action, second: Action) -> None:
+        temp = self.content[first]
+        self.content[first] = self.content[second]
+        self.content[second] = temp
 
 
-    def add_action(self, action):
-        self.contend.append(action)
+    def add_action(self, action: Action) -> None:
+        self.content.append(action)
 
-    def get_content(self):
-        return self.contend
+
+    def get_content(self) -> list[Action]:
+        return self.content
     
 
-
-    def dictify (self):
+    def dictify(self) -> dict:
         to_return = dict()
         to_return["key"] = self.key
         to_return["name"] = self.name
-        content = []
-        for action in self.contend :
+        content: list[Action] = []
+        for action in self.content :
             content.append(action.dictify())
 
         to_return["content"] = content

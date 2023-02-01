@@ -1,28 +1,26 @@
+from src.model.action.listable_action import ListableAction
 
 
-class MoveToPosition:
-    key :str = "move"
-    #chosen_robot :str
-    #coordinates: dict
-    #is_cartesian: bool
+class MoveToPosition(ListableAction):
+    key: str = "move"
 
-    def __init__ (self, robot_nr, coordinates: dict, is_cartesian:bool): 
-        self.chosen_robot = robot_nr
+    def __init__(self, robot_nr: int, coordinates: dict, is_cartesian:bool) -> None: 
+        self.key = MoveToPosition.key
+        self.robot_nr = robot_nr
         self.coordinates = coordinates
         self.is_cartesian = is_cartesian
-        self.key = MoveToPosition.key
 
 
 
-    def get_chosen_robot(self):
-        return self.chosen_robot
+    def get_robot_nr(self) -> int:
+        return self.robot_nr
     
 
 
-    def dictify (self):
+    def dictify(self) -> dict:
         to_return = dict()
         to_return["key"] = self.key
-        to_return["chosen_robot"] = self.chosen_robot
-        to_return["is_cartesina"] = self.is_cartesian
-        to_return["coorsiantes"] = self.coordinates
+        to_return["robot_nr"] = self.robot_nr
+        to_return["is_cartesian"] = self.is_cartesian
+        to_return["coordiantes"] = self.coordinates
         return to_return
