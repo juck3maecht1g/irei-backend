@@ -6,14 +6,14 @@ from wait import Wait
 
 class ListableFactory:
 
-    def create_single_action(action :dict) :
+    def create_single_action(action: dict) -> None:
         if action.key == "close_gripper" :
-                return CloseGripper(action.robot_nr)
+                return CloseGripper(action.robot_nrs)
         elif action.key == "custom":
-                return CustomAction(action.robot_nr, action.action)
+                return CustomAction(action.robot_nrs, action.action)
         elif action.key == "move" :
-                return MoveToPosition(action.robot_nr, action.coordinates, action.is_cartesian)
+                return MoveToPosition(action.robot_nrs, action.coordinates, action.type)
         elif action.key == "open_gripper":
-                return OpenGripper(action.robot_nr)
+                return OpenGripper(action.robot_nrs)
         elif action.key == "wait":
-                return Wait(action.robot_nr, action.time)
+                return Wait(action.robot_nrs, action.time)
