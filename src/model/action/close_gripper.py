@@ -4,7 +4,6 @@ class CloseGripper(ListableAction):
     key: str = "close_gripper"
 
     def __init__(self, robot_nr: int) -> None: 
-        self.key = CloseGripper.key
         self.robot_nr = robot_nr
       
 
@@ -17,6 +16,6 @@ class CloseGripper(ListableAction):
 
     def dictify(self) -> dict:
         to_return = dict()
-        to_return["key"] = self.key
+        to_return["key"] = CloseGripper.key
         to_return["robot_nr"] = self.robot_nr
         return to_return

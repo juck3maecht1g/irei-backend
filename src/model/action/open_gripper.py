@@ -5,7 +5,6 @@ class OpenGripper(ListableAction):
     key: str = "open_gripper"
 
     def __init__(self, robot_nr: int) -> None: 
-        self.key = OpenGripper.key
         self.robot_nr = robot_nr
       
 
@@ -18,6 +17,6 @@ class OpenGripper(ListableAction):
 
     def dictify(self) -> dict:
         to_return = dict()
-        to_return["key"] = self.key
+        to_return["key"] = OpenGripper.key
         to_return["robot_nr"] = self.robot_nr
         return to_return
