@@ -1,5 +1,5 @@
 from close_gripper import CloseGripper
-from custom_aktion import CustomAction
+from custom_action import CustomAction
 from move_to_position import MoveToPosition
 from open_gripper import OpenGripper
 from wait import Wait
