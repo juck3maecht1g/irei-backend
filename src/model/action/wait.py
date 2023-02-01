@@ -1,4 +1,5 @@
 from src.model.action.listable_action import ListableAction
+from src.model.communication.physical.robot import Robot
 
 
 class Wait(ListableAction):
@@ -8,9 +9,9 @@ class Wait(ListableAction):
         super(robot_nrs)
         self.time = time
 
-    def dictify(self) -> dict:
+    def dictify(self, robots: list[Robot]) -> dict:
         to_return = dict()
         to_return["key"] = Wait.key
-        to_return["robot_nrs"] = self.get_robot_nrs()
+        to_return["robots"] = self.map_robots(self.robot_nrs, robots)
         to_return["time"] = self.time
         return to_return

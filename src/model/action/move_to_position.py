@@ -1,4 +1,5 @@
 from src.model.action.listable_action import ListableAction
+from src.model.communication.physical.robot import Robot
 
 
 class MoveToPosition(ListableAction):
@@ -9,10 +10,10 @@ class MoveToPosition(ListableAction):
         self.coordinates = coordinates
         self.type = type
 
-    def dictify(self) -> dict:
+    def dictify(self, robots: list[Robot]) -> dict:
         to_return = dict()
         to_return["key"] = MoveToPosition.key
-        to_return["robot_nrs"] = self.get_robot_nrs()
+        to_return["robots"] = self.map_robots(self.robot_nrs, robots)
         to_return["type"] = self.type
         to_return["coordiantes"] = self.coordinates
         return to_return

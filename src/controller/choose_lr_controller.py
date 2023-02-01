@@ -52,10 +52,7 @@ class ChooseLRController:
     @staticmethod
     def set_current_lab():
         data = request.get_json()
-        print(data)
-        test_labs = [Lab("lab1")]
-        # for lab in ChooseLRController.global_config_handler.get_labs():
-        for lab in test_labs:
+        for lab in ChooseLRController.global_config_handler.get_labs():
             if lab.get_name() == data:
                 ChooseLRController.current_lab = lab
             return 'Done', 201

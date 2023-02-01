@@ -53,8 +53,15 @@ class alr_interface:
         #self.active_experiment.emergency_stop()
         print("experiment doew what ever is implemented for an emergency stop")
 
-    def mode(self, mode):
+    def set_mode(self, mode):
         #self.active_experiment.set_mode(mode)
         print("sets the experiment in the specified mode")
 
-    
+    def execute_sequenzial_list(self, action_list_dict: dict):
+        #self.active_experiment.execute_sequenzial_list(action_list_dict)
+        print("would exec list")
+
+
+    def validate_action(self,action:dict)-> bool:
+        #return self.active_experiment.validate_action(dict)
+        print("would test the action")

@@ -4,13 +4,13 @@ from flask import request
 from src.model.alr_interface import alr_interface
 
 class ControlPageController:
-    file_navigator = None
+    pc_data_handler = None
     alr_interface = None
     action_list_handler = None
     experiment_config_handler = None
     
     @staticmethod
-    def set_file_navigator(given_file_navigator):
+    def  pc_data_handler(given_file_navigator):
         ControlPageController.file_navigator = given_file_navigator
 
     @staticmethod
@@ -76,30 +76,13 @@ class ControlPageController:
         data = request.get_json()
         if data == ControlPageController.marker_stop:
             result = alr_interface.stop_log()
-            ControlPageController.file_navigator.save_log(result)
+            ControlPageController. pc_data_handler.save_log(result)
             return 'Done', 201
         else:
             return 'failed', 201
 
 
-    marker_exec_list = "executeList"
-
-
-    @app.route("/api/" + marker_exec_list, methods=['POST'])
-    @staticmethod
-    def post_execute_list():
-        data = request.get_json()
-        if data == ControlPageController.marker_exec_list:
-            exec_list = ControlPageController.experiment_config_handler.get_active_list
-            actions = ControlPageController.action_list_handler(exec_list)
-            for action in actions:
-                action.execute
-
-            return 'Done', 201
-        else:
-            return 'failed', 201
-
-
+    
     marker_change_gripper_state = "execchangegripper"
 
 
