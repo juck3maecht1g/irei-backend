@@ -1,6 +1,6 @@
-from src.model.communication.physical.robot import Robot
+from src.model.communication.physical.Robot import Robot
 
-class Lab:
+class Laboratory:
     def __init__(self, name: str, robots: list[Robot]) -> None:
         self.name = name
         self.robots = robots
