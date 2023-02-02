@@ -1,7 +1,10 @@
 from src.controller.irei import *
-
-setup_experiment("experiment")
-initialize()
-
-
+class TestClass:
+    def __init__():
+        pass
+    
+    register_experiment(TestClass)
+    setup_experiment("experiment")
+    initialize()
+    
 

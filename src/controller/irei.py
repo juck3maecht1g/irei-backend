@@ -12,7 +12,7 @@ from src.controller.__init__  import app
 
 
 _registered_experiments = []
-
+@staticmethod
 def initialize():
     #pc_data_handler = PcDataHandler()
     action_list_handler = ActionListHandler()
@@ -35,17 +35,17 @@ def initialize():
 
 
 
-
+@staticmethod
 def setup_experiment(experiment):
     alr_interf = alr_interface(experiment)
     ControlPageController.set_alr_interface(alr_interf)
     #fetch_for_action.set_alr_interface(alr_interf)
 
-
+@staticmethod
 def register_experiment(experiment):
     _registered_experiments.append(experiment)
 
-
+@staticmethod
 def get_registered_experiments():
     return _registered_experiments
 

@@ -69,7 +69,7 @@ class ControlPageController:
 
     marker_stop = "stop"
 
-
+    # add naming option
     @app.route("/api/" + marker_stop, methods=['POST'])
     @staticmethod
     def post_stop():
@@ -85,7 +85,7 @@ class ControlPageController:
     
     marker_change_gripper_state = "execchangegripper"
 
-
+    # outdated execute überdenken drüber quatschen
     @app.route("/api/" + marker_change_gripper_state, methods=['POST'])
     @staticmethod
     def post_change_gripper_state():
@@ -100,7 +100,7 @@ class ControlPageController:
 
     marker_save_position = "savePosition"
 
-
+    # ADD naming
     @app.route("/api/" + marker_save_position, methods=['POST'])
     @staticmethod
     def post_save_position():
@@ -128,12 +128,8 @@ class ControlPageController:
     @app.route("/api/" + marker_get_mode)
     @staticmethod
     def get_mode():
-        data = request.get_json()
-        if data == ControlPageController.marker_get_mode:
             result = ControlPageController.experiment_config_handler.get_mode()
-            return 'Done', 201
-        else:
-            return 'failed', 201
+            return result
 
     marker_emergeny_stop = "emergency_stop"
     @app.route("/api/" + marker_emergeny_stop, methods=['POST'])

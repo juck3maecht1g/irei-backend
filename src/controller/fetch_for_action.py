@@ -30,14 +30,14 @@ class FetchForAction:
         action_dict = action.dictify(robot_list)
         return action_dict
 
-    @app.route("/api/get-action_list") # gets name of all action lists
+    @app.route("/api/get-action_lists") # gets name of all action lists
     @staticmethod
     def get_action_lists():
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         action_lists: list[ActionList] = FetchForAction.action_list_handler.get_all_lists()
         to_return = []
-        for action in action_lists:
-            action_dict = action.dictify(robot_list)
+        for action_list in action_lists:
+            action_dict = action_list.dictify_to_display(robot_list)
             to_return.append(action_dict.name)
         return to_return
     
@@ -111,8 +111,7 @@ class FetchForAction:
     def get_active_lists(): # useless because info in buttons
         pass
 
-    marker_exec_list = "executeList"
-    @app.route("/api/" + marker_exec_list, methods=['POST'])
+    @app.route("/api/executeList", methods=['POST'])
     @staticmethod
     def post_execute_list():
         data = request.get_json()
