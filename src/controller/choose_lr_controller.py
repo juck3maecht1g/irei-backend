@@ -52,10 +52,11 @@ class ChooseLRController:
     @staticmethod
     def set_current_lab():
         data = request.get_json()
-        for lab in ChooseLRController.global_config_handler.get_labs():
-            if lab.get_name() == data:
-                ChooseLRController.current_lab = lab
-            return 'Done', 201
+        if data.marker == "setCurrentLab":
+            for lab in ChooseLRController.global_config_handler.get_labs():
+                if lab.get_name() == data.name:
+                    ChooseLRController.current_lab = lab
+                return 'Done', 201
 
         return 'failed', 201
 
@@ -102,8 +103,11 @@ class ChooseLRController:
     def setup_exp():
         from src.controller.irei import get_registered_experiments, setup_experiment
         data = request.get_json()
-        if data in get_registered_experiments:
-            setup_experiment(data)
+        if data.marker != "SetExperiment":
+            return "F", 300
+        for experiment in get_registered_experiments():
+            if data.experiment == experiment.get_name:
+                setup_experiment(experiment)
             return 'Done', 201
         else:
             return 'failed', 201
@@ -114,8 +118,10 @@ class ChooseLRController:
     @staticmethod
     def set_robots_exp():
         data = request.get_json()
+        if data.marker != "SetExpRobots":
+            return "F", 300
         robots = []
-        for ip in data:
+        for ip in data.robot_ips:
             for robot in ChooseLRController.current_lab.get_robots():
                 if ip == robot.get_ip():
                     robots.append(Robot(ip=ip, name=robot.get_name()))
@@ -130,8 +136,10 @@ class ChooseLRController:
     @staticmethod
     def set_robots_gripper():
         data = request.get_json()
+        if data.marker != "SetChangeGripperRobots":
+            return "F", 300
         robots = []
-        for ip in data:
+        for ip in data.robots_ips:
             for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
                 if ip == robot.get_ip():
                     robots.append(Robot(ip=ip, name=robot.get_name()))
@@ -141,15 +149,18 @@ class ChooseLRController:
 
         # todo error condition
 
-    set_save_pos_marker = "setSavePos"
+    #sets the robot for save position
+    set_save_pos_marker = "setSavePosition"
 
     @app.route("/api/" + set_save_pos_marker, methods=['POST'])
     @staticmethod
     def set_save_pos():
         data = request.get_json()
+        if data.marker != "SetSavePositionRobots":
+            return "F", 300
         for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
-            if data == robot.get_ip():
-                pos_robot = Robot(ip=data, name=robot.get_name())
+            if data.robot_ip == robot.get_ip():
+                pos_robot = Robot(ip=data.robot_ip, name=robot.get_name())
                 ChooseLRController.experiment_config_handler.set_save_position_robot(
                     pos_robot)
                 return 'Done', 201

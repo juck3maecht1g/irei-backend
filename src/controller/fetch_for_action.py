@@ -46,6 +46,7 @@ class FetchForAction:
     @staticmethod
     def set_current_list():
         data = request.get_json()
+        
         for action_list in FetchForAction.action_list_handler.get_all_lists():
             if action_list.get_name() == data:
                 FetchForAction.current_action_list = action_list
@@ -70,43 +71,48 @@ class FetchForAction:
     def append_action():
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         data = request.get_json()
-        action = FetchForAction.action_list_handler.build(data)
-        temp_list = FetchForAction.current_action_list
-        temp_list.add_action(action)
-        if FetchForAction.alr_interface.validate_action(temp_list.dictify(robot_list)):
-            FetchForAction.action_list_handler.add(FetchForAction.current_action_list, action)
-            FetchForAction.current_action_list.add(action)
-            return 'Done', 201
-        else: return 'failed', 300
+        if data.marker == "append_action":
+            action = FetchForAction.action_list_handler.build(data)
+            temp_list = FetchForAction.current_action_list
+            temp_list.add_action(action)
+            if FetchForAction.alr_interface.validate_action(temp_list.dictify(robot_list)):
+                FetchForAction.action_list_handler.add(FetchForAction.current_action_list, action)
+                FetchForAction.current_action_list.add(action)
+                return 'Done', 201
+            else: return 'failed', 300
             
 
     @app.route("/api/delete_action", methods=['POST'])
     @staticmethod
     def delete_action():
         data = request.get_json()
-        FetchForAction.action_list_handler.delete_action(FetchForAction.current_action_list, data)
-        FetchForAction.current_action_list.delete_action(data)
-        return 'Done', 201
+        if data.marker == "delete_action":
+            FetchForAction.action_list_handler.delete_action(FetchForAction.current_action_list, data.position)
+            FetchForAction.current_action_list.delete_action(data.position)
+            return 'Done', 201
     
     @app.route("/api/swap_action", methods=['POST'])
     @staticmethod
     def swap_action():
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         data = request.get_json()
-        first = data.first
-        second = data.second
-        temp_list = FetchForAction.current_action_list
-        temp_list.swap(first, second)
-        if FetchForAction.alr_interface.validate_action(temp_list.dictify(robot_list)):
-            FetchForAction.action_list_handler.swap(FetchForAction.current_action_list, first, second)
-            FetchForAction.current_action_list.swap(first, second)
-        return 'Done', 201
+        if data.marker == "swap":
+            first = data.first
+            second = data.second
+            temp_list = FetchForAction.current_action_list
+            temp_list.swap(first, second)
+            if FetchForAction.alr_interface.validate_action(temp_list.dictify(robot_list)):
+                FetchForAction.action_list_handler.swap(FetchForAction.current_action_list, first, second)
+                FetchForAction.current_action_list.swap(first, second)
+                return 'Done', 201
     
     @app.route("/api/create_action_list", methods=['POST'])
     @staticmethod
     def create_action_list():
         data = request.get_json()
-        FetchForAction.action_list_handler.create(data)
+        if data.marker == "create_action_list":
+            FetchForAction.action_list_handler.create(data.name)
+            return 'Done', 201
 
     def get_active_lists(): # useless because info in buttons
         pass
@@ -115,14 +121,15 @@ class FetchForAction:
     @staticmethod
     def post_execute_list():
         data = request.get_json()
-        for action_list in FetchForAction.action_list_handler.get_all_lists():
-            if action_list.get_name() == data:
-                robots = FetchForAction.experiment_config_handler.get_exp_robots()
-                to_execute = action_list.dictify(robots)
-                FetchForAction.alr_interface.execute_sequenzial_list(to_execute)
+        if data.marker == "execute_action_list":
+            for action_list in FetchForAction.action_list_handler.get_all_lists():
+                if action_list.get_name() == data.name:
+                    robots = FetchForAction.experiment_config_handler.get_exp_robots()
+                    to_execute = action_list.dictify(robots)
+                    FetchForAction.alr_interface.execute_sequenzial_list(to_execute)
 
 
-            return 'Done', 201
+                return 'Done', 201
         else:
             return 'failed', 201
 
