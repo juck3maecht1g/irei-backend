@@ -3,11 +3,13 @@ from src.model.communication.physical.robot import Robot
 
 
 class ActionList(Action):
-    key: str = "action_list"
+    #sequential_key: str = "sequential_list"
+    #parallel_key: str = "parallel_list"
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, key: str) -> None:
         self.name = name
         self.content: list[Action] = []
+        self.key = key
       
 
     # switches places of two actions
@@ -31,7 +33,7 @@ class ActionList(Action):
 
     def dictify(self, robots: list[Robot]) -> dict:
         to_return = dict()
-        to_return["key"] = ActionList.key
+        to_return["key"] = self.key
         to_return["name"] = self.name
         content: list[Action] = []
         for action in self.content :

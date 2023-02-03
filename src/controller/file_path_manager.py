@@ -15,9 +15,16 @@ class FilePathManager:
         FilePathManager. pc_data_handler = given_file_navigator
 
 
-    #@app.route("/api/get_content")
-    #@staticmethod 
-    #def get_content():
+    @app.route("/api/get_content")
+    @staticmethod 
+    def get_content():
+       child_experiments = FilePathManager.pc_data_handler.get_dir_child_experiments
+       content = FilePathManager.pc_data_handler.get_dir_content
+       not_childer = content.difference(child_experiments)
+       to_return = dict()
+       to_return["to_navigate"] = child_experiments
+       to_return["cant_navigate"] = not_childer
+       return to_return
 
     @app.route("/api/navigate_up", method=['Post'])
     @staticmethod

@@ -65,13 +65,19 @@ class FetchForAction:
             to_return.append(action_dict)
         return to_return
 
-    
+    ##
     @app.route("/api/append_action", methods=['POST'])
     @staticmethod
     def append_action():
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         data = request.get_json()
         if data.marker == "append_action":
+            if data.key == "move":
+                positions = FetchForAction.experiment_config_handler.get_positions()
+                for position in positions:
+                    if data.position == position.get_name():
+                        data["position"]= position
+                        data["type"] = FetchForAction.experiment_config_handler.get_coordinate_type()
             action = FetchForAction.action_list_handler.build(data)
             temp_list = FetchForAction.current_action_list
             temp_list.add_action(action)
@@ -111,7 +117,7 @@ class FetchForAction:
     def create_action_list():
         data = request.get_json()
         if data.marker == "create_action_list":
-            FetchForAction.action_list_handler.create(data.name)
+            FetchForAction.action_list_handler.create(data.name, data.key)
             return 'Done', 201
 
     def get_active_lists(): # useless because info in buttons
@@ -134,4 +140,26 @@ class FetchForAction:
             return 'failed', 201
 
      
-    
+    @app.route("/api/set_coordinate_type", methods=['POST'])
+    @staticmethod
+    def post_coordinate_type():
+        data = request.get_json()
+        if data.marker == "execute_action_list":
+            FetchForAction.experiment_config_handler.set_coordinate_type(data.type)
+            return 'Done', 201
+        else:
+            return 'failed', 201
+
+    @app.route("/api/get_coordinates")
+    @staticmethod
+    def get_coordinates():
+        type = FetchForAction.experiment_config_handler.get_coordinate_type()
+        to_return = list[dict]
+        positions = FetchForAction.experiment_config_handler.get_positions()
+        for position in positions:
+            coordinate = dict()
+            coordinate["name"] = position.get_name()
+            coordinate["coordinate"] = position.get_coordinate(type)
+            to_return.append(coordinate)
+        return to_return
+       

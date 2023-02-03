@@ -1,6 +1,6 @@
 from src.model.communication.position.position import Position
 
-class alr_interface:
+class AlrInterface:
     #cunstruktor
     active_experiment = None
 
@@ -42,7 +42,7 @@ class alr_interface:
             self.active_experiment.approach_cartesian(ip, position.get_cartesian)
         else: self.active_experiment.approach_joint(ip, position.get_joint)
 
-    def save_posiiton(self, ip):
+    def save_posiiton(self, ip, name):
         #cartesian = self.get_cartesian_position_of(ip)
         #joint = self.get_joint_position_of(ip)
         #position = Position(cartesian, joint)
@@ -65,3 +65,7 @@ class alr_interface:
     def validate_action(self,action:dict)-> bool:
         #return self.active_experiment.validate_action(dict)
         print("would test the action")
+
+    def change_gripper_state(self, robots:list[str]):
+            #return self.active_experiment.change_grippper_state(robots)
+            print("would change state of all chosen gripppers")
