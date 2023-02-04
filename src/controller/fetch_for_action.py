@@ -46,14 +46,14 @@ class FetchForAction:
     @staticmethod
     def set_current_list():
         data = request.get_json()
-        
+        if data.marker != "set_action_list":
+            return "F", 300
         for action_list in FetchForAction.action_list_handler.get_all_lists():
             if action_list.get_name() == data:
                 FetchForAction.current_action_list = action_list
             return 'Done', 201
 
         return 'failed', 201
-
 
     @app.route("/api/get_action_list_content")
     @staticmethod
@@ -144,7 +144,7 @@ class FetchForAction:
     @staticmethod
     def post_coordinate_type():
         data = request.get_json()
-        if data.marker == "execute_action_list":
+        if data.marker == "set_coordinate_type":
             FetchForAction.experiment_config_handler.set_coordinate_type(data.type)
             return 'Done', 201
         else:

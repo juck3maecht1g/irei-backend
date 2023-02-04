@@ -1,8 +1,8 @@
 from src.controller.__init__ import app
 from flask import request
-from src.model.communication.physical.Laboratory import Lab
-from src.model.communication.physical.Robot import Robot
-from src.model.communication.physical.Laboratory import Lab
+from src.model.communication.physical.laboratory import Lab
+from src.model.communication.physical.robot import Robot
+
 
 
 class ChooseLRController:
@@ -156,7 +156,7 @@ class ChooseLRController:
     @staticmethod
     def set_save_pos():
         data = request.get_json()
-        if data.marker != "SetSavePositionRobots":
+        if data.marker != "SetSavePositionRobot":
             return "F", 300
         for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
             if data.robot_ip == robot.get_ip():
