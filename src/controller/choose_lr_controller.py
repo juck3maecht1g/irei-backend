@@ -10,14 +10,14 @@ from src.model.fileStorrage.ExperimentConfigHandler import ExperimentConfigHandl
 
 
 class ChooseLRController:
-    experiment_config_handler: ExperimentConfigHandler
+    exp_config_handler: ExperimentConfigHandler
     global_config_handler: GlobalConfigHandler
 
     current_lab: Laboratory
 
     @staticmethod
-    def set_experiment_config_handler(exp_config_handler: ExperimentConfigHandler) -> None:
-        ChooseLRController.experiment_config_handler = exp_config_handler
+    def set_exp_config_handler(exp_config_handler: ExperimentConfigHandler) -> None:
+        ChooseLRController.exp_config_handler = exp_config_handler
 
     @staticmethod
     def set_global_config_handler(global_config_handler: GlobalConfigHandler) -> None:
@@ -42,7 +42,7 @@ class ChooseLRController:
 
     @app.route("/api/" + lab_marker)
     @staticmethod
-    def get_all_labs() -> dict(str, list[str]):
+    def get_all_labs() -> dict:
         data = ChooseLRController.global_config_handler.get_labs()
         to_return = dict()
         for lab in data:
@@ -68,8 +68,8 @@ class ChooseLRController:
 
     @app.route("/api/" + robots_exp_marker)
     @staticmethod
-    def get_robots_exp() -> dict(dict(str, str)):
-        data = ChooseLRController.experiment_config_handler.get_exp_robots()
+    def get_robots_exp() -> dict:
+        data = ChooseLRController.exp_config_handler.get_exp_robots()
         to_return = dict()
         for robot in data:
             to_append = {"name": robot.get_name(), "ip": robot.get_ip()}
@@ -80,8 +80,8 @@ class ChooseLRController:
 
     @app.route("/api/" + robots_gripper_marker)
     @staticmethod
-    def get_robots_gripper() -> dict(dict(str, str)):
-        data = ChooseLRController.experiment_config_handler.get_execute_gripper()
+    def get_robots_gripper() -> dict:
+        data = ChooseLRController.exp_config_handler.get_execute_gripper()
         to_return = dict()
         for robot in data:
             to_append = {"name": robot.get_name(), "ip": robot.get_ip()}
@@ -127,7 +127,7 @@ class ChooseLRController:
             for robot in ChooseLRController.current_lab.get_robots():
                 if ip == robot.get_ip():
                     robots.append(Robot(ip=ip, name=robot.get_name()))
-        ChooseLRController.experiment_config_handler.set_exp_robots(robots)
+        ChooseLRController.exp_config_handler.set_exp_robots(robots)
         return 'Done', 201
 
         # todo error condition
@@ -142,10 +142,10 @@ class ChooseLRController:
             return "F", 300
         robots = []
         for ip in data["robots_ips"]:
-            for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
+            for robot in ChooseLRController.exp_config_handler.get_exp_robots():
                 if ip == robot.get_ip():
                     robots.append(Robot(ip=ip, name=robot.get_name()))
-        ChooseLRController.experiment_config_handler.set_execute_gripper(
+        ChooseLRController.exp_config_handler.set_execute_gripper(
             robots)
         return 'Done', 201
 
@@ -160,10 +160,10 @@ class ChooseLRController:
         data = request.get_json()
         if data["marker"] != "SetSavePositionRobots":
             return "F", 300
-        for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
+        for robot in ChooseLRController.exp_config_handler.get_exp_robots():
             if data["robot_ip"] == robot.get_ip():
                 pos_robot = Robot(ip=data["robot_ip"], name=robot.get_name())
-                ChooseLRController.experiment_config_handler.set_save_position_robot(
+                ChooseLRController.exp_config_handler.set_save_position_robot(
                     pos_robot)
                 return 'Done', 201
 

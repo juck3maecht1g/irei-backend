@@ -5,7 +5,7 @@ from src.model.communication.physical.robot import Robot
 class Wait(ListableAction):
     key: str = "wait"
 
-    def __init__(self, robot_nrs: list[int], time: int) -> None: 
+    def __init__(self, robot_nrs: list[int], time: int) -> None:
         super().__init__(robot_nrs)
         self.time = time
 

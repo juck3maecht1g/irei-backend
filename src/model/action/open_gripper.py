@@ -5,9 +5,9 @@ from src.model.communication.physical.robot import Robot
 class OpenGripper(ListableAction):
     key: str = "open_gripper"
 
-    def __init__(self, robot_nrs: list[int]) -> None: 
+    def __init__(self, robot_nrs: list[int]) -> None:
         super().__init__(robot_nrs)
-      
+
     def dictify(self, robots: list[Robot]) -> dict:
         to_return = dict()
         to_return["key"] = OpenGripper.key
