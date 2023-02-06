@@ -43,5 +43,4 @@ class ActionList(Action):
         return to_return
     
     def dictify_to_display(self, robots: list[Robot]) -> dict:
-
         return {"key": self.key, "name": self.name}

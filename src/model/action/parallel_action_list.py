@@ -1,4 +1,4 @@
-# outdated
+# outdated, to be removed
 from src.model.action.action import Action
 from src.model.communication.physical.robot import Robot
 

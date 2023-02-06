@@ -6,10 +6,10 @@ class OpenGripper(ListableAction):
     key: str = "open_gripper"
 
     def __init__(self, robot_nrs: list[int]) -> None: 
-        super(robot_nrs)
+        super().__init__(robot_nrs)
       
     def dictify(self, robots: list[Robot]) -> dict:
         to_return = dict()
         to_return["key"] = OpenGripper.key
-        to_return["robots"] = to_return["robots"] = self.map_robots(self.robot_nrs, robots)
+        to_return["robots"] = self.map_robots(self.robot_nrs, robots)
         return to_return

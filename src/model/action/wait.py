@@ -6,7 +6,7 @@ class Wait(ListableAction):
     key: str = "wait"
 
     def __init__(self, robot_nrs: list[int], time: int) -> None: 
-        super(robot_nrs)
+        super().__init__(robot_nrs)
         self.time = time
 
     def dictify(self, robots: list[Robot]) -> dict:

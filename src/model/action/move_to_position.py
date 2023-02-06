@@ -7,7 +7,7 @@ class MoveToPosition(ListableAction):
     key: str = "move"
 
     def __init__(self, robot_nrs: list[int], position: Position, type: str) -> None:
-        super(robot_nrs)
+        super().__init__(robot_nrs)
         self.position = position
         self.type = type
 

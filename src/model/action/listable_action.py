@@ -13,9 +13,9 @@ class ListableAction(Action):
         return self.robot_nrs
 
     def map_robots(robot_nrs: list[int], robot_list: list[Robot]) -> dict:
-        robots_dict: list[dict] = []
+        robots_dict = []
         for robot_nr in robot_nrs():
-            robots_dict.append({"name": robot_list[robot_nr].get_name, "ip": robot_list[robot_nr].get_ip})
+            robots_dict.append({"name": robot_list[robot_nr].get_name(), "ip": robot_list[robot_nr].get_ip()})
         return robots_dict
 
     @abstractmethod
@@ -23,5 +23,5 @@ class ListableAction(Action):
         pass
 
 
-    def dictify_to_display(self, robots):
+    def dictify_to_display(self, robots: list[Robot]) -> dict:
         return self.dictify(robots)
