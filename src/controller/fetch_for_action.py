@@ -49,7 +49,7 @@ class FetchForAction:
     @staticmethod
     def set_current_list() -> Tuple[str, int]:
         data = request.get_json()
-        if data.marker != "set_action_list":
+        if data["marker"] != "set_action_list":
             return "F", 300
         for action_list in FetchForAction.action_list_handler.get_all_lists():
             if action_list.get_name() == data:
@@ -151,7 +151,7 @@ class FetchForAction:
     def post_coordinate_type() -> Tuple[str, int]:
         data = request.get_json()
         if data["marker"] == "execute_action_list":
-            FetchForAction.experiment_config_handler.set_coordinate_type(data.type)
+            FetchForAction.experiment_config_handler.set_coordinate_type(data["type"])
             return 'Done', 201
         else:
             return 'failed', 201
