@@ -3,8 +3,8 @@ class TestClass:
     def __init__():
         pass
     
-    register_experiment(TestClass)
-    setup_experiment("experiment")
-    initialize()
+register_experiment(TestClass)
+setup_experiment("experiment")
+initialize()
     
 
