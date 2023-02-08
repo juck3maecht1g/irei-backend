@@ -1,5 +1,6 @@
 from src.model.file_storage.path_observer import PathObserver
 
+
 class PathSubject():
     _observers: list[PathObserver] = []
 

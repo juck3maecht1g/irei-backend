@@ -4,12 +4,13 @@ import pickle
 
 from src.model.file_storage.path_subject import PathSubject
 
+
 class PcDataHandler(PathSubject):
 
     def __init__(self, root_path) -> None:
-         self.root = root_path
-         self.path = root_path
-    
+        self.root = root_path
+        self.path = root_path
+
     def navigate_to_parent(self):
         if not (self.path == self.root):
             self.path = os.path.dirname(self.path)

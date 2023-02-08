@@ -7,8 +7,9 @@ from src.controller.__init__ import app
 from src.model.alr_interface import AlrInterface
 from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
-from src.model.file_storage.pc_data_handler import PcDataHandler  
+from src.model.file_storage.pc_data_handler import PcDataHandler
 from datetime import datetime
+
 
 class ControlPageController:
     pc_data_handler: PcDataHandler
@@ -122,6 +123,7 @@ class ControlPageController:
             return 'failed', 201
 
     marker_cycle_modes = "cycle_modes"
+
     @app.route("/api/" + marker_cycle_modes, methods=['POST'])
     @staticmethod
     def post_cycle_modes() -> Tuple[str, int]:
@@ -136,7 +138,7 @@ class ControlPageController:
 
     @app.route("/api/" + marker_get_mode)
     @staticmethod
-    def get_mode() -> str:  
+    def get_mode() -> str:
         result = ControlPageController.exp_config_handler.get_mode()
         return result
 

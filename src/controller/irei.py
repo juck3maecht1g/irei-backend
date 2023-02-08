@@ -1,6 +1,6 @@
 from src.model.file_storage.pc_data_handler import PcDataHandler
 from src.model.file_storage.action_list_handler import ActionListHandler
-from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler 
+from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from src.model.alr_interface import alr_interface
 

@@ -5,9 +5,10 @@ from src.model.communication.physical.laboratory import Laboratory
 
 import os
 
+
 class GlobalConfigHandler(YamlFile):
 
-    def __init__ (self, file_name: str, path: str):
+    def __init__(self, file_name: str, path: str):
         data = {
             "Laboratories": {
                 "Lab name": {
@@ -29,18 +30,17 @@ class GlobalConfigHandler(YamlFile):
             },
 
             "ActiveUser": "Max",
-            "Users":{
-                "Max": { 
+            "Users": {
+                "Max": {
                     "language": "english",
                 },
 
-                "Moritz": { 
+                "Moritz": {
                     "language": "german",
                 }
             }
         }
         super().__init__(path, file_name, data)
-
 
     def create(self):
         if not (self.file_name in os.listdir(self.path)):
@@ -56,7 +56,6 @@ class GlobalConfigHandler(YamlFile):
 
         active_user = self.data["ActiveUser"]
         return self.data["Users"][active_user]["language"]
-
 
     def get_labs(self) -> list[Laboratory]:
         self.read()
@@ -75,10 +74,7 @@ class GlobalConfigHandler(YamlFile):
         lab_rob = []
 
         for rob_data in lab.values():
-            robot = Robot(rob_data["ip"],rob_data["name"])
+            robot = Robot(rob_data["ip"], rob_data["name"])
             lab_rob.append(robot)
 
         return Laboratory(lab_name, lab_rob)
-
-
-    

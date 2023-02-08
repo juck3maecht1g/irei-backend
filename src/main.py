@@ -18,16 +18,15 @@ from src.model.action.custom_action import CustomAction
 from src.model.communication.physical.robot import Robot
 from src.model.communication.position.joint import Joint
 from src.model.communication.position.cartesian import Cartesian
-from src.model.communication.position.position import Position
+from src.model.communication.position.variable import Variable
 
 import pytest
 
 robots = [Robot("q", "a"), Robot("1", "2")]
 
-j_c = Joint(dict({"space": "joint", "values": [1, 0, 0, 0, 0, 0, 0]}))
-c_c = Cartesian(dict({"space": "cartesian", "coords": [
-                1, 0, 0], "quat": [1, 0, 0, 0]}))  # check for none
-pos = Position(name="pos1", cartesian=c_c, joint=j_c)
+var_dict = ({"name": "var1", "joint": {"values": [1, 0, 0, 0, 0, 0, 0]}, "used space": "joint", "cartesian": {
+            "coord": [1, 0, 0], "quat": [1, 0, 0, 0]}})
+pos = Variable(var_dict)
 time = 10
 og1 = OpenGripper([1])
 cg1 = CloseGripper([1])

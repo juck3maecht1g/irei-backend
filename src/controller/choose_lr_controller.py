@@ -149,7 +149,7 @@ class ChooseLRController:
 
         # todo error condition
 
-    #sets the robot for save position
+    # sets the robot for save position
     set_save_pos_marker = "setSavePosition"
 
     @app.route("/api/" + set_save_pos_marker, methods=['POST'])
@@ -166,5 +166,3 @@ class ChooseLRController:
                 return 'Done', 201
 
         return 'failed', 201
-
-
