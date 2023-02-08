@@ -5,9 +5,9 @@ from datetime import datetime
 
 from src.controller.__init__ import app
 from src.model.alr_interface import AlrInterface
-from src.model.fileStorrage.action_list_handler import ActionListHandler
-from src.model.fileStorrage.experiment_config_handler import ExperimentConfigHandler
-from src.model.fileStorrage.pc_data_handler import PcDataHandler  
+from src.model.file_storage.action_list_handler import ActionListHandler
+from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
+from src.model.file_storage.pc_data_handler import PcDataHandler  
 from datetime import datetime
 
 class ControlPageController:
