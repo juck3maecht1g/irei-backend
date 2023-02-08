@@ -1,8 +1,8 @@
 from src.controller.__init__ import app
 from flask import request
-from src.model.communication.physical.Laboratory import Lab
-from src.model.communication.physical.Robot import Robot
-from src.model.communication.physical.Laboratory import Lab
+from src.model.communication.physical.laboratory import Laboratory
+from src.model.communication.physical.robot import Robot
+
 
 
 class ChooseLRController:

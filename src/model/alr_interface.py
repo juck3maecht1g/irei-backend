@@ -50,11 +50,20 @@ class AlrInterface:
         #joint = self.get_joint_position_of(ip)
         #position = Variable(cartesian, joint)
         print("saved position in alr-sim")
-        return {"wanttobePosition": "asdghlfgjsdkjfh"}
+        return Variable(dict({name: dict({
+                    "used space": "joint",
+                    "cartesian": {
+                        "coord": [15, 15, 15],
+                        "quat": [10, 1, 1, 1]
+                    },
+                    "joint": {
+                        "values": [105, 150, 150, 10, 150, 10, 10]
+                    }
+                })}))
 
     def emergency_stop(self):
         # self.active_experiment.emergency_stop()
-        print("experiment doew what ever is implemented for an emergency stop")
+        print("emergency")
 
     def set_mode(self, mode):
         # self.active_experiment.set_mode(mode)

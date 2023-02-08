@@ -11,6 +11,11 @@ class YamlFile(FileInterface):
             yaml.dump(self.data, outfile, sort_keys=False,
                       default_flow_style=None)
 
-    def read(self):
+    def read(self) -> dict:
+        return self.data
         with open(os.path.join(self.path, self.file_name), 'r') as infile:
-            self.data = yaml.safe_load(infile)
+            data = yaml.safe_load(infile)
+            if data is None:
+                return dict({})
+            else:
+                return data

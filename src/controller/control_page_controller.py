@@ -1,4 +1,5 @@
 
+import json
 from typing import Tuple
 from flask import request
 from datetime import datetime
@@ -113,12 +114,13 @@ class ControlPageController:
     @staticmethod
     def post_save_position() -> Tuple[str, int]:
         data = request.get_json()
+
         if data["marker"] == ControlPageController.marker_save_position:
             result = ControlPageController.exp_config_handler.get_save_position_robot()
             position = ControlPageController.alr_interface.save_posiiton(
                 result.get_ip(), data["name"])
-            ControlPageController.exp_config_handler.add_var(position)
-            return 'Done', 201
+            ControlPageController.exp_config_handler.set_var(position)
+            return "Done", 201
         else:
             return 'failed', 201
 
@@ -140,7 +142,7 @@ class ControlPageController:
     @staticmethod
     def get_mode() -> str:
         result = ControlPageController.exp_config_handler.get_mode()
-        return result
+        return json.dumps(result)
 
     marker_emergeny_stop = "emergency_stop"
 
@@ -159,11 +161,12 @@ class ControlPageController:
     @app.route("/api/" + marker_get_base_name_stop)
     @staticmethod
     def get_base_name_stop() -> str:
-        return f"log_from_{ControlPageController.get_identifier()}"
+        return json.dumpds(f"log_from_{ControlPageController.get_identifier()}")
 
     marker_get_base_name_save_position = "get_base_name_save_position"
 
     @app.route("/api/" + marker_get_base_name_save_position)
     @staticmethod
     def get_base_name_save_position() -> str:
-        return f"position_from_{ControlPageController.get_identifier()}"
+        to_return = f"position_from_{ControlPageController.get_identifier()}"
+        return json.dumps(to_return)

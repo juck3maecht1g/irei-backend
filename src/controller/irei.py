@@ -2,7 +2,7 @@ from src.model.file_storage.pc_data_handler import PcDataHandler
 from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
-from src.model.alr_interface import alr_interface
+from src.model.alr_interface import AlrInterface
 
 from src.controller.fetch_for_action import FetchForAction
 from src.controller.choose_lr_controller import ChooseLRController
@@ -16,10 +16,10 @@ _registered_experiments = []
 
 @staticmethod
 def initialize() -> None:
-    # pc_data_handler = PcDataHandler()
+    pc_data_handler = PcDataHandler("/home/sihi/test")
     action_list_handler = ActionListHandler()
-    exp_config_handler = ExperimentConfigHandler()
-    global_config_handler = GlobalConfigHandler()
+    exp_config_handler = ExperimentConfigHandler("exp_config.yml", pc_data_handler.path, pc_data_handler.root)
+    global_config_handler = GlobalConfigHandler("global_config.yml", pc_data_handler.path)
 
     # ChooseLRController.set_global_config_handler(global_config_handler)
     # ChooseLRController.set_exp_config_handler(exp_config_handler)

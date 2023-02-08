@@ -7,9 +7,9 @@ class Variable:
     def __init__(self, data: dict):
         name = list(data.keys())[0]
         self.name = name
-        self.used_space = data["used space"]
-        self.cartesian = Cartesian(data["cartesian"])
-        self.joint = Joint(data["joint"])
+        self.used_space = data[name]["used space"]
+        self.cartesian = Cartesian(data[name]["cartesian"])
+        self.joint = Joint(data[name]["joint"])
 
     def set_name(self, name) -> str:
         self.name = name

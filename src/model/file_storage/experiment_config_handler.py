@@ -11,7 +11,8 @@ import os
 class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def __init__(self, file_name: str, path: str, root: str):
-        data = {
+        
+        self.data = dict({
             "experiment interface": "max",
             "active actionlist": "action",
             "experiment robots": {
@@ -31,10 +32,11 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
                     }
                 }
             }
-        }
-
-        super().__init__(path, file_name, data)
+        })
+        #self.data = dict({})
+        super().__init__(path, file_name, self.data)
         self.root = root
+        
 
     def update(self, path):
         self.path = path
@@ -48,27 +50,20 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
             """
             elif not (self.name in os.listdir(self.path)):
-                self.data_handler.copy_file_from_parent(self.file)
-                self.data.update({"Variables": {}})
+                self.data1_handler.copy_file_from_parent(self.file)
+                self.data1.update({"Variables": {}})
                 self.__write_config()
             """
 
     def get_exp_interface(self) -> str:
-        self.read()
-
-        return self.data["experiment interface"]
+        return super().read()["experiment interface"]
 
     def get_active_actionlist(self) -> str:
-        self.read()
-
-        return self.data["active actionlist"]
+        return super().read()["active actionlist"]
 
     def get_robots(self) -> list[Robot]:
-        self.read()
-
-        all_robs = self.data["experiment robots"]
+        all_robs = super().read()["experiment robots"]
         out = []
-
         for rob_data in all_robs:
             out.append(Robot(rob_data["name"], rob_data["ip"]))
 
@@ -77,14 +72,17 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     # todo
     # method overwrites old var if they have the same name
     def set_var(self, var: Variable) -> bool:
-        self.read()
-        self.data["variables"][var.get_name()] = var.to_dict()[var.get_name()]
+        #print("\n\n")
+        #print("data")
+        #print(super().read()["variables"])
+        super().read()["variables"].update({var.get_name(): var.to_dict()[var.get_name()]})
+        #print("\n\n")
+        #print(super().read()["variables"])
         self.write()
 
         return True
 
     def get_vars(self) -> list[Variable]:
-        self.read()
 
         old_path = self.path
         out = []
@@ -106,5 +104,15 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         return out
 
     def __get_file_vars(self):
-        self.read()
-        return self.data["variables"]
+        return super().read()["variables"]
+
+    #TODO implement these below
+
+    def get_save_position_robot(self) -> Robot:
+        return Robot("dummy", "stupid ip")
+
+    def get_mode(self) -> str:
+        return "dummy mode"
+
+    def next_mode(self) -> None:
+        return
