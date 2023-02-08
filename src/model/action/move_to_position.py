@@ -1,6 +1,6 @@
 from src.model.action.listable_action import ListableAction
 from src.model.communication.physical.robot import Robot
-from src.model.communication.position.position import Position
+from src.model.communication.position.variable import Position
 
 
 class MoveToPosition(ListableAction):

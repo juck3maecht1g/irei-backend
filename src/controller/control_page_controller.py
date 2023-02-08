@@ -2,9 +2,9 @@
 from src.controller.__init__ import app
 from flask import request
 from src.model.alr_interface import AlrInterface
-from src.model.fileStorrage.ActionListHandler import ActionListHandler
-from src.model.fileStorrage.ExperimentConfigHandler import ExperimentConfigHandler
-from src.model.fileStorrage.PcDataHandler import PcDataHandler  
+from src.model.fileStorrage.action_list_handler import ActionListHandler
+from src.model.fileStorrage.experiment_config_handler import ExperimentConfigHandler
+from src.model.fileStorrage.pc_data_handler import PcDataHandler  
 from datetime import datetime
 
 class ControlPageController:

@@ -1,4 +1,4 @@
-from src.model.communication.position.position import Position
+from src.model.communication.position.variable import Position
 
 class AlrInterface:
     #cunstruktor
