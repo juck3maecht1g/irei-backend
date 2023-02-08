@@ -33,7 +33,7 @@ class ChooseLRController:
         to_return = []
         robots = ChooseLRController.current_lab.get_robots()
         for robot in robots:
-            to_append = {"name": robot.get_name, "ip": robot.get_ip}
+            to_append = {"name": robot.get_name(), "ip": robot.get_ip()}
             to_return.append(to_append)
 
         return to_return

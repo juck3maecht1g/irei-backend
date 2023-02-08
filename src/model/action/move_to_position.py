@@ -14,7 +14,7 @@ class MoveToPosition(ListableAction):
     def dictify(self, robots: list[Robot]) -> dict:
         to_return = dict()
         to_return["key"] = MoveToPosition.key
-        to_return["robots"] = self.map_robots(self.robot_nrs, robots)
+        to_return["robots"] = super().map_robots(self.robot_nrs, robots)
         to_return["type"] = self.type
         to_return["coordiante"] = self.position.get_coordinate(self.type)
         return to_return

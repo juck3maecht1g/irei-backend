@@ -12,6 +12,6 @@ class CustomAction(ListableAction):
     def dictify(self, robots: list[Robot]) -> dict:
         to_return = dict()
         to_return["key"] = CustomAction.key
-        to_return["robots"] = self.map_robots(self.robot_nrs, robots)
+        to_return["robots"] = super().map_robots(self.robot_nrs, robots)
         to_return["action"] = self.action
         return to_return

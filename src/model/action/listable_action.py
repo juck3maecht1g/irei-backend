@@ -9,12 +9,12 @@ class ListableAction(Action):
     def __init__(self, robot_nrs: list[int]) -> None:
         self.robot_nrs = robot_nrs
 
-    def get_robot_nrs(self) -> list[int]:
+    def get_robot_nrs(self) -> list[int]:  # useless?
         return self.robot_nrs
 
-    def map_robots(robot_nrs: list[int], robot_list: list[Robot]) -> dict:
+    def map_robots(self, robot_nrs: list[int], robot_list: list[Robot]) -> dict:
         robots_dict = []
-        for robot_nr in robot_nrs():
+        for robot_nr in robot_nrs:
             robots_dict.append(
                 {"name": robot_list[robot_nr].get_name(), "ip": robot_list[robot_nr].get_ip()})
         return robots_dict
