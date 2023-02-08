@@ -6,7 +6,7 @@ class CustomAction(ListableAction):
     key: str = "custom"
 
     def __init__(self, robot_nrs: list[int], action: str) -> None:
-        super().__init__(robot_nrs)
+        super(robot_nrs)
         self.action = action
 
     def dictify(self, robots: list[Robot]) -> dict:

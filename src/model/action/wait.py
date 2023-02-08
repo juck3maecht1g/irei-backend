@@ -5,8 +5,8 @@ from src.model.communication.physical.robot import Robot
 class Wait(ListableAction):
     key: str = "wait"
 
-    def __init__(self, robot_nrs: list[int], time: int) -> None:
-        super().__init__(robot_nrs)
+    def __init__(self, robot_nrs: list[int], time: int) -> None: 
+        super(robot_nrs)
         self.time = time
 
     def dictify(self, robots: list[Robot]) -> dict:

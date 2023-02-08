@@ -2,7 +2,9 @@ import os
 import shutil
 import pickle
 
-class PcDataHandler:
+from src.model.file_storage.path_subject import PathSubject
+
+class PcDataHandler(PathSubject):
 
     def __init__(self, root_path) -> None:
          self.root = root_path
@@ -11,17 +13,18 @@ class PcDataHandler:
     def navigate_to_parent(self):
         if not (self.path == self.root):
             self.path = os.path.dirname(self.path)
+            self.notify(self.path)
 
     def navigate_to_child(self, name):
-        if (name in self.list_children()):
+        if (name in self.get_dir_content()):
             self.path = os.path.join(self.path, name)
+            self.notify(self.path)
 
     def get_dir_content(self):
         return os.listdir(self.path)
 
-
     def create_directory(self, name):
-        if not (name in self.list_children()):
+        if not (name in self.get_dir_content()):
             new_dir = os.path.join(self.path, name)
             os.mkdir(new_dir)
 

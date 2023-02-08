@@ -1,4 +1,4 @@
-from src.model.communication.position.position import Position
+from src.model.communication.position.variable import Position
 
 class AlrInterface:
     #cunstruktor
@@ -57,8 +57,8 @@ class AlrInterface:
         #self.active_experiment.set_mode(mode)
         print("sets the experiment in the specified mode")
 
-    def execute_list(self, action_list_dict: dict):
-        #self.active_experiment.execute_list(action_list_dict)
+    def execute_sequenzial_list(self, action_list_dict: dict):
+        #self.active_experiment.execute_sequenzial_list(action_list_dict)
         print("would exec list")
 
 

@@ -5,7 +5,7 @@ from src.model.communication.physical.robot import Robot
 
 
 class ListableAction(Action):
-
+    
     def __init__(self, robot_nrs: list[int]) -> None:
         self.robot_nrs = robot_nrs
 
@@ -23,5 +23,6 @@ class ListableAction(Action):
     def dictify(self, robots: list[Robot]) -> dict:
         pass
 
-    def dictify_to_display(self, robots: list[Robot]) -> dict:
+
+    def dictify_to_display(self, robots):
         return self.dictify(robots)

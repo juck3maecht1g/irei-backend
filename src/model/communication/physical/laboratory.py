@@ -10,7 +10,4 @@ class Laboratory:
 
     def get_robots(self) -> list[Robot]:
         return self.robots
-        return [{
-            "name": "robot",
-            "ip": "1293.1239.12389"
-        }]
+        
