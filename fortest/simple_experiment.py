@@ -1,4 +1,5 @@
-from fortest.all_methods  import TestClass
+
+
 from src.controller.irei import initialize, register_experiment
 import enum
 import threading
@@ -9,7 +10,7 @@ from alr_sim.sims import SimFactory
 
 
 
-class SimpleExp(TestClass, threading.Thread):
+class SimpleExp(threading.Thread):
     class Mode(enum.Enum):
         MODE_A = "mode_a"
         MODE_B = "mode_b"
@@ -17,7 +18,7 @@ class SimpleExp(TestClass, threading.Thread):
 
     def __init__(self, robots: list[dict]):
         # Start Threading stuff
-        super(TestClass, self).__init__()
+        #super(TestClass, self).__init__()
 
         factory = SimFactory.SimRepository.get_factory("pybullet")
         self.scene = factory.create_scene()
@@ -214,8 +215,9 @@ class SimpleExp(TestClass, threading.Thread):
 
 
 if __name__ == "__main__":
-    initialize()
+   
     register_experiment(SimpleExp)
+    initialize()
     exp = SimpleExp([{"name": "test"}, {"name": "test2"}])
     exp.set_mode("mode_a")
     time.sleep(10)

@@ -61,7 +61,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     def get_active_actionlist(self) -> str:
         return super().read()["active actionlist"]
 
-    def get_robots(self) -> list[Robot]:
+    def get_exp_robots(self) -> list[Robot]:
         all_robs = super().read()["experiment robots"]
         out = []
         for rob_data in all_robs:

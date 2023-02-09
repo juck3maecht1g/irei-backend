@@ -22,28 +22,33 @@ def initialize() -> None:
     global_config_handler = GlobalConfigHandler("global_config.yml", pc_data_handler.path)
 
     ChooseLRController.set_global_config_handler(global_config_handler)
-    ChooseLRController.set_exp_config_handler(exp_config_handler)
+    ChooseLRController.set_experiment_config_handler(exp_config_handler)
 
     ControlPageController.set_pc_data_handler(pc_data_handler)
     ControlPageController.set_exp_config_handler(exp_config_handler)
     ControlPageController.set_action_list_handler(action_list_handler)
 
-    FetchForAction.set_exp_config_handler(exp_config_handler)
+    FetchForAction.set_experiment_config_handler(exp_config_handler)
 
     FilePathManager.set_pc_data_handler(pc_data_handler)
     app.run(debug=True, port=5000)
 
 
 @staticmethod
-def setup_experiment(experiment) -> None:
-    alr_interface = AlrInterface(experiment)
+def setup_experiment(experiment, robots) -> None:
+    print("\n\n" "hi")
+    exp = experiment(robots)
+    alr_interface = AlrInterface(exp)
+    
     ControlPageController.set_alr_interface(alr_interface)
     FetchForAction.set_alr_interface(alr_interface)
+    alr_interface.run_exp()
 
 
 @staticmethod
 def register_experiment(experiment) -> None:
     _registered_experiments.append(experiment)
+    print (_registered_experiments)
 
 
 @staticmethod

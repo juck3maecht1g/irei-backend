@@ -8,7 +8,7 @@ class FilePathManager:
      pc_data_handler= None
 
      @staticmethod
-     def  pc_data_handler(given_file_navigator):
+     def  set_pc_data_handler(given_file_navigator):
           FilePathManager.pc_data_handler = given_file_navigator
 
 

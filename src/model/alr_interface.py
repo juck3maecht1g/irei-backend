@@ -28,27 +28,27 @@ class AlrInterface:
 
     # maby delete those methods
 
-    def wait(self, ip, time):
-        self.active_experiment.wait(ip, time)
+    def wait(self, robot, time):
+        self.active_experiment.wait(robot, time)
 
-    def open_gripper(self, ip):
-        self.active_experiment.open_gripper(ip)
+    def open_gripper(self, robot):
+        self.active_experiment.open_gripper(robot)
 
-    def close_gripper(self, ip):
-        self.active_experiment.close_gripper(ip)
+    def close_gripper(self, robot):
+        self.active_experiment.close_gripper(robot)
 
     # depending on how coordinates are served
-    def approach_position(self, ip, position, is_cartesian):
+    def approach_position(self, robot, position, is_cartesian):
         if is_cartesian:
             self.active_experiment.approach_cartesian(
-                ip, position.get_cartesian)
+                robot, position.get_cartesian)
         else:
-            self.active_experiment.approach_joint(ip, position.get_joint)
+            self.active_experiment.approach_joint(robot, position.get_joint)
 
-    def save_posiiton(self, ip, name):
-        #cartesian = self.get_cartesian_position_of(ip)
-        #joint = self.get_joint_position_of(ip)
-        #position = Variable(cartesian, joint)
+    def save_posiiton(self, robot, name):
+        cartesian = self.get_cartesian_position_of(robot)
+        joint = self.get_joint_position_of(robot)
+        position = Variable(cartesian, joint)
         print("saved position in alr-sim")
         return Variable(dict({name: dict({
                     "used space": "joint",
@@ -62,21 +62,27 @@ class AlrInterface:
                 })}))
 
     def emergency_stop(self):
-        # self.active_experiment.emergency_stop()
+        self.active_experiment.emergency_stop()
         print("emergency")
 
     def set_mode(self, mode):
-        # self.active_experiment.set_mode(mode)
+        self.active_experiment.set_mode(mode)
         print("sets the experiment in the specified mode")
 
     def execute_sequenzial_list(self, action_list_dict: dict):
-        # self.active_experiment.execute_sequenzial_list(action_list_dict)
+        self.active_experiment.execute_sequenzial_list(action_list_dict)
         print("would exec list")
 
     def validate_action(self, action: dict) -> bool:
-        # return self.active_experiment.validate_action(dict)
-        print("would test the action")
+         print("would test the action")
+         return self.active_experiment.validate_action(dict)
+       
 
-    def change_gripper_state(self, robots: list[str]):
-        # return self.active_experiment.change_grippper_state(robots)
+    def change_gripper_state(self, robots: list[dict]):
         print("would change state of all chosen gripppers")
+        return self.active_experiment.change_grippper_state(robots)
+        
+
+    def run_exp(self):
+        print( self.active_exp.run())
+        

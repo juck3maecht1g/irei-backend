@@ -42,8 +42,13 @@ class ChooseLRController:
         data = ChooseLRController.global_config_handler.get_labs()
         to_return = dict()
         for lab in data:
-            to_return[lab.get_name] = ChooseLRController.get_robots_ip_list(
-                lab)
+            robots = lab.get_robots()
+            robot_list = []
+            for robot in robots:
+                to_append = {"name": robot.get_name(), "ip": robot.get_ip()}
+                robot_list.append(to_append)
+
+            to_return[lab.get_name()] = robot_list
         return to_return
 
     current_lab_marker = "setCurrentLab"
@@ -66,7 +71,7 @@ class ChooseLRController:
     @staticmethod
     def get_robots_exp():
         data = ChooseLRController.experiment_config_handler.get_exp_robots()
-        to_return = dict()
+        to_return = []
         for robot in data:
             to_append = {"name": robot.get_name, "ip": robot.get_ip}
             to_return.append(to_append)
@@ -78,7 +83,7 @@ class ChooseLRController:
     @staticmethod
     def get_robots_gripper():
         data = ChooseLRController.experiment_config_handler.get_execute_gripper()
-        to_return = dict()
+        to_return = []
         for robot in data:
             to_append = {"name": robot.get_name, "ip": robot.get_ip}
             to_return.append(to_append)
@@ -103,13 +108,20 @@ class ChooseLRController:
     def setup_exp():
         from src.controller.irei import get_registered_experiments, setup_experiment
         data = request.get_json()
-        if data.marker != "SetExperiment":
+        
+        if data["marker"] != "SetExperiment":
+            
             return "F", 300
         for experiment in get_registered_experiments():
-            if data.experiment == experiment.get_name:
-                setup_experiment(experiment)
+            print("\n\n")
+            print(experiment.get_name())
+            if data["experiment"] == experiment.get_name():
+                robots = ChooseLRController.get_robots_exp()
+                
+                setup_experiment(experiment, robots)
             return 'Done', 201
         else:
+            
             return 'failed', 201
 
     set_robots_exp_marker = "setRobotsExp"
