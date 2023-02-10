@@ -8,7 +8,7 @@ import os
 
 class GlobalConfigHandler(YamlFile):
 
-    def __init__(self, file_name: str, path: str):
+    def __init__(self, path: str):
         data = {
             "Laboratories": {
                 "Lab name": {
@@ -40,7 +40,7 @@ class GlobalConfigHandler(YamlFile):
                 }
             }
         }
-        super().__init__(path, file_name, data)
+        super().__init__(path, "global_config", data)
 
     def create(self):
         if not (self.file_name in os.listdir(self.path)):

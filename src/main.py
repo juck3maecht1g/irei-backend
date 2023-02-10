@@ -19,6 +19,7 @@ from src.model.communication.physical.robot import Robot
 from src.model.communication.position.joint import Joint
 from src.model.communication.position.cartesian import Cartesian
 from src.model.communication.position.variable import Variable
+from src.root_dir import root_path
 
 from src.controller.irei import *
 class TestClass:
@@ -27,7 +28,7 @@ class TestClass:
     
 register_experiment(TestClass)
 setup_experiment("experiment")
-initialize()
+initialize(root_path)
 
 """
 robots = [Robot("q", "a"), Robot("1", "2")]

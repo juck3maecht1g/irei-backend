@@ -10,7 +10,7 @@ import os
 
 class ExperimentConfigHandler(YamlFile, PathObserver):
 
-    def __init__(self, file_name: str, path: str, root: str):
+    def __init__(self, root: str):
         
         self.data = dict({
             "experiment interface": "max",
@@ -34,7 +34,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
             }
         })
         #self.data = dict({})
-        super().__init__(path, file_name, self.data)
+        super().__init__(root, "experiment_config", self.data)
         self.root = root
         
 
