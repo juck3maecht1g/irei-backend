@@ -8,13 +8,13 @@ from wait import Wait
 class ListableFactory:
 
     def create_single_action(action: dict) -> None:
-        if action.key == "close_gripper":
-            return CloseGripper(action.robot_nrs)
-        elif action.key == "custom":
-            return CustomAction(action.robot_nrs, action.action)
-        elif action.key == "move":
-            return MoveToPosition(action.robot_nrs, action.position, action.type)
-        elif action.key == "open_gripper":
-            return OpenGripper(action.robot_nrs)
-        elif action.key == "wait":
-            return Wait(action.robot_nrs, action.time)
+        if action["key"] == "close_gripper":
+            return CloseGripper(action["robot_nrs"])
+        elif action["key"] == "custom":
+            return CustomAction(action["robot_nrs"], action["action"])
+        elif action["key"] == "move":
+            return MoveToPosition(action["robot_nrs"], action["position"], action["type"])
+        elif action["key"] == "open_gripper":
+            return OpenGripper(action["robot_nrs"])
+        elif action["key"] == "wait":
+            return Wait(action["robot_nrs"], action["time"])

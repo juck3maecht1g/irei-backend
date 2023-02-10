@@ -30,7 +30,7 @@ class FilePathManager:
      @staticmethod
      def navigate_up():
           data = request.get_json()
-          if data.marker == "navigate_up":
+          if data["marker"] == "navigate_up":
                FilePathManager.pc_data_handler.navigate_to_parent()
                return "Done", 201
           return "F", 300
@@ -39,8 +39,8 @@ class FilePathManager:
      @staticmethod
      def navigate_down():
           data = request.get_json()
-          if data.marker == "navigate_down":
-               FilePathManager.pc_data_handler.navigate_to_child(data.dir)
+          if data["marker"] == "navigate_down":
+               FilePathManager.pc_data_handler.navigate_to_child(data["dir"])
                return "Done", 201
           return "F", 300
 
@@ -48,8 +48,8 @@ class FilePathManager:
      @staticmethod
      def create_dir():
           data = request.get_json()
-          if data.marker == "crerate":
-               FilePathManager.pc_data_handler.create_directory(data.name)
+          if data["marker"] == "crerate":
+               FilePathManager.pc_data_handler.create_directory(data["name"])
                return "Done", 201
           return "F", 300
 
@@ -58,8 +58,8 @@ class FilePathManager:
      @staticmethod
      def delete_dir():
           data = request.get_json()
-          if data.marker == "delete_directory":
-               FilePathManager.pc_data_handler.delete_directory(data.name)
+          if data["marker"] == "delete_directory":
+               FilePathManager.pc_data_handler.delete_directory(data["name"])
                return "Done", 201
           return "F", 300
 
