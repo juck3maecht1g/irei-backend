@@ -9,6 +9,11 @@ from src.controller.control_page_controller import ControlPageController
 
 class FilePathManager:
      pc_data_handler= None
+     exp_config_handler = None
+
+     @staticmethod
+     def  set_exp_config_handler(given_exp_config_handler):
+          FilePathManager.exp_config_handler = given_exp_config_handler
 
      @staticmethod
      def  set_pc_data_handler(given_file_navigator):
@@ -49,7 +54,12 @@ class FilePathManager:
      def create_dir():
           data = request.get_json()
           if data["marker"] == "crerate":
+               print("\n\n")
+               print("data" + data["name"])
+               print("\n\n")
                FilePathManager.pc_data_handler.create_directory(data["name"])
+               FilePathManager.pc_data_handler.navigate_to_child(data["name"])
+               FilePathManager.exp_config_handler.create()
                return "Done", 201
           return "F", 300
 

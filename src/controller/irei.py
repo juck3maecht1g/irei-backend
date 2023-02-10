@@ -17,7 +17,7 @@ _registered_experiments = []
 
 @staticmethod
 def _build_data_structure(pc_data: PcDataHandler, global_config: GlobalConfigHandler, exp_config: ExperimentConfigHandler) -> None:
-    if not ("global_config" in pc_data.get_dir_content()):
+   if not ("global_config" in pc_data.get_dir_content()):
         global_config.create()
         for user in global_config.get_users():
             pc_data.create_directory(user)
@@ -27,12 +27,12 @@ def _build_data_structure(pc_data: PcDataHandler, global_config: GlobalConfigHan
             
 
 @staticmethod
-def initialize(root_path: str) -> None:
+def initialize() -> None:
     pc_data_handler = PcDataHandler(root_path)
     action_list_handler = ActionListHandler()
     exp_config_handler = ExperimentConfigHandler(root_path)
     global_config_handler = GlobalConfigHandler(root_path)
-    pc_data_handler.attach(action_list_handler)
+    #pc_data_handler.attach(action_list_handler)
     pc_data_handler.attach(exp_config_handler)
 
     _build_data_structure(pc_data_handler, global_config_handler, exp_config_handler)
@@ -46,7 +46,7 @@ def initialize(root_path: str) -> None:
     ControlPageController.set_action_list_handler(action_list_handler)
 
     FetchForAction.set_experiment_config_handler(exp_config_handler)
-
+    FilePathManager.set_exp_config_handler(exp_config_handler)
     FilePathManager.set_pc_data_handler(pc_data_handler)
     app.run(debug=True, port=5000)
 
