@@ -1,5 +1,8 @@
+import json
 from src.controller.__init__ import app
 from flask import request
+
+from src.controller.control_page_controller import ControlPageController
 
 
 
@@ -67,3 +70,14 @@ class FilePathManager:
      def delete_file():
           data = request.get_json()
           FilePathManager.pc_data_handler.delete_file(data)
+
+
+
+
+     marker_get_base_name_dir = "get_base_name_dir"
+
+     @app.route("/api/" + marker_get_base_name_dir)
+     @staticmethod
+     def get_base_name_dir() -> str:
+          to_return = f"dir_from_{ControlPageController.get_identifier()}"
+          return json.dumps(to_return)
