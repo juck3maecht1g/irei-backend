@@ -24,6 +24,7 @@ def _build_data_structure(pc_data: PcDataHandler, global_config: GlobalConfigHan
             pc_data.navigate_to_child(user)
             exp_config.create()
             pc_data.navigate_to_parent()
+            
 
 @staticmethod
 def initialize(root_path: str) -> None:
@@ -31,6 +32,8 @@ def initialize(root_path: str) -> None:
     action_list_handler = ActionListHandler()
     exp_config_handler = ExperimentConfigHandler(root_path)
     global_config_handler = GlobalConfigHandler(root_path)
+    pc_data_handler.attach(action_list_handler)
+    pc_data_handler.attach(exp_config_handler)
 
     _build_data_structure(pc_data_handler, global_config_handler, exp_config_handler)
 

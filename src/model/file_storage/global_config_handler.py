@@ -13,21 +13,19 @@ class GlobalConfigHandler(YamlFile):
             "Laboratories": {
                 "Lab name": {
                     "Robots": {
-                        "Robot1": {
-                            "name": "Cooler Rob",
-                            "ip": "101.10.20.101"
+                        "101.10.20.101":{
+                            "name": "Cooler Rob"
                         },
-                        "Robot2": {
+                       "101.10.0.102": {
                             "name": "Cooler",
-                            "ip": "101.10.0.101"
                         },
-                        "Robot3": {
+                        "101.0.20.101": {
                             "name": "Coolr Rob",
-                            "ip": "101.0.20.101"
                         }
-                    }
+                    },
                 },
             },
+            "experiment modes": ["cooler mode 1", "cooler mode 2"],
 
             "ActiveUser": "Max",
             "Users": {
@@ -57,6 +55,11 @@ class GlobalConfigHandler(YamlFile):
         active_user = self.data["ActiveUser"]
         return self.data["Users"][active_user]["language"]
 
+    def get_exp_modes(self):
+        self.read()
+
+        return self.data["experiment modes"]
+
     def get_labs(self) -> list[Laboratory]:
         self.read()
 
@@ -73,8 +76,8 @@ class GlobalConfigHandler(YamlFile):
         lab = self.data["Laboratories"][lab_name]["Robots"]
         lab_rob = []
 
-        for rob_data in lab.values():
-            robot = Robot(rob_data["ip"], rob_data["name"])
+        for rob_data in lab:
+            robot = Robot(lab[rob_data]["name"], rob_data)
             lab_rob.append(robot)
 
         return Laboratory(lab_name, lab_rob)

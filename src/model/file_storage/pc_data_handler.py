@@ -21,6 +21,9 @@ class PcDataHandler(PathSubject):
             self.path = os.path.join(self.path, name)
             self.notify(self.path)
 
+    def get_sub_dir(self):
+        return filter(os.path.isdir, os.listdir(os.getcwd()))
+
     def get_dir_content(self):
         return os.listdir(self.path)
 
