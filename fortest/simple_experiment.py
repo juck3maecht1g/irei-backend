@@ -217,7 +217,7 @@ class SimpleExp(threading.Thread):
 if __name__ == "__main__":
    
     register_experiment(SimpleExp)
-    initialize()
+    initialize("/home/sihi/test")
     exp = SimpleExp([{"name": "test"}, {"name": "test2"}])
     exp.set_mode("mode_a")
     time.sleep(10)

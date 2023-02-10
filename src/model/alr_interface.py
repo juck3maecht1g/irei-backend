@@ -38,6 +38,7 @@ class AlrInterface:
         self.active_experiment.close_gripper(robot)
 
     # depending on how coordinates are served
+    
     def approach_position(self, robot, position, is_cartesian):
         if is_cartesian:
             self.active_experiment.approach_cartesian(

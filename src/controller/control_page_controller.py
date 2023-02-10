@@ -83,7 +83,7 @@ class ControlPageController:
     @staticmethod
     def post_stop() -> Tuple[str, int]:
         data = request.get_json()
-        if data == ControlPageController.marker_stop:
+        if data["marker"] == ControlPageController.marker_stop:
             result = ControlPageController.alr_interface.stop_log()
             ControlPageController.pc_data_handler.save_log(
                 result, data["name"])
@@ -161,7 +161,7 @@ class ControlPageController:
     @app.route("/api/" + marker_get_base_name_stop)
     @staticmethod
     def get_base_name_stop() -> str:
-        return json.dumpds(f"log_from_{ControlPageController.get_identifier()}")
+        return json.dumps(f"log_from_{ControlPageController.get_identifier()}")
 
     marker_get_base_name_save_position = "get_base_name_save_position"
 
@@ -170,3 +170,5 @@ class ControlPageController:
     def get_base_name_save_position() -> str:
         to_return = f"position_from_{ControlPageController.get_identifier()}"
         return json.dumps(to_return)
+    
+    
