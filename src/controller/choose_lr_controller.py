@@ -57,9 +57,9 @@ class ChooseLRController:
     @staticmethod
     def set_current_lab():
         data = request.get_json()
-        if data.marker == "setCurrentLab":
+        if data["marker"] == "setCurrentLab":
             for lab in ChooseLRController.global_config_handler.get_labs():
-                if lab.get_name() == data.name:
+                if lab.get_name() == data["name"]:
                     ChooseLRController.current_lab = lab
                 return 'Done', 201
 
@@ -130,10 +130,10 @@ class ChooseLRController:
     @staticmethod
     def set_robots_exp():
         data = request.get_json()
-        if data.marker != "SetExpRobots":
+        if data["marker"] != "SetExpRobots":
             return "F", 300
         robots = []
-        for ip in data.robot_ips:
+        for ip in data["robot_ips"]:
             for robot in ChooseLRController.current_lab.get_robots():
                 if ip == robot.get_ip():
                     robots.append(Robot(ip=ip, name=robot.get_name()))
@@ -148,10 +148,10 @@ class ChooseLRController:
     @staticmethod
     def set_robots_gripper():
         data = request.get_json()
-        if data.marker != "SetChangeGripperRobots":
+        if data["marker"]!= "SetChangeGripperRobots":
             return "F", 300
         robots = []
-        for ip in data.robots_ips:
+        for ip in data["robot_ips"]:
             for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
                 if ip == robot.get_ip():
                     robots.append(Robot(ip=ip, name=robot.get_name()))
@@ -168,10 +168,10 @@ class ChooseLRController:
     @staticmethod
     def set_save_pos():
         data = request.get_json()
-        if data.marker != "SetSavePositionRobots":
+        if data["marker"] != "SetSavePositionRobots":
             return "F", 300
         for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
-            if data.robot_ip == robot.get_ip():
+            if data["robot_ip"] == robot.get_ip():
                 pos_robot = Robot(ip=data.robot_ip, name=robot.get_name())
                 ChooseLRController.experiment_config_handler.set_save_position_robot(
                     pos_robot)

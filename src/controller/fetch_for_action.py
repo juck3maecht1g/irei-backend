@@ -38,7 +38,7 @@ class FetchForAction:
         to_return = []
         for action_list in action_lists:
             action_dict = action_list.dictify_to_display(robot_list)
-            to_return.append(action_dict.name)
+            to_return.append(action_dict["name"])
         return to_return
     
 
@@ -61,7 +61,7 @@ class FetchForAction:
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         to_return: list[dict] = []
         for action in FetchForAction.current_action_list.get_content():
-            action_dict = action.dictify_to_display(robot_list)
+            action_dict = action.dictify_to_display(robot_list) # possiblility for dictify exists
             to_return.append(action_dict)
         return to_return
 
@@ -71,11 +71,11 @@ class FetchForAction:
     def append_action():
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         data = request.get_json()
-        if data.marker == "append_action":
-            if data.key == "move":
+        if data["marker"] == "append_action":
+            if data["key"] == "move":
                 positions = FetchForAction.experiment_config_handler.get_positions()
                 for position in positions:
-                    if data.position == position.get_name():
+                    if data["position"]== position.get_name():
                         data["position"]= position
                         data["type"] = FetchForAction.experiment_config_handler.get_coordinate_type()
             action = FetchForAction.action_list_handler.build(data)
@@ -92,9 +92,9 @@ class FetchForAction:
     @staticmethod
     def delete_action():
         data = request.get_json()
-        if data.marker == "delete_action":
-            FetchForAction.action_list_handler.delete_action(FetchForAction.current_action_list, data.position)
-            FetchForAction.current_action_list.delete_action(data.position)
+        if data["marker"] == "delete_action":
+            FetchForAction.action_list_handler.delete_action(FetchForAction.current_action_list, data["position"])
+            FetchForAction.current_action_list.delete_action(data["position"])
             return 'Done', 201
     
     @app.route("/api/swap_action", methods=['POST'])
@@ -102,9 +102,9 @@ class FetchForAction:
     def swap_action():
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         data = request.get_json()
-        if data.marker == "swap":
-            first = data.first
-            second = data.second
+        if data["marker"] == "swap":
+            first = data["first"]
+            second = data["second"]
             temp_list = FetchForAction.current_action_list
             temp_list.swap(first, second)
             if FetchForAction.alr_interface.validate_action(temp_list.dictify(robot_list)):
@@ -116,8 +116,8 @@ class FetchForAction:
     @staticmethod
     def create_action_list():
         data = request.get_json()
-        if data.marker == "create_action_list":
-            FetchForAction.action_list_handler.create(data.name, data.key)
+        if data["marker"] == "create_action_list":
+            FetchForAction.action_list_handler.create(data["name"], data["key"])
             return 'Done', 201
 
     def get_active_lists(): # useless because info in buttons
@@ -127,9 +127,9 @@ class FetchForAction:
     @staticmethod
     def post_execute_list():
         data = request.get_json()
-        if data.marker == "execute_action_list":
+        if data["marker"] == "execute_action_list":
             for action_list in FetchForAction.action_list_handler.get_all_lists():
-                if action_list.get_name() == data.name:
+                if action_list.get_name() == data["name"]:
                     robots = FetchForAction.experiment_config_handler.get_exp_robots()
                     to_execute = action_list.dictify(robots)
                     FetchForAction.alr_interface.execute_sequenzial_list(to_execute)
@@ -144,8 +144,8 @@ class FetchForAction:
     @staticmethod
     def post_coordinate_type():
         data = request.get_json()
-        if data.marker == "execute_action_list":
-            FetchForAction.experiment_config_handler.set_coordinate_type(data.type)
+        if data["marker"] == "execute_action_list":
+            FetchForAction.experiment_config_handler.set_coordinate_type(data["type"])
             return 'Done', 201
         else:
             return 'failed', 201
