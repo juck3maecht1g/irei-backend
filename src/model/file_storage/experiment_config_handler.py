@@ -95,13 +95,31 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         self.read()
         return self.data["experiment interface"]
 
+    def set_exp_interface(self, exp_interface: str) -> None:
+        self.read()
+        self.data["experiment interface"] = exp_interface
+        self.write()    
+
     def get_active_actionlist(self) -> str:
         self.read()
         return self.data["active actionlist"]
 
+    def set_active_actionlist(self, action_list: str) -> None:
+        self.read()
+        self.data["active actionlist"] = action_list
+        self.write()   
+
     def get_exp_robots(self) -> list[str]:
         self.read()
         return self.data["experiment robots"]
+
+    def set_exp_robot(self, robots: list[Robot]) -> None:
+        self.read()
+        new_robots_ip = []
+        for robot in robots:
+            new_robots_ip.append(robot.get_ip())
+        self.data["experiment robots"] = new_robots_ip
+        self.write()
 
     def get_mode(self) -> str:
         self.read()
