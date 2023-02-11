@@ -10,7 +10,7 @@ from src.controller.control_page_controller import ControlPageController
 class FilePathManager:
      pc_data_handler= None
      exp_config_handler = None
-
+     
      @staticmethod
      def  set_exp_config_handler(given_exp_config_handler):
           FilePathManager.exp_config_handler = given_exp_config_handler
@@ -29,9 +29,7 @@ class FilePathManager:
           to_return = dict()
           to_return["to_navigate"] = child_experiments
           to_return["cant_navigate"] = not_childer
-          print("\n\n")
-          print(child_experiments)
-          print("\n\n")
+  
           return to_return
 
      @app.route("/api/navigate_up", methods=['Post'])

@@ -8,6 +8,7 @@ from src.controller.__init__ import app
 from src.model.alr_interface import AlrInterface
 from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
+from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from src.model.file_storage.pc_data_handler import PcDataHandler
 from datetime import datetime
 
@@ -17,6 +18,7 @@ class ControlPageController:
     alr_interface: AlrInterface
     action_list_handler: ActionListHandler
     exp_config_handler: ExperimentConfigHandler
+    glob_config_handler: GlobalConfigHandler
 
     @staticmethod
     def set_pc_data_handler(data_handler: PcDataHandler) -> None:
@@ -29,6 +31,10 @@ class ControlPageController:
     @staticmethod
     def set_exp_config_handler(exp_config_handler: ExperimentConfigHandler) -> None:
         ControlPageController.exp_config_handler = exp_config_handler
+
+    @staticmethod
+    def set_glob_config_handler(glob_config_handler: GlobalConfigHandler) -> None:
+        ControlPageController.glob_config_handler = glob_config_handler
 
     @staticmethod
     def set_action_list_handler(action_list_handler: ActionListHandler) -> None:
@@ -131,7 +137,17 @@ class ControlPageController:
     def post_cycle_modes() -> Tuple[str, int]:
         data = request.get_json()
         if data == ControlPageController.marker_cycle_modes:
-            ControlPageController.exp_config_handler.next_mode()  # display in frontend
+            modes = ControlPageController.glob_config_handler.get_exp_modes()
+            current_mode = ControlPageController.exp_config_handler.get_mode()
+            place_of_mode = 0
+            for mode in modes:
+                if modes[place_of_mode] == current_mode:
+                    if place_of_mode < (len(modes) - 1):
+                        ControlPageController.exp_config_handler.set_mode(modes[place_of_mode + 1])
+                    else : 
+                             ControlPageController.exp_config_handler.set_mode(modes[0])
+                else :
+                    place_of_mode = place_of_mode + 1
             return 'Done', 201
         else:
             return 'failed', 201

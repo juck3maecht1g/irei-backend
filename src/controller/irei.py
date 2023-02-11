@@ -44,7 +44,7 @@ def initialize() -> None:
     ControlPageController.set_pc_data_handler(pc_data_handler)
     ControlPageController.set_exp_config_handler(exp_config_handler)
     ControlPageController.set_action_list_handler(action_list_handler)
-
+    ControlPageController.set_glob_config_handler(global_config_handler)
     FetchForAction.set_experiment_config_handler(exp_config_handler)
     FilePathManager.set_exp_config_handler(exp_config_handler)
     FilePathManager.set_pc_data_handler(pc_data_handler)
@@ -54,10 +54,11 @@ def initialize() -> None:
 
 @staticmethod
 def setup_experiment(experiment, robots) -> None:
-    print("\n\n" "hi")
+    print("\n\n0")
     exp = experiment(robots)
+    print("\n\n1")
     alr_interface = AlrInterface(exp)
-    
+    print("\n\n2")
     ControlPageController.set_alr_interface(alr_interface)
     FetchForAction.set_alr_interface(alr_interface)
     alr_interface.run_exp()
@@ -66,7 +67,7 @@ def setup_experiment(experiment, robots) -> None:
 @staticmethod
 def register_experiment(experiment) -> None:
     _registered_experiments.append(experiment)
-    print (_registered_experiments)
+
 
 
 @staticmethod

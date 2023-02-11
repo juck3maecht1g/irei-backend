@@ -61,10 +61,14 @@ class ChooseLRController:
     def set_current_lab():
         data = request.get_json()
         if data["marker"] == "setCurrentLab":
+   
+
             for lab in ChooseLRController.global_config_handler.get_labs():
+     
                 if lab.get_name() == data["name"]:
                     ChooseLRController.current_lab = lab
-                return 'Done', 201
+        
+                    return 'Done', 201
 
         return 'failed', 201
 
@@ -74,10 +78,13 @@ class ChooseLRController:
     @staticmethod
     def get_robots_exp():
         data = ChooseLRController.experiment_config_handler.get_exp_robots()
+        robots = ChooseLRController.current_lab.get_robots()
         to_return = []
-        for robot in data:
-            to_append = {"name": robot.get_name, "ip": robot.get_ip}
-            to_return.append(to_append)
+        for ip in data:
+            for robot in robots:
+                if robot.get_ip == ip:
+                    to_append = {"name": robots.get_name, "ip": robot.get_ip}
+                    to_return.append(to_append)
         return to_return
 
     robots_gripper_marker = "getRobotsForGripper"
@@ -111,7 +118,6 @@ class ChooseLRController:
     def setup_exp():
         from src.controller.irei import get_registered_experiments, setup_experiment
         data = request.get_json()
-        
         if data["marker"] != "SetExperiment":
             
             return "F", 300
@@ -131,6 +137,7 @@ class ChooseLRController:
     @staticmethod
     def set_robots_exp():
         data = request.get_json()
+  
         if data["marker"] != "SetExpRobots":
             return "F", 300
         robots = []
