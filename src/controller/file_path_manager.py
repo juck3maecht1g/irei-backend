@@ -23,18 +23,23 @@ class FilePathManager:
      @app.route("/api/get_content")
      @staticmethod 
      def get_content():
-          child_experiments = FilePathManager.pc_data_handler.get_dir_child_experiments()
+          child_experiments = list(FilePathManager.pc_data_handler.get_sub_dir())
           content = FilePathManager.pc_data_handler.get_dir_content()
-          not_childer = content.difference(child_experiments)
+          not_childer = list(set(content) - set(child_experiments))
           to_return = dict()
           to_return["to_navigate"] = child_experiments
           to_return["cant_navigate"] = not_childer
+          print("\n\n")
+          print(child_experiments)
+          print("\n\n")
           return to_return
 
      @app.route("/api/navigate_up", methods=['Post'])
      @staticmethod
      def navigate_up():
+        
           data = request.get_json()
+         
           if data["marker"] == "navigate_up":
                FilePathManager.pc_data_handler.navigate_to_parent()
                return "Done", 201
@@ -54,9 +59,7 @@ class FilePathManager:
      def create_dir():
           data = request.get_json()
           if data["marker"] == "crerate":
-               print("\n\n")
-               print("data" + data["name"])
-               print("\n\n")
+             
                FilePathManager.pc_data_handler.create_directory(data["name"])
                FilePathManager.pc_data_handler.navigate_to_child(data["name"])
                FilePathManager.exp_config_handler.create()

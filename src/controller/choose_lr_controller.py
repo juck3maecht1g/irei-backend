@@ -40,15 +40,18 @@ class ChooseLRController:
     @staticmethod
     def get_all_labs():
         data = ChooseLRController.global_config_handler.get_labs()
-        to_return = dict()
+
+        to_return = []
         for lab in data:
+            lab_dict = dict()
+            lab_dict["name"] = lab.get_name()
             robots = lab.get_robots()
             robot_list = []
             for robot in robots:
                 to_append = {"name": robot.get_name(), "ip": robot.get_ip()}
                 robot_list.append(to_append)
-
-            to_return[lab.get_name()] = robot_list
+            lab_dict["robots"] = robot_list
+            to_return.append(lab_dict)
         return to_return
 
     current_lab_marker = "setCurrentLab"
@@ -113,8 +116,6 @@ class ChooseLRController:
             
             return "F", 300
         for experiment in get_registered_experiments():
-            print("\n\n")
-            print(experiment.get_name())
             if data["experiment"] == experiment.get_name():
                 robots = ChooseLRController.get_robots_exp()
                 

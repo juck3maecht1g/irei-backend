@@ -1,1 +1,1 @@
-root_path = r"C:\Users\morit\OneDrive\Desktop\Datastructure"
+root_path = r"/home/sihi/test"
