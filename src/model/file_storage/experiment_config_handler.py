@@ -2,13 +2,14 @@ from src.model.communication.physical.robot import Robot
 from src.model.communication.position.variable import Variable
 from src.model.file_storage.yaml_file import YamlFile
 from src.model.file_storage.path_observer import PathObserver
+from src.model.file_storage.robot_subject import RobotSubject
 
 import os
 
 # todo Observer
 
 
-class ExperimentConfigHandler(YamlFile, PathObserver):
+class ExperimentConfigHandler(YamlFile, PathObserver, RobotSubject):
 
     def __init__(self, root: str):
         
@@ -40,7 +41,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         self.root = root
         
 
-    def update(self, path):
+    def update_path(self, path):
         self.path = path
 
     #todo copy for sub?
@@ -129,6 +130,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         for robot in robots:
             new_robots_ip.append(robot.get_ip())
         self.data["experiment robots"] = new_robots_ip
+        self.notify()
         self.write()
 
     def get_mode(self) -> str:

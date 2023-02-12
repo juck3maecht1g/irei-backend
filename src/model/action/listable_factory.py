@@ -7,6 +7,7 @@ from wait import Wait
 
 class ListableFactory:
 
+    @staticmethod
     def create_single_action(action: dict) -> None:
         if action["key"] == "close_gripper":
             return CloseGripper(action["robot_nrs"])
