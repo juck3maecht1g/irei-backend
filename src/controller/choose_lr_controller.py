@@ -81,18 +81,24 @@ class ChooseLRController:
     @app.route("/api/" + current_lab_marker, methods=['POST'])
     @staticmethod
     def set_current_lab():
-        data = request.get_json()
-        if data["marker"] == "setCurrentLab":
-   
+        try:
+            data = request.get_json()
+            if data["marker"] == "setCurrentLab":
+    
 
-            for lab in ChooseLRController.global_config_handler.get_labs():
-     
-                if lab.get_name() == data["name"]:
-                    ChooseLRController.current_lab = lab
+                for lab in ChooseLRController.global_config_handler.get_labs():
         
-                    return 'Done', 201
+                    if lab.get_name() == data["name"]:
+                        ChooseLRController.current_lab = lab
+            
+                        return 'Done', 201
 
-        return 'failed', 201
+            return 'marker missmatched', 201
+        except Exception as e:
+            return str(e)
+        
+
+
 
     robots_exp_marker = "getRobotsInExperiment"
 
@@ -114,7 +120,7 @@ class ChooseLRController:
     @app.route("/api/" + robots_gripper_marker)
     @staticmethod
     def get_robots_gripper():
-        data = ChooseLRController.experiment_config_handler.get_execute_gripper()
+        data = ChooseLRController.experiment_config_handler.get_switch_gripper_ip()
         to_return = []
         for robot in data:
             to_append = {"name": robot.get_name, "ip": robot.get_ip}
@@ -138,49 +144,56 @@ class ChooseLRController:
     @app.route("/api/" + setup_exp_marker, methods=['POST'])
     @staticmethod
     def setup_exp():
-        data = request.get_json()
-        if data["marker"] != "SetExperiment":
-            if ChooseLRController.setup_exp_from_name(data["experiment"]):
-                return "Done", 201
-        return 'failed', 201
+        try:
+            data = request.get_json()
+            if data["marker"] != "SetExperiment":
+                if ChooseLRController.setup_exp_from_name(data["experiment"]):
+                    return "Done", 201
+        except Exception as e:
+            return str(e)
 
     set_robots_exp_marker = "setRobotsExp"
 
     @app.route("/api/" + set_robots_exp_marker, methods=['POST'])
     @staticmethod
     def set_robots_exp():
-        data = request.get_json()
-  
-        if data["marker"] != "SetExpRobots":
-            return "F", 300
-        robots = []
-        for ip in data["robot_ips"]:
-            for robot in ChooseLRController.current_lab.get_robots():
-                if ip == robot.get_ip():
-                    robots.append(Robot(ip=ip, name=robot.get_name()))
-        ChooseLRController.experiment_config_handler.set_exp_robot(robots)
-        return 'Done', 201
+        try:
+            data = request.get_json()
+    
+            if data["marker"] != "SetExpRobots":
+                return "F", 300
+            robots = []
+            for ip in data["robot_ips"]:
+                for robot in ChooseLRController.current_lab.get_robots():
+                    if ip == robot.get_ip():
+                        robots.append(Robot(ip=ip, name=robot.get_name()))
+            ChooseLRController.experiment_config_handler.set_exp_robot(robots)
+            return 'Done', 201
+        except Exception as e:
+            return str(e)
+        
 
-        # todo error condition
+
 
     set_robots_gripper_marker = "setRobotsGripper"
 
     @app.route("/api/" + set_robots_gripper_marker, methods=['POST'])
     @staticmethod
     def set_robots_gripper():
-        data = request.get_json()
-        if data["marker"]!= "SetChangeGripperRobots":
-            return "F", 300
-        robots = []
-        for ip in data["robot_ips"]:
-            for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
-                if ip == robot.get_ip():
-                    robots.append(Robot(ip=ip, name=robot.get_name()))
-        ChooseLRController.experiment_config_handler.set_execute_gripper(
-            robots)
-        return 'Done', 201
-
-        # todo error condition
+        try:
+            data = request.get_json()
+            if data["marker"]!= "SetChangeGripperRobots":
+                return "F", 300
+            robots = []
+            for ip in data["robot_ips"]:
+                for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
+                    if ip == robot.get_ip():
+                        robots.append(ip) #Robot(ip=ip, name=robot.get_name()) for implementation with robots not strings
+            ChooseLRController.experiment_config_handler.set_switch_gripper_ip(
+                robots)
+            return 'Done', 201
+        except Exception as e:
+            return str(e)
 
     # sets the robot for save position
     set_save_pos_marker = "setSavePosition"
@@ -188,17 +201,18 @@ class ChooseLRController:
     @app.route("/api/" + set_save_pos_marker, methods=['POST'])
     @staticmethod
     def set_save_pos():
-        data = request.get_json()
-        if data["marker"] != "SetSavePositionRobots":
-            return "F", 300
-        for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
-            if data["robot_ip"] == robot.get_ip():
-                pos_robot = Robot(ip=data.robot_ip, name=robot.get_name())
-                ChooseLRController.experiment_config_handler.set_save_position_robot(
-                    pos_robot)
-                return 'Done', 201
-
-        return 'failed', 201
+        try:
+            data = request.get_json()
+            if data["marker"] != "SetSavePositionRobots":
+                return "F", 300
+            for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
+                if data["robot_ip"] == robot.get_ip():
+                    pos_robot = Robot(ip=data.robot_ip, name=robot.get_name())
+                    ChooseLRController.experiment_config_handler.set_save_position_robot(
+                        pos_robot)
+                    return 'Done', 201
+        except Exception as e:
+            return str(e)
 
 
     @app.route("/api/confirm_dir_coise", methods=['POST'])
@@ -208,9 +222,9 @@ class ChooseLRController:
             valid = False
             data = request.get_json()
             if data != "confirm_dir_coise":
-                return "failed", 300
-            """
-            lab_name = ChooseLRController.experiment_config_handler.get_lab_name()
+                return 'marker missmatched',201
+        
+            lab_name = ChooseLRController.experiment_config_handler.get_lab_()
             for lab in ChooseLRController.global_config_handler.get_labs():
                 if lab_name == lab.get_name:
                     ChooseLRController.current_lab = lab
@@ -218,7 +232,7 @@ class ChooseLRController:
 
             if not valid :
                 return "something is wrong with the chosen lab in this folder", 201
-            """
+     
             exp_name = ChooseLRController.experiment_config_handler.get_exp_interface()
             if ChooseLRController.setup_exp_from_name(exp_name):
                 return "Done", 201
