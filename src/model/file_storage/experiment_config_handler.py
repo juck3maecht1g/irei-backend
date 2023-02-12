@@ -15,6 +15,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         self.data = {
             "experiment interface": "max",
             "active actionlist": "action",
+            "lab": "labname dummy",
             "experiment robots": ["ex_ip1", "ex_ip2"],
             "mode": "test_mode",
             "save position ip": "save_ip",
@@ -107,7 +108,16 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     def set_active_actionlist(self, action_list: str) -> None:
         self.read()
         self.data["active actionlist"] = action_list
-        self.write()   
+        self.write() 
+
+    def get_lab(self) -> str:
+        self.read()
+        return self.data["lab"]
+
+    def set_lab(self, lab_name: str) -> None:
+        self.read()
+        self.data["lab"] = lab_name
+        self.write()  
 
     def get_exp_robots(self) -> list[str]:
         self.read()
