@@ -88,7 +88,7 @@ class ChooseLRController:
         
                     if lab.get_name() == data["name"]:
                         ChooseLRController.current_lab = lab
-            
+                        ChooseLRController.experiment_config_handler.set_lab(data["name"])
                         return 'Done', 201
 
             return 'marker missmatched', 201
