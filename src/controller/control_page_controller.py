@@ -11,6 +11,7 @@ from src.model.file_storage.experiment_config_handler import ExperimentConfigHan
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from src.model.file_storage.pc_data_handler import PcDataHandler
 from src.controller.choose_lr_controller import ChooseLRController
+from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from datetime import datetime
 
 
@@ -40,6 +41,10 @@ class ControlPageController:
     @staticmethod
     def set_action_list_handler(action_list_handler: ActionListHandler) -> None:
         ControlPageController.action_list_handler = action_list_handler
+
+    @staticmethod
+    def set_global_config_handler(global_config_handler: ActionListHandler) -> None:
+        ControlPageController.global_config_handler = global_config_handler
 
     @staticmethod
     def get_identifier() -> str:

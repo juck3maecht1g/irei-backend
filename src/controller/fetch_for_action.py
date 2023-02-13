@@ -3,25 +3,32 @@ from flask import request
 from src.model.action.action_list import ActionList
 from src.model.action.listable_action import ListableAction
 
+from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
+from src.model.file_storage.global_config_handler import GlobalConfigHandler
+from src.model.file_storage.action_list_handler import ActionListHandler
+from src.model.alr_interface import AlrInterface
+from src.model.action.action_list import ActionList
 
+#TODO open/close/switch gripper
 class FetchForAction:
 
-    action_list_handler = None
-    experiment_config_handler = None
-    current_action_list = None
-    alr_interface = None
+    action_list_handler: ActionListHandler
+    experiment_config_handler: ExperimentConfigHandler
+    alr_interface: AlrInterface
+
+    current_action_list: ActionList
 
     @staticmethod
-    def set_experiment_config_handler(given_action_list_handler):
-        FetchForAction.action_list_handler = given_action_list_handler
+    def set_experiment_config_handler(action_list_handler) -> None:
+        FetchForAction.action_list_handler = action_list_handler
 
     @staticmethod
     def set_action_list_handler(given_action_list_handler):
         FetchForAction.action_list_handler = given_action_list_handler
 
     @staticmethod
-    def set_alr_interface(given_alr_interface):
-        FetchForAction.alr_interface = given_alr_interface
+    def set_alr_interface(alr_interface) -> None:
+        FetchForAction.alr_interface = alr_interface
 
 
     @staticmethod
@@ -34,10 +41,11 @@ class FetchForAction:
     @staticmethod
     def get_action_lists():
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
-        action_lists: list[ActionList] = FetchForAction.action_list_handler.get_all_lists()
+        action_lists: list[ActionList] = FetchForAction.action_list_handler.get_lists()
         to_return = []
         for action_list in action_lists:
             action_dict = action_list.dictify_to_display(robot_list)
+            to_return.append(action_dict["name"])
             to_return.append(action_dict["name"])
         return to_return
     
@@ -178,17 +186,18 @@ class FetchForAction:
 
 
 
+    # need to test
     @app.route("/api/get_coordinates")
     @staticmethod
     def get_coordinates():
      
         type = FetchForAction.experiment_config_handler.get_coordinate_type()
         to_return = list[dict]
-        positions = FetchForAction.experiment_config_handler.get_positions()
+        positions = FetchForAction.experiment_config_handler.get_vars()
         for position in positions:
             coordinate = dict()
             coordinate["name"] = position.get_name()
-            coordinate["coordinate"] = position.get_coordinate(type)
+            coordinate["coordinate"] = position.get_coordinate()
             to_return.append(coordinate)
         return to_return
        
