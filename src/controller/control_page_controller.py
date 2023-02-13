@@ -152,22 +152,26 @@ class ControlPageController:
     @app.route("/api/" + marker_save_position, methods=['POST'])
     @staticmethod
     def post_save_position() -> Tuple[str, int]:
-        try:
+        #try:
             data = request.get_json()
 
             if data["marker"] == ControlPageController.marker_save_position:
                 result = ControlPageController.exp_config_handler.get_position_ip()
-                robot = ChooseLRController.get_robots_from_ip(list(result))
+                robots = ChooseLRController.get_robots_from_ip([result])
                 robot_dict = dict()
-                robot_dict["name": robot[0].get_name(), "ip":robot[0].get_ip()]
+                robot = robots[0]
+                print("\n\n"), print(ControlPageController.exp_config_handler.get_position_ip())
+                robot_dict["name"]= robot.get_name()
+                robot_dict["ip"]= robot.get_ip()
+             
                 position = ControlPageController.alr_interface.save_posiiton(
                     result, data["name"])
                 ControlPageController.exp_config_handler.set_var(position)
                 return "Done", 201
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
-            return str(e)
+        #except Exception as e:
+            #return str(e)
         
 
 

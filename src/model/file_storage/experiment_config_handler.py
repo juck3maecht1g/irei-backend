@@ -144,7 +144,8 @@ class ExperimentConfigHandler(YamlFile, PathObserver, RobotSubject):
 
     def get_position_ip(self) -> str:
         self.read()
-        return self.data["save position robot"]
+        print("\n\n"), print(self.data["save position ip"])
+        return self.data["save position ip"]
 
     def set_position_ip(self, ip: str) -> None:
         self.read()

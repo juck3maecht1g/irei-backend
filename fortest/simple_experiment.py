@@ -3,6 +3,7 @@
 from src.controller.irei import initialize, register_experiment
 import enum
 import threading
+#import multiprocessing
 import time
 from typing import Dict
 from alr_sim.sims import SimFactory
@@ -18,7 +19,7 @@ class SimpleExp(threading.Thread):
 
     def __init__(self, robots: list[dict]):
         # Start Threading stuff
-        #super(TestClass, self).__init__()
+        super().__init__()
 
         factory = SimFactory.SimRepository.get_factory("pybullet")
         self.scene = factory.create_scene()
@@ -30,10 +31,14 @@ class SimpleExp(threading.Thread):
 
         self.scene.start()
 
+        print()
+        print()
+        print("after start")
+
         self.selected_mode = None
         self.stop_all = False
         self.flipper = 1
-        self.start()
+        #self.start()
 
 
 
@@ -64,6 +69,7 @@ class SimpleExp(threading.Thread):
                 target, [0, 1, 0, 0], global_coord=False, block=True
             )
             self.flipper *= -1
+            time.sleep(1)
 
     @staticmethod
     def get_name():
@@ -215,8 +221,8 @@ class SimpleExp(threading.Thread):
 
 
 if __name__ == "__main__":
-    register_experiment(SimpleExp) 
-    initialize()
+    # register_experiment(SimpleExp) 
+    # initialize()
     exp = SimpleExp([{"name": "test"}, {"name": "test2"}])
    
   

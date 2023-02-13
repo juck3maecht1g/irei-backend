@@ -55,13 +55,18 @@ def initialize() -> None:
 
 @staticmethod
 def setup_experiment(experiment, robots) -> None:
+    robots = [{"name": "test"}, {"name": "test2"}]
+    print()
+    print(experiment)
+    print(robots)
     #exp = experiment(robots)
     print("\n\n\n\nirei setup")
-    exp = experiment
-    alr_interface = AlrInterface(exp)
+    #exp = experiment
+    #exp.start()
+    alr_interface = AlrInterface("pls kill meeeee")
     ControlPageController.set_alr_interface(alr_interface)
     FetchForAction.set_alr_interface(alr_interface)
-    #alr_interface.run_exp()
+    alr_interface.run_exp()
 
 
 @staticmethod

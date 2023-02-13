@@ -27,7 +27,7 @@ class ChooseLRController:
     @staticmethod
     def get_robots_from_ip(ips: list[str]):
             all_robots = ChooseLRController.current_lab.get_robots()
-            robots = [Robot]
+            robots = []
             for ip in ips:
                 for robot in all_robots:
                     if ip == robot.get_ip():
@@ -182,7 +182,7 @@ class ChooseLRController:
                 if name == experiment.get_name():
 
                     robots = ChooseLRController.get_robots_exp()
-                    #setup_experiment(experiment, robots)
+                    setup_experiment(experiment, robots)
                     return "Done"
        
         except Exception as e:
