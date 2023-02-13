@@ -9,6 +9,7 @@ from src.model.alr_interface import AlrInterface
 from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
 from src.model.file_storage.pc_data_handler import PcDataHandler
+from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from datetime import datetime
 
 
@@ -17,6 +18,7 @@ class ControlPageController:
     alr_interface: AlrInterface
     action_list_handler: ActionListHandler
     exp_config_handler: ExperimentConfigHandler
+    global_config_handler: GlobalConfigHandler
 
     @staticmethod
     def set_pc_data_handler(data_handler: PcDataHandler) -> None:
@@ -33,6 +35,10 @@ class ControlPageController:
     @staticmethod
     def set_action_list_handler(action_list_handler: ActionListHandler) -> None:
         ControlPageController.action_list_handler = action_list_handler
+
+    @staticmethod
+    def set_global_config_handler(global_config_handler: ActionListHandler) -> None:
+        ControlPageController.global_config_handler = global_config_handler
 
     @staticmethod
     def get_identifier() -> str:
@@ -99,10 +105,10 @@ class ControlPageController:
     def post_change_gripper_state() -> Tuple[str, int]:
         data = request.get_json()
         if data == ControlPageController.marker_change_gripper_state:
-            robots = ControlPageController.exp_config_handler.get_execute_gripper()
-            ips: list[str] = []
-            for robot in robots:
-                ips.append(robot.get_ip())
+            robot_ips = ControlPageController.exp_config_handler.get_execute_gripper()
+            ips = []
+            for ip in robot_ips:
+                ips.append(ip)
             ControlPageController.alr_interface.change_gripper_state(ips)
             return 'Done', 201
         else:
@@ -116,9 +122,9 @@ class ControlPageController:
         data = request.get_json()
 
         if data["marker"] == ControlPageController.marker_save_position:
-            result = ControlPageController.exp_config_handler.get_save_position_robot()
+            ip = ControlPageController.exp_config_handler.get_save_position_robot()
             position = ControlPageController.alr_interface.save_posiiton(
-                result.get_ip(), data["name"])
+                ip, data["name"])
             ControlPageController.exp_config_handler.set_var(position)
             return "Done", 201
         else:
@@ -131,7 +137,12 @@ class ControlPageController:
     def post_cycle_modes() -> Tuple[str, int]:
         data = request.get_json()
         if data == ControlPageController.marker_cycle_modes:
-            ControlPageController.exp_config_handler.next_mode()  # display in frontend
+            current = ControlPageController.exp_config_handler.get_mode()  # display in frontend
+            modes = ControlPageController.global_config_handler.get_all_modes()
+            for i, mode in enumerate(modes):
+                if mode == current:
+                    ControlPageController.exp_config_handler.set_mode(modes[(i + 1) % len(modes)])
+
             return 'Done', 201
         else:
             return 'failed', 201
