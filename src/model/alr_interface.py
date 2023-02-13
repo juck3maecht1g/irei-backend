@@ -7,23 +7,23 @@ class AlrInterface:
 
     def __init__(self, active_experiment):
         self.active_experiment = active_experiment
-        #self.active_experiment = active_experiment
+ 
 
     def start_log(self):
-        # self.active_experiment.start_log()
+        self.active_experiment.start_log()
         print("start")
 
     def cancel_log(self):
-        # self.active_experiment.cancel_log()
+        self.active_experiment.cancel_log()
         print("logging canceled")
 
-    def stop_log():
-        # self.active_experiment.stop_log()
+    def stop_log(self):
+        self.active_experiment.stop_log()
         print("stop")
         return {"log1": "234715623478568127"}  # to be deleted
 
     def reset_scene(self):
-        # self.active_experiment.reset()
+        self.active_experiment.reset()
         print("scene reset")
 
     # maby delete those methods
@@ -38,6 +38,7 @@ class AlrInterface:
         self.active_experiment.close_gripper(robot)
 
     # depending on how coordinates are served
+    
     def approach_position(self, robot, position, is_cartesian):
         if is_cartesian:
             self.active_experiment.approach_cartesian(
@@ -84,5 +85,5 @@ class AlrInterface:
         
 
     def run_exp(self):
-        print( self.active_exp.run())
+        print( self.active_experiment.run())
         

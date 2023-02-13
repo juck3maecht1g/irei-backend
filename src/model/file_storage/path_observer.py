@@ -4,5 +4,5 @@ from abc import ABC, abstractmethod
 class PathObserver(ABC):
 
     @abstractmethod
-    def update(self, path):
+    def update_path(self, path):
         pass

@@ -22,9 +22,18 @@ from src.model.communication.physical.robot import Robot
 from src.model.communication.position.joint import Joint
 from src.model.communication.position.cartesian import Cartesian
 from src.model.communication.position.variable import Variable
+from src.root_dir import root_path
 
-import pytest
+from src.controller.irei import *
+class TestClass:
+    def __init__():
+        pass
+    
+register_experiment(TestClass)
+setup_experiment("experiment")
+initialize(root_path)
 
+"""
 robots = [Robot("q", "a"), Robot("1", "2")]
 
 var_dict = ({"name": "var1", "joint": {"values": [1, 0, 0, 0, 0, 0, 0]}, "used space": "joint", "cartesian": {

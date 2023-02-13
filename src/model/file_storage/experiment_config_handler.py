@@ -2,24 +2,27 @@ from src.model.communication.physical.robot import Robot
 from src.model.communication.position.variable import Variable
 from src.model.file_storage.yaml_file import YamlFile
 from src.model.file_storage.path_observer import PathObserver
+from src.model.file_storage.robot_subject import RobotSubject
 
 import os
 
 # todo Observer
 
 
-class ExperimentConfigHandler(YamlFile, PathObserver):
+class ExperimentConfigHandler(YamlFile, PathObserver, RobotSubject):
 
-    def __init__(self, file_name: str, path: str, root: str):
+    def __init__(self, root: str):
         
-        self.data = dict({
+        self.data = {
             "experiment interface": "max",
             "active actionlist": "action",
-            "experiment robots": {
-                "robot 1": "ip1",
-                "robot 2": "ip2",
-                "robot 3": "ip3"},
-
+            "lab": "labname dummy",
+            "experiment robots": ["ex_ip1", "ex_ip2"],
+            "mode": "test_mode",
+            "save position ip": "save_ip",
+            "open gripper ips": ["open_ip", "open_ip1"],
+            "close gripper ips": ["close_ip"],
+            "switch gripper ips": ["switch_ip"],
             "variables": {
                 "example_name1": {
                     "used space": "joint",
@@ -32,19 +35,19 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
                     }
                 }
             }
-        })
-        #self.data = dict({})
-        super().__init__(path, file_name, self.data)
+        }
+        
+        super().__init__(root, "experiment_config", self.data)
         self.root = root
         
 
-    def update(self, path):
+    def update_path(self, path):
         self.path = path
 
+    #todo copy for sub?
     def create(self):
         if not (self.path == self.root):
 
-            # if(self.root == os.path.dirname(self.path)):
             if not (self.file_name in os.listdir(self.path)):
                 self.write()
 
@@ -55,29 +58,12 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
                 self.__write_config()
             """
 
-    def get_exp_interface(self) -> str:
-        return super().read()["experiment interface"]
-
-    def get_active_actionlist(self) -> str:
-        return super().read()["active actionlist"]
-
-    def get_exp_robots(self) -> list[Robot]:
-        all_robs = super().read()["experiment robots"]
-        out = []
-        for rob_data in all_robs:
-            out.append(Robot(rob_data["name"], rob_data["ip"]))
-
-        return out
+    
 
     # todo
     # method overwrites old var if they have the same name
     def set_var(self, var: Variable) -> bool:
-        #print("\n\n")
-        #print("data")
-        #print(super().read()["variables"])
         super().read()["variables"].update({var.get_name(): var.to_dict()[var.get_name()]})
-        #print("\n\n")
-        #print(super().read()["variables"])
         self.write()
 
         return True
@@ -104,15 +90,90 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         return out
 
     def __get_file_vars(self):
+        self.read()
         return super().read()["variables"]
 
-    #TODO implement these below
+    def get_exp_interface(self) -> str:
+        self.read()
+        return self.data["experiment interface"]
 
-    def get_save_position_robot(self) -> Robot:
-        return Robot("dummy", "stupid ip")
+    def set_exp_interface(self, exp_interface: str) -> None:
+        self.read()
+        self.data["experiment interface"] = exp_interface
+        self.write()    
+
+    def get_active_actionlist(self) -> str:
+        self.read()
+        return self.data["active actionlist"]
+
+    def set_active_actionlist(self, action_list: str) -> None:
+        self.read()
+        self.data["active actionlist"] = action_list
+        self.write() 
+
+    def get_lab(self) -> str:
+        self.read()
+        return self.data["lab"]
+
+    def set_lab(self, lab_name: str) -> None:
+        self.read()
+        self.data["lab"] = lab_name
+        self.write()  
+
+    def get_exp_robots(self) -> list[str]:
+        self.read()
+        return self.data["experiment robots"]
+
+    def set_exp_robot(self, robots: list[Robot]) -> None:
+        self.read()
+        new_robots_ip = []
+        for robot in robots:
+            new_robots_ip.append(robot.get_ip())
+        self.data["experiment robots"] = new_robots_ip
+        self.notify()
+        self.write()
 
     def get_mode(self) -> str:
-        return "dummy mode"
+        self.read()
+        return self.data["mode"]
+    
+    def set_mode(self, mode: str) -> None:
+        self.read()
+        self.data["mode"] = mode
+        self.write()
 
-    def next_mode(self) -> None:
-        return
+    def get_position_ip(self) -> str:
+        self.read()
+        return self.data["save position robot"]
+
+    def set_position_ip(self, ip: str) -> None:
+        self.read()
+        self.data["save position ip"] = ip
+        self.write()
+
+    def get_open_gripper_ip(self) -> list[str]:
+        self.read()
+        return self.data["open gripper ips"]
+
+    def set_open_gripper_ip(self, ip: list[str]) -> None:
+        self.read()
+        self.data["open gripper ips"] = ip
+        self.write()
+
+    def get_close_gripper_ip(self) -> list[str]:
+        self.read()
+        return self.data["close gripper ips"]
+
+    def set_close_gripper_ip(self, ip: list[str]) -> None:
+        self.read()
+        self.data["close gripper ips"] = ip
+        self.write()
+
+    def get_switch_gripper_ip(self) -> list[str]:
+        self.read()
+        return self.data["switch gripper ips"]
+
+    def set_switch_gripper_ip(self, ip: list[str]) -> None:
+        self.read()
+        self.data["switch gripper ips"] = ip
+        self.write()

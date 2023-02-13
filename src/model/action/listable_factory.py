@@ -1,12 +1,14 @@
+
+from src.model.action.src.model.action.src.model.action.custom_action import CustomAction
+from src.model.action.src.model.action.move_to_position import MoveToPosition
+from src.model.action.src.model.action.open_gripper import OpenGripper
 from src.model.action.close_gripper import CloseGripper
-from src.model.action.custom_action import CustomAction
-from src.model.action.move_to_position import MoveToPosition
-from src.model.action.open_gripper import OpenGripper
-from src.model.action.wait import Wait
+from src.model.action.src.model.action.wait import Wait
 
 
 class ListableFactory:
     
+    @staticmethod
     @staticmethod
     def create_single_action(action: dict) -> None:
         if action["key"] == "close_gripper":

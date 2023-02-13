@@ -12,4 +12,4 @@ class PathSubject():
 
     def notify(self, path: str) -> None:
         for observer in self._observers:
-            observer.update(path)
+            observer.update_path(path)
