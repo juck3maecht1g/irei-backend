@@ -1,8 +1,9 @@
-from close_gripper import CloseGripper
-from custom_action import CustomAction
-from move_to_position import MoveToPosition
-from open_gripper import OpenGripper
-from wait import Wait
+
+from src.model.action.custom_action import CustomAction
+from src.model.action.move_to_position import MoveToPosition
+from src.model.action.open_gripper import OpenGripper
+from src.model.action.close_gripper import CloseGripper
+from src.model.action.wait import Wait
 
 
 class ListableFactory:

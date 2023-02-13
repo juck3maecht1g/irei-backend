@@ -29,7 +29,7 @@ def _build_data_structure(pc_data: PcDataHandler, global_config: GlobalConfigHan
 @staticmethod
 def initialize() -> None:
     pc_data_handler = PcDataHandler(root_path)
-    action_list_handler = ActionListHandler()
+    action_list_handler = ActionListHandler(root_path)
     exp_config_handler = ExperimentConfigHandler(root_path)
     global_config_handler = GlobalConfigHandler(root_path)
     #pc_data_handler.attach(action_list_handler)
@@ -54,11 +54,9 @@ def initialize() -> None:
 
 @staticmethod
 def setup_experiment(experiment, robots) -> None:
-    print("\n\n0")
     exp = experiment(robots)
-    print("\n\n1")
+    print("\n\n\n\nirei setup")
     alr_interface = AlrInterface(exp)
-    print("\n\n2")
     ControlPageController.set_alr_interface(alr_interface)
     FetchForAction.set_alr_interface(alr_interface)
     alr_interface.run_exp()
@@ -72,4 +70,5 @@ def register_experiment(experiment) -> None:
 
 @staticmethod
 def get_registered_experiments() -> list:
+
     return _registered_experiments

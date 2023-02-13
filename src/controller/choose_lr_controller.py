@@ -25,18 +25,16 @@ class ChooseLRController:
 
 
     @staticmethod
-    def setup_exp_from_name(name):
-        from src.controller.irei import get_registered_experiments, setup_experiment
+    def get_robots_from_ip(ips: list[str]):
+            all_robots = ChooseLRController.current_lab.get_robots()
+            robots = [Robot]
+            for ip in ips:
+                for robot in all_robots:
+                    if ip == robot.get_ip():
+                        robots.append(robot)
+            return robots
 
-        for experiment in get_registered_experiments():
-            if name == experiment.get_name():
-                robots = ChooseLRController.get_robots_exp()
-                
-                setup_experiment(experiment, robots)
-                active_experiment = True
-                return True
-        return False
-
+   
 
 
 
@@ -120,9 +118,8 @@ class ChooseLRController:
     @app.route("/api/" + robots_gripper_marker)
     @staticmethod
     def get_robots_gripper():
-        data = ChooseLRController.experiment_config_handler.get_switch_gripper_ip()
         to_return = []
-        for robot in data:
+        for robot in ChooseLRController.get_robots_from_ip(ChooseLRController.experiment_config_handler.get_switch_gripper_ip()):
             to_append = {"name": robot.get_name, "ip": robot.get_ip}
             to_return.append(to_append)
         return to_return
@@ -139,18 +136,7 @@ class ChooseLRController:
             to_return.append(exp.get_name())
         return to_return
 
-    setup_exp_marker = "setup_exp"
 
-    @app.route("/api/" + setup_exp_marker, methods=['POST'])
-    @staticmethod
-    def setup_exp():
-        try:
-            data = request.get_json()
-            if data["marker"] != "SetExperiment":
-                if ChooseLRController.setup_exp_from_name(data["experiment"]):
-                    return "Done", 201
-        except Exception as e:
-            return str(e)
 
     set_robots_exp_marker = "setRobotsExp"
 
@@ -160,8 +146,8 @@ class ChooseLRController:
         try:
             data = request.get_json()
     
-            if data["marker"] != "SetExpRobots":
-                return "F", 300
+            if data["marker"] != "setExpRobots":
+                return data["marker"], 201
             robots = []
             for ip in data["robot_ips"]:
                 for robot in ChooseLRController.current_lab.get_robots():
@@ -171,6 +157,81 @@ class ChooseLRController:
             return 'Done', 201
         except Exception as e:
             return str(e)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @staticmethod
+    def setup_exp_from_name(name):
+        from src.controller.irei import get_registered_experiments, setup_experiment
+        print("\n\ntest")
+        test = get_registered_experiments()
+        try:   
+            for experiment in test:
+                print("\n\n"+ experiment.get_name())
+                if name == experiment.get_name():
+
+                    robots = ChooseLRController.get_robots_exp()
+                    #setup_experiment(experiment, robots)
+                    return "Done"
+       
+        except Exception as e:
+            
+            return str(e)
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    setup_exp_marker = "setup_exp"
+
+    @app.route("/api/" + setup_exp_marker, methods=['POST'])
+    @staticmethod
+    def setup_exp():
+        try:
+            data = request.get_json() 
+            print("\n\n" +data["marker"])
+            if data["marker"] == "SetExperiment":
+                text = ChooseLRController.setup_exp_from_name(data["experiment"])
+                if text == "Done":
+                    ChooseLRController.experiment_config_handler.set_exp_interface(data["experiment"])
+                    return "Done", 201
+                else :
+                    return "could not set up experiment", 201
+            else :
+                return 'marker missmatched', 201   
+        except Exception as e:
+           
+            return str(e)
+
+   
         
 
 
@@ -186,7 +247,7 @@ class ChooseLRController:
                 return "F", 300
             robots = []
             for ip in data["robot_ips"]:
-                for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
+                  for robot in ChooseLRController.get_robots_from_ip(ChooseLRController.experiment_config_handler.get_exp_robots()):
                     if ip == robot.get_ip():
                         robots.append(ip) #Robot(ip=ip, name=robot.get_name()) for implementation with robots not strings
             ChooseLRController.experiment_config_handler.set_switch_gripper_ip(
@@ -205,11 +266,11 @@ class ChooseLRController:
             data = request.get_json()
             if data["marker"] != "SetSavePositionRobots":
                 return "F", 300
-            for robot in ChooseLRController.experiment_config_handler.get_exp_robots():
+            for robot in ChooseLRController.get_robots_from_ip(ChooseLRController.experiment_config_handler.get_exp_robots()):
                 if data["robot_ip"] == robot.get_ip():
                     pos_robot = Robot(ip=data.robot_ip, name=robot.get_name())
-                    ChooseLRController.experiment_config_handler.set_save_position_robot(
-                        pos_robot)
+                    ChooseLRController.experiment_config_handler.set_position_ip(
+                       pos_robot.get_ip())
                     return 'Done', 201
         except Exception as e:
             return str(e)
@@ -218,15 +279,17 @@ class ChooseLRController:
     @app.route("/api/confirm_dir_coise", methods=['POST'])
     @staticmethod
     def confirm_dir_coise():
-        try :
+        #try :
             valid = False
             data = request.get_json()
             if data != "confirm_dir_coise":
                 return 'marker missmatched',201
         
-            lab_name = ChooseLRController.experiment_config_handler.get_lab_()
+            lab_name = ChooseLRController.experiment_config_handler.get_lab()
             for lab in ChooseLRController.global_config_handler.get_labs():
-                if lab_name == lab.get_name:
+               
+                if lab_name == lab.get_name():
+                    
                     ChooseLRController.current_lab = lab
                     valid = True
 
@@ -234,12 +297,13 @@ class ChooseLRController:
                 return "something is wrong with the chosen lab in this folder", 201
      
             exp_name = ChooseLRController.experiment_config_handler.get_exp_interface()
+            print("\n\n"+ exp_name)
             if ChooseLRController.setup_exp_from_name(exp_name):
                 return "Done", 201
             else :
                 ChooseLRController.active_experiment = False
-            return "the experiment registered in this folder could not be run", 201
-        except Exception as e:
+                return "the experiment registered in this folder could not be run", 201
+        #except Exception as e:
             return str(e)
 
 
@@ -256,3 +320,7 @@ class ChooseLRController:
         else:
             return "false"
   
+
+
+
+   

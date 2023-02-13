@@ -10,6 +10,7 @@ from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from src.model.file_storage.pc_data_handler import PcDataHandler
+from src.controller.choose_lr_controller import ChooseLRController
 from datetime import datetime
 
 
@@ -126,10 +127,10 @@ class ControlPageController:
         try:
             data = request.get_json()
             if data == ControlPageController.marker_change_gripper_state:
-                robots = ControlPageController.exp_config_handler.get_execute_gripper()
+                robots = ControlPageController.exp_config_handler.get_switch_gripper_ip()
                 ips: list[str] = []
-                for robot in robots:
-                    ips.append(robot.get_ip())
+                for robot in robots: #used if shdssdhdfsrdftzhgfklhjklödfghl
+                    ips.append(robot)
                 ControlPageController.alr_interface.change_gripper_state(ips)
                 return 'Done', 201
             else:
@@ -150,9 +151,12 @@ class ControlPageController:
             data = request.get_json()
 
             if data["marker"] == ControlPageController.marker_save_position:
-                result = ControlPageController.exp_config_handler.get_save_position_robot()
+                result = ControlPageController.exp_config_handler.get_position_ip()
+                robot = ChooseLRController.get_robots_from_ip(list(result))
+                robot_dict = dict()
+                robot_dict["name": robot[0].get_name(), "ip":robot[0].get_ip()]
                 position = ControlPageController.alr_interface.save_posiiton(
-                    result.get_ip(), data["name"])
+                    result, data["name"])
                 ControlPageController.exp_config_handler.set_var(position)
                 return "Done", 201
             else:
@@ -177,8 +181,12 @@ class ControlPageController:
                 for mode in modes:
                     if modes[place_of_mode] == current_mode:
                         if place_of_mode < (len(modes) - 1):
+                          
+                            ControlPageController.alr_interface.set_mode(mode[place_of_mode + 1]) 
                             ControlPageController.exp_config_handler.set_mode(modes[place_of_mode + 1])
                         else : 
+                              
+                                ControlPageController.alr_interface.set_mode(mode[0])
                                 ControlPageController.exp_config_handler.set_mode(modes[0])
                     else :
                         place_of_mode = place_of_mode + 1

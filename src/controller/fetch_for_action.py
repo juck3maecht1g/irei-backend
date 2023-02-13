@@ -98,15 +98,9 @@ class FetchForAction:
         try:
             data = request.get_json()
             if data["marker"] == "delete_action":
-                temp_list =  FetchForAction.current_action_list.get_content()
-                location = data["position"]
-                for x in range(len(location) - 1):
-                    temp_list = temp_list[x].get_cpntent()
-                FetchForAction.action_list_handler.delete_action(temp_list, location[len(location) - 1])
-                """
-                todo interne liste actualisieren
-                """
-                return 'Done', 201
+                FetchForAction.action_list_handler.delete_action(FetchForAction.current_action_list, data["position"])
+                FetchForAction.current_action_list.delete_action(data["position"])
+            return 'Done', 201
         except Exception as e:
             return str(e)
     

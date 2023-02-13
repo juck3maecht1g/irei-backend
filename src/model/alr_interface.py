@@ -85,5 +85,5 @@ class AlrInterface:
         
 
     def run_exp(self):
-        print( self.active_exp.run())
+        print( self.active_experiment.run())
         
