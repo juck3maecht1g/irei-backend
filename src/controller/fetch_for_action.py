@@ -16,8 +16,8 @@ class FetchForAction:
         FetchForAction.action_list_handler = given_action_list_handler
 
     @staticmethod
-    def set_experiment_config_handler(given_experiment_config_handler):
-        FetchForAction.experiment_config_handler = given_experiment_config_handler
+    def set_action_list_handler(given_action_list_handler):
+        FetchForAction.action_list_handler = given_action_list_handler
 
     @staticmethod
     def set_alr_interface(given_alr_interface):
@@ -149,7 +149,7 @@ class FetchForAction:
         try:
             data = request.get_json()
             if data["marker"] == "execute_action_list":
-                for action_list in FetchForAction.action_list_handler.get_all_lists():
+                for action_list in FetchForAction.action_list_handler.get_lists():
                     if action_list.get_name() == data["name"]:
                         robots = FetchForAction.experiment_config_handler.get_exp_robots()
                         to_execute = action_list.dictify(robots)

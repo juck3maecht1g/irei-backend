@@ -32,7 +32,7 @@ def initialize() -> None:
     action_list_handler = ActionListHandler(root_path)
     exp_config_handler = ExperimentConfigHandler(root_path)
     global_config_handler = GlobalConfigHandler(root_path)
-    #pc_data_handler.attach(action_list_handler)
+    pc_data_handler.attach(action_list_handler)
     pc_data_handler.attach(exp_config_handler)
 
     _build_data_structure(pc_data_handler, global_config_handler, exp_config_handler)
@@ -46,6 +46,7 @@ def initialize() -> None:
     ControlPageController.set_action_list_handler(action_list_handler)
     ControlPageController.set_glob_config_handler(global_config_handler)
     FetchForAction.set_experiment_config_handler(exp_config_handler)
+    FetchForAction.set_action_list_handler(action_list_handler)
     FilePathManager.set_exp_config_handler(exp_config_handler)
     FilePathManager.set_pc_data_handler(pc_data_handler)
     app.run(debug=True, port=5000)
