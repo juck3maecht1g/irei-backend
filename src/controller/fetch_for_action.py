@@ -57,7 +57,7 @@ class FetchForAction:
         try:
             data = request.get_json()
             
-            for action_list in FetchForAction.action_list_handler.get_all_lists():
+            for action_list in FetchForAction.action_list_handler.get_lists():
                 if action_list.get_name() == data:
                     FetchForAction.current_action_list = action_list
                 return 'Done', 201
@@ -203,7 +203,7 @@ class FetchForAction:
         return to_return
        
 
-    
+    #todo
     def get_mapping_list_part(table: dict()):
         to_return = []
         for elem in table["mapping"]:
@@ -242,6 +242,10 @@ class FetchForAction:
             if not list["mapping"][pos]["type"] == "list":
                 list["mapping"][pos]["robot"] = robots[robots_index]
                 robots_index =+ 1
+
+
+
+
         FetchForAction.experiment_config_handler.set_mapping_table(FetchForAction.current_action_list, total)   
 
 

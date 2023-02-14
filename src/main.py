@@ -47,27 +47,25 @@ al2 = ActionList("second_list", "parallel")
 w = Wait([1], time)
 #mp = MoveToPosition([1], pos, "joint")
 ca = CustomAction([1], "stupid action")
-al2.add_action(og1)
+b = CustomAction([0], "stupid action")
+c = CustomAction([2], "stupid action")
+al2.add_action(b)
 al2.add_action(w)
 al1.add_action(ca)
-al1.add_action(ca)
+al1.add_action(b)
 al1.add_action(al2)
 al1.add_action(ca)
+al1.add_action(c)
 
 def tree(action_list: ActionList):
-    to_return = dict()
-    to_return["type"] = "list"
-    to_return["name"] = action_list.name
-    to_return["mapping"] = []
+    to_return = []
     for c in range(0, len(action_list.get_content())):
         if not isinstance(action_list.get_content()[c], ActionList):
-            temp = dict()
-            temp["type"] = "action"
-            temp["name"] = action_list.get_content()[c].key
-            temp["robot"] = c
-            to_return["mapping"].append(temp)
+           if not action_list.get_content()[c].robot_nrs in to_return:
+            to_return.append(action_list.get_content()[c].robot_nrs)
+
         else: 
-            to_return["mapping"].append(tree(action_list.get_content()[c]))
+            to_return.append(tree(action_list.get_content()[c]))
     return to_return
 
 print(tree(al1))
@@ -75,18 +73,6 @@ print(tree(al1))
 
 
 
-def detree(action_list: ActionList, mapping,):
-    to_return = []
-    lookup = mapping["mapping"]
-    for c in range(0, len(action_list.get_content())):
-        if not isinstance(action_list.get_content()[c], ActionList):
-           to_return.append(lookup[c]["robot"])  #action_list.get_content()[c].dictify(mapping["mapping"][c]["robot"]) auskommentiert weil sonst robotter mappen nötig
-        else: 
-            to_return.append(detree(action_list.get_content()[c], lookup[c]))
-            
-    return to_return
-
-print(detree(al1, tree(al1)))
 """
 print(cg1.dictify_to_display(robots))
 print(og1.dictify_to_display(robots))
