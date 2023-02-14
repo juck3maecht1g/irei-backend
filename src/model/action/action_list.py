@@ -27,13 +27,15 @@ class ActionList(Action):
     def get_content(self) -> list[Action]:
         return self.content
 
-    def dictify(self, robots: list[Robot]) -> dict:
+    def dictify(self, robots: list[list[Robot]]) -> dict:
         to_return = dict()
         to_return["key"] = self.key
         to_return["name"] = self.name
         content: list[Action] = []
+        robot_counter = 0
         for action in self.content:
-            content.append(action.dictify(robots))
+            content.append(action.dictify(robots[robot_counter]))
+            robot_counter = robot_counter + 1
 
         to_return["content"] = content
         return to_return

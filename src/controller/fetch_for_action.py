@@ -1,5 +1,6 @@
 from src.controller.__init__ import app
 from flask import request
+from src.controller.choose_lr_controller import ChooseLRController
 from src.model.action.action_list import ActionList
 from src.model.action.listable_action import ListableAction
 
@@ -15,7 +16,7 @@ class FetchForAction:
     action_list_handler: ActionListHandler
     experiment_config_handler: ExperimentConfigHandler
     alr_interface: AlrInterface
-
+    current_mapping_pos= []
     current_action_list: ActionList
 
     @staticmethod
@@ -200,4 +201,57 @@ class FetchForAction:
             coordinate["coordinate"] = position.get_coordinate()
             to_return.append(coordinate)
         return to_return
+       
+
+    
+    def get_mapping_list_part(table: dict()):
+        to_return = []
+        for elem in table["mapping"]:
+            if elem["type"] == "action":
+                to_return.append(elem)
+        return to_return
+
+
+    # need to test
+    @app.route("/api/get_mapping_table")
+    @staticmethod
+    def get_mapping_table():
+        total_table = FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
+        if FetchForAction.current_mapping_pos[0] == -1:
+            return FetchForAction.get_mapping_list_part(total_table)
+        else:
+            temp = total_table
+            for x in FetchForAction.current_mapping_pos:
+                temp = temp [x]
+            return  FetchForAction.get_mapping_list_part(temp)
+       
+
+
+
+    @app.route("/api/set_mapping_in_table", methods=['POST'])
+    @staticmethod
+    def get_mapping_table():
+        total= FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
+        list = total
+        data = request.get_json()
+        for x in FetchForAction.current_mapping_pos:
+                list = list [x]
+        robots = ChooseLRController.get_robots_from_ip(data["ip"])
+        robots_index = 0
+        for pos in range(0, len(list["mapping"])):
+            if not list["mapping"][pos]["type"] == "list":
+                list["mapping"][pos]["robot"] = robots[robots_index]
+                robots_index =+ 1
+        FetchForAction.experiment_config_handler.set_mapping_table(FetchForAction.current_action_list, total)   
+
+
+
+        return "Done", 201
+       
+    @app.route("/api/set_mapping_pos", methods=['POST'])
+    @staticmethod
+    def set_mapping_pos():
+        data = request.get_json()
+        FetchForAction.current_mapping_pos = data["position"]
+        return "Done", 201
        
