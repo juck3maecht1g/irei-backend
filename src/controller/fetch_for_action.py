@@ -17,7 +17,7 @@ class FetchForAction:
     experiment_config_handler: ExperimentConfigHandler
     alr_interface: AlrInterface
     current_mapping_pos= []
-    current_action_list: ActionList
+    current_list_name = ""
 
     @staticmethod
     def set_experiment_config_handler(action_list_handler) -> None:
@@ -37,20 +37,25 @@ class FetchForAction:
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         action_dict = action.map_dictify(robot_list)
         return action_dict
+    
 
-    @app.route("/api/get-action_lists") # gets name of all action lists
+    # """
+    # this method returns the names of all action lists as string list
+    # and displays it to the frontens
+    # """
+    @app.route("/api/get-action_lists")
     @staticmethod
     def get_action_lists():
-        robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
         action_lists: list[ActionList] = FetchForAction.action_list_handler.get_lists()
         to_return = []
         for action_list in action_lists:
-            action_dict = action_list.dictify_to_display(robot_list)
-            to_return.append(action_dict["name"])
-            to_return.append(action_dict["name"])
+            to_return.append(action_list.name)
+       
         return to_return
     
 
+
+    #this method takes a sting from the route and sets it as name of the currently aktive action list
     @app.route("/api/set_action_list", methods=['POST'])
     @staticmethod
     def set_current_list():
@@ -59,17 +64,22 @@ class FetchForAction:
             
             for action_list in FetchForAction.action_list_handler.get_lists():
                 if action_list.get_name() == data:
-                    FetchForAction.current_action_list = action_list
+                    FetchForAction.current_action_list = data
                 return 'Done', 201
 
             return 'no action list', 201
         except Exception as e:
             return str(e)
 
+
+
+
+
+
     @app.route("/api/get_action_list_content")
     @staticmethod
     def get_action_list_content():
-        robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
+        
         to_return: list[dict] = []
         for action in FetchForAction.current_action_list.get_content():
             action_dict = action.dictify_to_display(robot_list) # possiblility for dictify exists
@@ -212,29 +222,52 @@ class FetchForAction:
         return to_return
 
 
+    def navigate_by_content_pos(action_list: dict, content_pos: list[int]):
+        list_counter = []
+        counter = 0
+        for x in range(0, content_pos[0]):
+            if action_list["content"][x]["key" ] == "sequential_list" or action_list["content"][x]["key" ] == "parallel_list":
+                counter =+ 1
+        list_counter.append(counter)
+        next = content_pos[0]
+        content_pos = content_pos.pop(0)
+        if not len(content_pos) == 0:
+            list_counter.append(FetchForAction.navigate_by_content_pos(action_list["content"][next], content_pos))
+        return list_counter
+
+
+
     # need to test
     @app.route("/api/get_mapping_table")
     @staticmethod
     def get_mapping_table():
-        total_table = FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
-        if FetchForAction.current_mapping_pos[0] == -1:
-            return FetchForAction.get_mapping_list_part(total_table)
+        if FetchForAction.experiment_config_handler.has_mapping(FetchForAction.current_list_name):
+            total_table = FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
+            if FetchForAction.current_mapping_pos[0] == -1:
+                return FetchForAction.get_mapping_list_part(total_table)
+            else:
+                action_list = FetchForAction.action_list_handler.dictify_with_nrs(FetchForAction.current_list_name)
+                look_up_list = FetchForAction.navigate_by_content_pos(action_list, FetchForAction.current_mapping_pos)
+                temp = total_table
+                for x in look_up_list:
+                    temp = temp["sublist"][x]
+                return  FetchForAction.get_mapping_list_part(temp)
         else:
-            temp = total_table
-            for x in FetchForAction.current_mapping_pos:
-                temp = temp [x]
-            return  FetchForAction.get_mapping_list_part(temp)
-       
+            temp_table = FetchForAction.action_list_handler.do_mapping(FetchForAction.current_list_name)
+            FetchForAction.experiment_config_handler.set_mapping(FetchForAction.current_list_name, temp_table)
+            return temp_table
 
 
 
     @app.route("/api/set_mapping_in_table", methods=['POST'])
     @staticmethod
     def get_mapping_table():
+        action_list = FetchForAction.action_list_handler.dictify_with_nrs(FetchForAction.current_list_name)
         total= FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
         list = total
         data = request.get_json()
         for x in FetchForAction.current_mapping_pos:
+                
                 list = list [x]
         robots = ChooseLRController.get_robots_from_ip(data["ip"])
         robots_index = 0
