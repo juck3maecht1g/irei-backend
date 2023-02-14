@@ -35,7 +35,7 @@ class FetchForAction:
     @staticmethod
     def listable_action_mapping(action: ListableAction) -> dict:
         robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
-        action_dict = action.dictify(robot_list)
+        action_dict = action.map_dictify(robot_list)
         return action_dict
 
     @app.route("/api/get-action_lists") # gets name of all action lists
@@ -93,7 +93,7 @@ class FetchForAction:
                 action = FetchForAction.action_list_handler.build(data)
                 temp_list = FetchForAction.current_action_list
                 temp_list.add_action(action)
-                if FetchForAction.alr_interface.validate_action(temp_list.dictify(robot_list)):
+                if FetchForAction.alr_interface.validate_action(temp_list.map_dictify(robot_list)):
                     FetchForAction.action_list_handler.add(FetchForAction.current_action_list, action)
                     FetchForAction.current_action_list.add(action)
                     return 'Done', 201
@@ -127,7 +127,7 @@ class FetchForAction:
                 second = data["second"]
                 temp_list = FetchForAction.current_action_list
                 temp_list.swap(first, second)
-                if FetchForAction.alr_interface.validate_action(temp_list.dictify(robot_list)):
+                if FetchForAction.alr_interface.validate_action(temp_list.map_dictify(robot_list)):
                     FetchForAction.action_list_handler.swap(FetchForAction.current_action_list, first, second)
                     FetchForAction.current_action_list.swap(first, second)
                     return 'Done', 201

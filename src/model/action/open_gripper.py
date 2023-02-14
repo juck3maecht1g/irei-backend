@@ -8,8 +8,14 @@ class OpenGripper(ListableAction):
     def __init__(self, robot_nrs: list[int]) -> None:
         super().__init__(robot_nrs)
 
-    def dictify(self, robots: list[Robot]) -> dict:
+    def map_dictify(self, robots: list[Robot]) -> dict:
         to_return = dict()
         to_return["key"] = OpenGripper.key
         to_return["robots"] = super().map_robots(self.robot_nrs, robots)
+        return to_return
+
+    def map_dictify(self) -> dict:
+        to_return = dict()
+        to_return["key"] = OpenGripper.key
+        to_return["robots"] = self.robot_nrs
         return to_return

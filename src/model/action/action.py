@@ -4,7 +4,7 @@ from src.model.communication.physical.robot import Robot
 class Action(ABC):
 
     @abstractmethod
-    def dictify(self, robots: list[Robot]) -> dict:
+    def map_dictify(self, map: dict) -> dict:
         pass
     
     @abstractmethod

@@ -2,20 +2,27 @@ from src.model.communication.physical.robot import Robot
 from src.model.communication.position.variable import Variable
 from src.model.file_storage.yaml_file import YamlFile
 from src.model.file_storage.path_observer import PathObserver
-from src.model.file_storage.robot_subject import RobotSubject
 
 import os
 
 # todo Observer
 
 
-class ExperimentConfigHandler(YamlFile, PathObserver, RobotSubject):
+class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def __init__(self, root: str):
         
         self.data = {
             "experiment interface": "max",
             "active actionlist": "action",
+            "number of shortcuts": 1,
+            "shortcuts": {
+                "alName": [[]],
+            },
+            "maped": {
+                "alName": [[[]]],
+                "alName2": [],
+                },
             "lab": "labname dummy",
             "experiment robots": ["ex_ip1", "ex_ip2"],
             "mode": "test_mode",
@@ -40,6 +47,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver, RobotSubject):
         super().__init__(root, "experiment_config", self.data)
         self.root = root
         
+
 
     def update_path(self, path):
         self.path = path
@@ -89,6 +97,15 @@ class ExperimentConfigHandler(YamlFile, PathObserver, RobotSubject):
         self.path = old_path
         return out
 
+    def get_shortcuts(self) -> list[str]:
+        return list(self.read()["shortcuts"].keys())
+
+    def get_map(self, name:str) -> list:
+        return self.read()["maped"][name]
+
+    def get_shortcut_map(self, name: str) -> list:
+        return self.read()["shortcuts"][name]
+
     def __get_file_vars(self):
         self.read()
         return super().read()["variables"]
@@ -130,7 +147,6 @@ class ExperimentConfigHandler(YamlFile, PathObserver, RobotSubject):
         for robot in robots:
             new_robots_ip.append(robot.get_ip())
         self.data["experiment robots"] = new_robots_ip
-        self.notify()
         self.write()
 
     def get_mode(self) -> str:

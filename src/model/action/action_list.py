@@ -27,17 +27,38 @@ class ActionList(Action):
     def get_content(self) -> list[Action]:
         return self.content
 
-    def dictify(self, robots: list[list[Robot]]) -> dict:
+    def map_dictify(self, map: dict) -> dict:
+        sublist_nr = 0
         to_return = dict()
         to_return["key"] = self.key
         to_return["name"] = self.name
-        content: list[Action] = []
-        robot_counter = 0
+        tmp_content = []
         for action in self.content:
-            content.append(action.dictify(robots[robot_counter]))
-            robot_counter = robot_counter + 1
+            if "list" in action.key:
+                tmp_content.append(action.map_dictify(map["sublist"][sublist_nr]))
+                sublist_nr += 1
+            else:
+                tmp_content.append(action.map_dictify(map))
 
-        to_return["content"] = content
+        to_return["content"] = tmp_content
+
+        return to_return
+    
+    def nr_dictify(self) -> dict:
+        sublist_nr = 0
+        to_return = dict()
+        to_return["key"] = self.key
+        to_return["name"] = self.name
+        tmp_content = []
+        for action in self.content:
+            if "list" in action.key:
+                tmp_content.append(action.nr_dictify())
+                sublist_nr += 1
+            else:
+                tmp_content.append(action.nr_dictify())
+
+        to_return["content"] = tmp_content
+
         return to_return
 
     def dictify_to_display(self, robots: list[Robot]) -> dict:
