@@ -221,14 +221,14 @@ class SimpleExp(threading.Thread):
 
 
 if __name__ == "__main__":
-    # register_experiment(SimpleExp) 
-    # initialize()
-    exp = SimpleExp([{"name": "test"}, {"name": "test2"}])
+    register_experiment(SimpleExp) 
+    initialize()
+    #exp = SimpleExp([{"name": "test"}, {"name": "test2"}])
    
   
-    exp.set_mode("mode_a")
+    #exp.set_mode("mode_a")
     time.sleep(10)
-    exp.set_mode("mode_b")
+    #exp.set_mode("mode_b")
    
     time.sleep(10)
-    exp.emergency_stop()
+    #exp.emergency_stop()

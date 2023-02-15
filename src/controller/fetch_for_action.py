@@ -46,12 +46,9 @@ class FetchForAction:
     @app.route("/api/get-action_lists")
     @staticmethod
     def get_action_lists():
-        action_lists: list[ActionList] = FetchForAction.action_list_handler.get_lists()
-        to_return = []
-        for action_list in action_lists:
-            to_return.append(action_list.name)
+        action_lists = FetchForAction.action_list_handler.get_lists()
        
-        return to_return
+        return action_lists
     
 
 
@@ -64,7 +61,7 @@ class FetchForAction:
             
             for action_list in FetchForAction.action_list_handler.get_lists():
                 if action_list.get_name() == data:
-                    FetchForAction.current_action_list = data
+                    FetchForAction.current_list_name = data
                 return 'Done', 201
 
             return 'no action list', 201
@@ -80,11 +77,12 @@ class FetchForAction:
     @staticmethod
     def get_action_list_content():
         
-        to_return: list[dict] = []
-        for action in FetchForAction.current_action_list.get_content():
-            action_dict = action.dictify_to_display(robot_list) # possiblility for dictify exists
-            to_return.append(action_dict)
-        return to_return
+        action_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
+        content = action_list.nr_dictify()["content"]
+        return content
+
+
+
 
     ##
     @app.route("/api/append_action", methods=['POST'])
@@ -111,6 +109,9 @@ class FetchForAction:
         except Exception as e:
             return str(e)       
 
+
+
+
     @app.route("/api/delete_action", methods=['POST'])
     @staticmethod
     def delete_action():
@@ -118,7 +119,6 @@ class FetchForAction:
             data = request.get_json()
             if data["marker"] == "delete_action":
                 FetchForAction.action_list_handler.delete_action(FetchForAction.current_action_list, data["position"])
-                FetchForAction.current_action_list.delete_action(data["position"])
             return 'Done', 201
         except Exception as e:
             return str(e)
@@ -135,12 +135,9 @@ class FetchForAction:
             if data["marker"] == "swap":
                 first = data["first"]
                 second = data["second"]
-                temp_list = FetchForAction.current_action_list
-                temp_list.swap(first, second)
-                if FetchForAction.alr_interface.validate_action(temp_list.map_dictify(robot_list)):
-                    FetchForAction.action_list_handler.swap(FetchForAction.current_action_list, first, second)
-                    FetchForAction.current_action_list.swap(first, second)
-                    return 'Done', 201
+           
+                FetchForAction.action_list_handler.swap(FetchForAction.current_list_name, first, second)
+                return 'Done', 201
         except Exception as e:
             return str(e)
     
@@ -168,19 +165,24 @@ class FetchForAction:
         try:
             data = request.get_json()
             if data["marker"] == "execute_action_list":
-                for action_list in FetchForAction.action_list_handler.get_lists():
-                    if action_list.get_name() == data["name"]:
-                        robots = FetchForAction.experiment_config_handler.get_exp_robots()
-                        to_execute = action_list.dictify(robots)
-                        FetchForAction.alr_interface.execute_sequenzial_list(to_execute)
-
-
-                    return 'Done', 201
+                name = FetchForAction.experiment_config_handler.get_shortcuts[data["pos"]]
+                action_list = FetchForAction.action_list_handler.get_list(name)
+                map = FetchForAction.experiment_config_handler.get_shortcut_map[data["pos"]]
+                to_execute = action_list.map_dictify(map)
+                FetchForAction.alr_interface.execute_sequenzial_list(to_execute)
+                return 'Done', 201
             else:
                 return 'marker missmatched', 201
 
         except Exception as e:
             return str(e)
+        
+
+
+
+
+
+
     @app.route("/api/set_coordinate_type", methods=['POST'])
     @staticmethod
     def post_coordinate_type():
@@ -215,10 +217,8 @@ class FetchForAction:
 
     #todo
     def get_mapping_list_part(table: dict()):
-        to_return = []
-        for elem in table["mapping"]:
-            if elem["type"] == "action":
-                to_return.append(elem)
+        to_return = table
+        del to_return["sublist"]
         return to_return
 
 
@@ -236,50 +236,52 @@ class FetchForAction:
         return list_counter
 
 
-
+    
     # need to test
     @app.route("/api/get_mapping_table")
     @staticmethod
     def get_mapping_table():
-        if FetchForAction.experiment_config_handler.has_mapping(FetchForAction.current_list_name):
-            total_table = FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
-            if FetchForAction.current_mapping_pos[0] == -1:
-                return FetchForAction.get_mapping_list_part(total_table)
-            else:
-                action_list = FetchForAction.action_list_handler.dictify_with_nrs(FetchForAction.current_list_name)
-                look_up_list = FetchForAction.navigate_by_content_pos(action_list, FetchForAction.current_mapping_pos)
-                temp = total_table
-                for x in look_up_list:
-                    temp = temp["sublist"][x]
-                return  FetchForAction.get_mapping_list_part(temp)
-        else:
-            temp_table = FetchForAction.action_list_handler.do_mapping(FetchForAction.current_list_name)
-            FetchForAction.experiment_config_handler.set_mapping(FetchForAction.current_list_name, temp_table)
-            return temp_table
+        # if FetchForAction.experiment_config_handler.has_mapping(FetchForAction.current_list_name):
+        #     total_table = FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
+        #     if FetchForAction.current_mapping_pos[0] == -1:
+        #         return FetchForAction.get_mapping_list_part(total_table)
+        #     else:
+        #         action_list = FetchForAction.action_list_handler.dictify_with_nrs(FetchForAction.current_list_name)
+        #         look_up_list = FetchForAction.navigate_by_content_pos(action_list, FetchForAction.current_mapping_pos)
+        #         temp = total_table
+        #         for x in look_up_list:
+        #             temp = temp["sublist"][x]
+        #         return  FetchForAction.get_mapping_list_part(temp)
+        # else:
+        #     temp_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
+        #     temp_table = temp_list.do_mapping()
+        #     FetchForAction.experiment_config_handler.set_mapping(FetchForAction.current_list_name, temp_table)
+            return FetchForAction.get_mapping_list_part({3: "ip0", "sublist": [{1: "ip1"}]}) #temp_table
 
 
 
     @app.route("/api/set_mapping_in_table", methods=['POST'])
     @staticmethod
-    def get_mapping_table():
-        action_list = FetchForAction.action_list_handler.dictify_with_nrs(FetchForAction.current_list_name)
-        total= FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
-        list = total
+    def set_mapping_in_table():
+        # action_list = FetchForAction.action_list_handler.dictify_with_nrs(FetchForAction.current_list_name)
+        # total= FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
+        # list = total
         data = request.get_json()
-        for x in FetchForAction.current_mapping_pos:
+        print("\n\n\n"),print(data)
+        # for x in FetchForAction.current_mapping_pos:
                 
-                list = list [x]
-        robots = ChooseLRController.get_robots_from_ip(data["ip"])
-        robots_index = 0
-        for pos in range(0, len(list["mapping"])):
-            if not list["mapping"][pos]["type"] == "list":
-                list["mapping"][pos]["robot"] = robots[robots_index]
-                robots_index =+ 1
+        #         list = list [x]
+        # robots = ChooseLRController.get_robots_from_ip(data["ip"])
+        # robots_index = 0
+        # for pos in range(0, len(list["mapping"])):
+        #     if not list["mapping"][pos]["type"] == "list":
+        #         list["mapping"][pos]["robot"] = robots[robots_index]
+        #         robots_index =+ 1
 
 
 
 
-        FetchForAction.experiment_config_handler.set_mapping_table(FetchForAction.current_action_list, total)   
+        # FetchForAction.experiment_config_handler.set_mapping_table(FetchForAction.current_action_list, total)   
 
 
 
@@ -289,6 +291,6 @@ class FetchForAction:
     @staticmethod
     def set_mapping_pos():
         data = request.get_json()
-        FetchForAction.current_mapping_pos = data["position"]
+        FetchForAction.current_mapping_pos = data
         return "Done", 201
        
