@@ -16,12 +16,13 @@ class FetchForAction:
     action_list_handler: ActionListHandler
     experiment_config_handler: ExperimentConfigHandler
     alr_interface: AlrInterface
-    current_mapping_pos= []
+    current_button_index= 0
+    current_mapping_pos= [1,0]
     current_list_name = ""
 
     @staticmethod
-    def set_experiment_config_handler(action_list_handler) -> None:
-        FetchForAction.action_list_handler = action_list_handler
+    def set_experiment_config_handler(experiment_config_handler) -> None:
+        FetchForAction.experiment_config_handler = experiment_config_handler
 
     @staticmethod
     def set_action_list_handler(given_action_list_handler):
@@ -227,7 +228,7 @@ class FetchForAction:
         counter = 0
         for x in range(0, content_pos[0]):
             if action_list["content"][x]["key" ] == "sequential_list" or action_list["content"][x]["key" ] == "parallel_list":
-                counter =+ 1
+                counter += 1
         list_counter.append(counter)
         next = content_pos[0]
         content_pos = content_pos.pop(0)
@@ -256,41 +257,67 @@ class FetchForAction:
         #     temp_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
         #     temp_table = temp_list.do_mapping()
         #     FetchForAction.experiment_config_handler.set_mapping(FetchForAction.current_list_name, temp_table)
-            return FetchForAction.get_mapping_list_part({3: "ip0", "sublist": [{1: "ip1"}]}) #temp_table
+            return {0: "ip0", 1: "ip0",} #temp_table
 
 
 
     @app.route("/api/set_mapping_in_table", methods=['POST'])
     @staticmethod
     def set_mapping_in_table():
-        # action_list = FetchForAction.action_list_handler.dictify_with_nrs(FetchForAction.current_list_name)
-        # total= FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
-        # list = total
+        total= FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
+        list =  total
         data = request.get_json()
-        print("\n\n\n"),print(data)
-        # for x in FetchForAction.current_mapping_pos:
-                
-        #         list = list [x]
-        # robots = ChooseLRController.get_robots_from_ip(data["ip"])
-        # robots_index = 0
-        # for pos in range(0, len(list["mapping"])):
-        #     if not list["mapping"][pos]["type"] == "list":
-        #         list["mapping"][pos]["robot"] = robots[robots_index]
-        #         robots_index =+ 1
+        if not FetchForAction.current_mapping_pos[0] == -1:
+            for x in FetchForAction.current_mapping_pos:       
+                list = list["sublist"] [x]
+        
 
+        for elem in data:
+            for key in elem:
+                list[int(key)] = elem[key] 
 
-
-
-        # FetchForAction.experiment_config_handler.set_mapping_table(FetchForAction.current_action_list, total)   
-
-
-
+        #if not FetchForAction.current_mapping_pos[0] == -1:
+            #total = FetchForAction.replace_sub_list_buttom_up(total, list, FetchForAction.current_mapping_pos)
+        #else:
+           # total = list
+    
+        FetchForAction.experiment_config_handler.set_mapping(FetchForAction.current_action_list, total)   
+        FetchForAction.experiment_config_handler.set_shortcut_map(FetchForAction.current_button_index, total)
         return "Done", 201
-       
+   
     @app.route("/api/set_mapping_pos", methods=['POST'])
     @staticmethod
     def set_mapping_pos():
         data = request.get_json()
         FetchForAction.current_mapping_pos = data
+
         return "Done", 201
        
+
+    @app.route("/api/set_button_index", methods=['POST'])
+    @staticmethod
+    def set_button_index():
+        data = request.get_json()
+        FetchForAction.current_button_index = data
+        print("\n\n\njaaaaaaaaaaaaaaaa")
+        return "Done", 201
+    
+
+
+
+   
+
+    def replace_sub_list_buttom_up(main_list, list, position: list[int]):
+        toplist = main_list["sublist"]
+        if len(position)== 0:
+           list["sublist"] = toplist
+           return list
+        else:  
+            next_list = toplist[position[0]]
+            print(position), print("position")
+            new_position = position
+            new_position.pop(0)
+            print(position)
+            toplist.insert(position[0],FetchForAction.replace_sub_list_buttom_up(next_list, list, new_position))
+        main_list["sublist"] = toplist
+        return main_list
