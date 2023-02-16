@@ -39,8 +39,9 @@ class FilePathManager:
                 FilePathManager.pc_data_handler.navigate_to_parent()
                 return "Done", 201
             return "F", 300
-        except Exception as e:
-            print(e.__str__)
+        except Exception as e: 
+            print(e.__str__())
+            return e.__str__()
 
     @app.route("/api/navigate_down", methods=['Post'])
     @staticmethod
@@ -51,8 +52,9 @@ class FilePathManager:
                 FilePathManager.pc_data_handler.navigate_to_child(data["dir"])
                 return "Done", 201
             return "F", 300
-        except Exception as e:
-            print(e.__str__)
+        except Exception as e: 
+            print("ERROR",e.__str__())
+            return e.__str__()
 
     @app.route("/api/create_dirctory", methods=['Post'])
     @staticmethod
@@ -66,8 +68,9 @@ class FilePathManager:
                 FilePathManager.exp_config_handler.create()
                 return "Done", 201
             return "F", 300
-        except Exception as e:
-            print(e.__str__)
+        except Exception as e: 
+            print("ERROR",e.__str__())
+            return(e.__str__)
 
     @app.route("/api/delete_dirctory", methods=['Post'])
     @staticmethod
@@ -78,8 +81,9 @@ class FilePathManager:
                 FilePathManager.pc_data_handler.delete_directory(data["name"])
                 return "Done", 201
             return "F", 300
-        except Exception as e:
-            print(e.__str__)
+        except Exception as e: 
+            print("ERROR",e.__str__())
+            return(e.__str__)
 
     # potential use but not jet
 
@@ -89,8 +93,9 @@ class FilePathManager:
         try:
             data = request.get_json()
             FilePathManager.pc_data_handler.delete_file(data)
-        except Exception as e:
-            print(e.__str__)
+        except Exception as e: 
+            print("ERROR",e.__str__())
+            return(e.__str__)
 
     marker_get_base_name_dir = "get_base_name_dir"
 

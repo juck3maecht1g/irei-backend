@@ -21,14 +21,18 @@ class ListableAction(Action):
         else:
             new_ip = []
             for rob in self.robot_nrs:
+                print("nrs",self.robot_nrs)
+                print(map)
                 new_ip.append(map[rob])
             to_return["robots"] = new_ip
             
         return to_return
 
     def nr_dictify(self) -> dict:
-        to_return = dict()
+        to_return = self.map_dictify(None)
+        to_return["robot_nrs"] = self.robot_nrs
+        return to_return
 
 
-    def dictify_to_display(self, robots):
-        return self.map_dictify(robots)
+    def dictify_to_display(self, map):
+        return self.map_dictify(map)

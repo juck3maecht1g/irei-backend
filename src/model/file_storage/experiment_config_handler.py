@@ -16,10 +16,10 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
             "experiment interface": "max",
             "active actionlist": "action",
             "number of shortcuts": 1,
-            "shortcuts": {
-                "alName": [[]],
-            },
-            "maped": {
+            "shortcuts": [{
+               "name": {}
+            }],
+            "mapped": {
                 "alName": [[[]]],
                 "alName2": [],
                 },
@@ -76,6 +76,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
         return True
 
+
     def get_vars(self) -> list[Variable]:
 
         old_path = self.path
@@ -83,7 +84,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         no_overwrite = []
 
         while not (self.path == self.root):
-            file_variables = self.__get_file_vars()
+            file_variables = self._get_file_vars()
 
             # collecting all variables from the experiment and from its parents
             for var_name in file_variables:
@@ -98,15 +99,43 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         return out
 
     def get_shortcuts(self) -> list[str]:
-        return list(self.read()["shortcuts"].keys())
+        self.read()
+        print("test") 
+        print([i.keys() for i in self.data["shortcuts"]])
+        return [i.keys() for i in self.data["shortcuts"]]
+
+    def set_shortcut(self, pos, name, mapping):
+        
+        self.data["shortcuts"][pos] = {name: mapping}
+
+        self.write()
+        
+
 
     def get_map(self, name:str) -> list:
-        return self.read()["maped"][name]
+        self.read()
+        return self.data["mapped"][name]
 
-    def get_shortcut_map(self, name: str) -> list:
-        return self.read()["shortcuts"][name]
+    def has_mapping(self, name:str) -> bool:
+        self.read()
+        return name in self.data["mapped"].keys()
+    
+    def set_map(self, name: str, map: dict):
+        self.data["mapped"][name] = map
+        self.write()
 
-    def __get_file_vars(self):
+
+    def get_shortcut_map(self, index: int) -> list:
+        self.read()
+        list_name = list(self.data["shortcuts"][index].keys())[0]
+        return self.data["shortcuts"][index][list_name]
+    
+    def set_shortcut_map(self, pos: int, map: dict):
+        self.read()
+        list_name = list(self.data["shortcuts"][pos].keys())[0]
+        self.data["shortcuts"][pos][list_name] = map
+
+    def _get_file_vars(self):
         self.read()
         return super().read()["variables"]
 
@@ -194,3 +223,9 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         self.read()
         self.data["switch gripper ips"] = ip
         self.write()
+    
+    def get_use_space(self):
+        pass
+
+    def set_use_space(self, type):
+        pass

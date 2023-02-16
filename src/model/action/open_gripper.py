@@ -14,8 +14,8 @@ class OpenGripper(ListableAction):
         to_return["robots"] = super().map_robots(self.robot_nrs, robots)
         return to_return
 
-    def map_dictify(self) -> dict:
+    def map_dictify(self, map: dict) -> dict:
         to_return = dict()
         to_return["key"] = OpenGripper.key
-        to_return["robots"] = self.robot_nrs
+        to_return |= super().map_dictify(map)
         return to_return

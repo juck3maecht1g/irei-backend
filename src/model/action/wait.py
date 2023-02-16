@@ -9,9 +9,9 @@ class Wait(ListableAction):
         super().__init__(robot_nrs)
         self.time = time
 
-    def dictify(self, robots: list[Robot]) -> dict:
+    def map_dictify(self, map: dict) -> dict:
         to_return = dict()
         to_return["key"] = Wait.key
-        to_return["robots"] = super().map_robots(self.robot_nrs, robots)
         to_return["time"] = self.time
+        to_return |= super().map_dictify(map)
         return to_return

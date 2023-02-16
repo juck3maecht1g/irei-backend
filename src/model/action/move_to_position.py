@@ -11,11 +11,11 @@ class MoveToPosition(ListableAction):
         self.position = position
         self.type = position.get_used_space()
 
-    def dictify(self, robots: list[Robot]) -> dict:
+    def map_dictify(self, map: dict) -> dict:
         to_return = dict()
         to_return["key"] = MoveToPosition.key
         to_return["name"] = self.position.get_name()
-        to_return["robots"] = super().map_robots(self.robot_nrs, robots)
         to_return["type"] = self.type
         to_return["coord"] = self.position.get_coordinate()
+        to_return |= super().map_dictify(map)
         return to_return

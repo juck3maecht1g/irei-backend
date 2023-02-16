@@ -11,6 +11,7 @@ class ListableFactory:
     @staticmethod
     @staticmethod
     def create_single_action(action: dict) -> None:
+        print("listableFaktory", action)
         if action["key"] == "close_gripper":
             return CloseGripper(action["robot_nrs"])
         elif action["key"] == "custom":

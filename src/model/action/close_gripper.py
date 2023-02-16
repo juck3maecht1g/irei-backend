@@ -10,8 +10,9 @@ class CloseGripper(ListableAction):
         super().__init__(robot_nrs)
 
     def map_dictify(self, map: dict) -> dict:
-        to_return = super().map_dictify(map)
+        to_return = dict()
         to_return["key"] = CloseGripper.key
+        to_return |= super().map_dictify(map)
         return to_return
 
     

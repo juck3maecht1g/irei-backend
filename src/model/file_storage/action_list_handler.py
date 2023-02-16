@@ -22,24 +22,29 @@ class ActionListHandler(YamlFile, PathObserver):
     def __init__(self, root: str):
         
         self.data = {
-            "type": "sequential",
-            "content": [{"key": "open_gripper", "robot_nrs": [1]}]
+            "type": "sequential_list",
+            "content": []
         }
         #TODO 
         super().__init__(root, None, self.data)
         self.root = root
 
 
-    def create(self, name: str):
+    def create(self, name: str, type: str):
         self.file_name = name
+        self.data["type"] = type
         parent_path = os.path.dirname(self.path)
-
+        print(self.path)
+        print(self.root)
         if not (self.path == self.root):
+            print("asd")
 
             if not (ActionListHandler.folder_name in os.listdir(parent_path)):
+                print("gnfdkmgdlf")
                 os.mkdir(self.path)
 
-            if not (name in os.listdir(self.path)):
+            if not name in os.listdir(self.path):
+                print("asdg bjansklfv sijv")
                 self.write()
 
     def update_path(self, path):
@@ -55,21 +60,29 @@ class ActionListHandler(YamlFile, PathObserver):
         self.read()
         out = ActionList(name, self.data["type"])
         for action in self.data["content"]:
+            print("\n\naction", action["key"])
+            print(action)
             if action["key"] == "file":
                 out.add_action(self.get_list(action["name"]))
                 sublist += 1
                 self.file_name = name
             else:
+                print(action) # test
                 out.add_action(ListableFactory.create_single_action(action))
+               
         return out
 
     def add_action(self, name, action: Action):
+        print("add acation")
         self.file_name = name
         self.read()
-        new = action.dictify_to_display(None)
+        new = action.nr_dictify()
+        print("\nnew",new)
         if "list" in new["key"]:
             new["key"] = "file"
-            new["name"] = action.dictify_to_display()["name"]
+            new["name"] = action.nr_dictify()["name"]
+            del new["content"]
+        print("\nnew2",new)
         self.data["content"].append(new)
         self.write()
 

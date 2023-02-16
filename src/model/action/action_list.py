@@ -62,5 +62,18 @@ class ActionList(Action):
         return to_return
 
     def dictify_to_display(self, robots: list[Robot]) -> dict:
-
         return {"key": self.key, "name": self.name}
+
+
+    def do_mapping(self):
+        to_return = {"sublist" : []}
+        for c in range(0, len(self.get_content())):
+            if not isinstance(self.get_content()[c], ActionList):
+                for nr in self.get_content()[c].robot_nrs:
+                    if not nr in to_return.keys():
+                        to_return |= ({nr: "none"})
+            else:
+                print(self.get_content()[c])
+                to_return["sublist"].append(self.get_content()[c].do_mapping())
+
+        return to_return

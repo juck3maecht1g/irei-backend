@@ -57,15 +57,21 @@ al1.add_action(al2)
 al1.add_action(ca)
 al1.add_action(c)
 
+
+
+
+
+
 def tree(action_list: ActionList):
-    to_return = []
+    to_return = {"sublist" : []}
     for c in range(0, len(action_list.get_content())):
         if not isinstance(action_list.get_content()[c], ActionList):
-           if not action_list.get_content()[c].robot_nrs in to_return:
-            to_return.append(action_list.get_content()[c].robot_nrs)
+            for nr in action_list.get_content()[c].robot_nrs:
+                if not nr in to_return.keys():
+                    to_return |= ({nr: "none"})
 
         else: 
-            to_return.append(tree(action_list.get_content()[c]))
+            to_return["sublist"].append(tree(action_list.get_content()[c]))
     return to_return
 
 print(tree(al1))

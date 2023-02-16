@@ -6,12 +6,13 @@ class CustomAction(ListableAction):
     key: str = "custom"
 
     def __init__(self, robot_nrs: list[int], action: str) -> None:
+        print("\nwhere????????????")
         super().__init__(robot_nrs)
         self.action = action
 
-    def dictify(self, robots: list[Robot]) -> dict:
+    def map_dictify(self, map: dict) -> dict:
         to_return = dict()
         to_return["key"] = CustomAction.key
-        to_return["robots"] = super().map_robots(self.robot_nrs, robots)
         to_return["action"] = self.action
+        to_return |= super().map_dictify(map)
         return to_return

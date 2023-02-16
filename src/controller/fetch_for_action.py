@@ -1,14 +1,17 @@
 from src.controller.__init__ import app
 from flask import request
 from src.controller.choose_lr_controller import ChooseLRController
+from src.model.action.action import Action
 from src.model.action.action_list import ActionList
 from src.model.action.listable_action import ListableAction
+from src.model.action.listable_factory import ListableFactory
 
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.alr_interface import AlrInterface
 from src.model.action.action_list import ActionList
+from src.controller.fetch_for_action_util import *
 
 #TODO open/close/switch gripper
 class FetchForAction:
@@ -16,9 +19,10 @@ class FetchForAction:
     action_list_handler: ActionListHandler
     experiment_config_handler: ExperimentConfigHandler
     alr_interface: AlrInterface
-    current_button_index= 0
+    listable_factory: ListableFactory
+    current_button_index= 3
     current_mapping_pos= [1,0]
-    current_list_name = ""
+    current_list_name = "some list"
 
     @staticmethod
     def set_experiment_config_handler(experiment_config_handler) -> None:
@@ -33,11 +37,11 @@ class FetchForAction:
         FetchForAction.alr_interface = alr_interface
 
 
-    @staticmethod
-    def listable_action_mapping(action: ListableAction) -> dict:
-        robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
-        action_dict = action.map_dictify(robot_list)
-        return action_dict
+    # @staticmethod
+    # def listable_action_mapping(action: ListableAction) -> dict:
+    #     robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
+    #     action_dict = action.map_dictify(robot_list)
+    #     return action_dict
     
 
     # """
@@ -58,15 +62,30 @@ class FetchForAction:
     @staticmethod
     def set_current_list():
         try:
-            data = request.get_json()
+            data = "some list" #request.get_json() test
+           
             
             for action_list in FetchForAction.action_list_handler.get_lists():
-                if action_list.get_name() == data:
+                if action_list == data:
                     FetchForAction.current_list_name = data
+                    if FetchForAction.experiment_config_handler.has_mapping(FetchForAction.current_list_name):
+                     
+                        temp_table = FetchForAction.experiment_config_handler.get_map(FetchForAction.current_list_name)
+                    else:
+                    
+                        temp_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
+              
+                        temp_table = temp_list.do_mapping()
+                     
+                        FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, temp_table)
+                    FetchForAction.experiment_config_handler.set_shortcut(FetchForAction.current_button_index, FetchForAction.current_list_name, temp_table)
+                #print("mapping:" ,FetchForAction.experiment_config_handler.get_map(FetchForAction.current_list_name))
+                #print("shortcut:" ,FetchForAction.experiment_config_handler.get_shortcut_map(0))
                 return 'Done', 201
-
+            #print('no action list')
             return 'no action list', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
 
 
@@ -85,43 +104,65 @@ class FetchForAction:
 
 
 
-    ##
+    ##wo mapping
     @app.route("/api/append_action", methods=['POST'])
     @staticmethod
     def append_action():
         try:
-            robot_list = FetchForAction.experiment_config_handler.get_exp_robots()
-            data = request.get_json()
+            data = {"marker": "append_action", "key": "wait", "robot": ["ex_ip1"], "time": 71283956238}#request.get_json() test
+            action: Action
+            print("DATA",data)
             if data["marker"] == "append_action":
+                print(data)
                 if data["key"] == "move":
-                    positions = FetchForAction.experiment_config_handler.get_positions()
+                    positions = FetchForAction.experiment_config_handler.get_vars()
                     for position in positions:
                         if data["position"]== position.get_name():
                             data["position"]= position
                             data["type"] = FetchForAction.experiment_config_handler.get_coordinate_type()
-                action = FetchForAction.action_list_handler.build(data)
-                temp_list = FetchForAction.current_action_list
-                temp_list.add_action(action)
-                if FetchForAction.alr_interface.validate_action(temp_list.map_dictify(robot_list)):
-                    FetchForAction.action_list_handler.add(FetchForAction.current_action_list, action)
-                    FetchForAction.current_action_list.add(action)
-                    return 'Done', 201
-                else: return 'no valid action', 300
-        except Exception as e:
+                if not "list" in data["key"]:
+                    print("2AIFBNA")
+                    map = FetchForAction.experiment_config_handler.get_shortcut_map(FetchForAction.current_button_index)
+                    print("map", map)
+                    new_mapping = extend_mapping(map, data["robot"])
+                    print("map", map)
+                    print(convert_ip_to_nrs(map, data["robot"]))
+                    data["robot_nrs"] = convert_ip_to_nrs(map, data["robot"]) #missing mapping dict
+                    print("data",data["robot_nrs"])
+                    print("data ",data["key"])
+                    print(data)
+                    action = FetchForAction.listable_factory.create_single_action(data)
+                    print("action:    aasfhbwgijfklsmadk",action)
+                else:
+                    action=FetchForAction.action_list_handler.get_list(data["name"])
+                FetchForAction.action_list_handler.add_action(FetchForAction.current_list_name, action)
+                mapping = FetchForAction.experiment_config_handler.get_shortcut_map(FetchForAction.current_button_index)
+                new_mapping = extend_mapping(mapping, data["robot"])
+                FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, new_mapping)   
+                FetchForAction.experiment_config_handler.set_shortcut_map(FetchForAction.current_button_index, new_mapping)
+                return 'Done', 201
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)       
 
 
 
-
+    # wo mapping
     @app.route("/api/delete_action", methods=['POST'])
     @staticmethod
     def delete_action():
         try:
             data = request.get_json()
             if data["marker"] == "delete_action":
-                FetchForAction.action_list_handler.delete_action(FetchForAction.current_action_list, data["position"])
+                action_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
+                FetchForAction.action_list_handler.del_action(FetchForAction.current_list_name, data["position"])
+                mapping = FetchForAction.experiment_config_handler.get_shortcut_map(FetchForAction.current_button_index)
+                new_mapping = mapping_delete(action_list, mapping, data["robots"])
+                FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, new_mapping)   
+                FetchForAction.experiment_config_handler.set_shortcut(FetchForAction.current_button_index, new_mapping)
             return 'Done', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
     
 
@@ -137,20 +178,22 @@ class FetchForAction:
                 first = data["first"]
                 second = data["second"]
            
-                FetchForAction.action_list_handler.swap(FetchForAction.current_list_name, first, second)
+                FetchForAction.action_list_handler.swap_action(FetchForAction.current_list_name, first, second)
                 return 'Done', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
     
     @app.route("/api/create_action_list", methods=['POST'])
     @staticmethod
     def create_action_list():
         try:
-            data = request.get_json()
+            data = {"marker": "create_action_list", "name": "some list", "key": "sequential_list"} #request.get_json() test
             if data["marker"] == "create_action_list":
                 FetchForAction.action_list_handler.create(data["name"], data["key"])
                 return 'Done', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
     
 
@@ -175,7 +218,8 @@ class FetchForAction:
             else:
                 return 'marker missmatched', 201
 
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
         
 
@@ -190,11 +234,12 @@ class FetchForAction:
         try:
             data = request.get_json()
             if data["marker"] == "execute_action_list":
-                FetchForAction.experiment_config_handler.set_coordinate_type(data["type"])
+                FetchForAction.experiment_config_handler.set_use_space(data["type"])
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
+        except Exception as e: 
+                print("ERROR",e.__str__())
                 return str(e)
         
 
@@ -205,7 +250,7 @@ class FetchForAction:
     @staticmethod
     def get_coordinates():
      
-        type = FetchForAction.experiment_config_handler.get_coordinate_type()
+        type = FetchForAction.experiment_config_handler.get_use_space()
         to_return = list[dict]
         positions = FetchForAction.experiment_config_handler.get_vars()
         for position in positions:
@@ -215,48 +260,27 @@ class FetchForAction:
             to_return.append(coordinate)
         return to_return
        
-
-    #todo
-    def get_mapping_list_part(table: dict()):
-        to_return = table
-        del to_return["sublist"]
-        return to_return
-
-
-    def navigate_by_content_pos(action_list: dict, content_pos: list[int]):
-        list_counter = []
-        counter = 0
-        for x in range(0, content_pos[0]):
-            if action_list["content"][x]["key" ] == "sequential_list" or action_list["content"][x]["key" ] == "parallel_list":
-                counter += 1
-        list_counter.append(counter)
-        next = content_pos[0]
-        content_pos = content_pos.pop(0)
-        if not len(content_pos) == 0:
-            list_counter.append(FetchForAction.navigate_by_content_pos(action_list["content"][next], content_pos))
-        return list_counter
-
-
     
     # need to test
     @app.route("/api/get_mapping_table")
     @staticmethod
     def get_mapping_table():
-        # if FetchForAction.experiment_config_handler.has_mapping(FetchForAction.current_list_name):
-        #     total_table = FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
-        #     if FetchForAction.current_mapping_pos[0] == -1:
-        #         return FetchForAction.get_mapping_list_part(total_table)
-        #     else:
-        #         action_list = FetchForAction.action_list_handler.dictify_with_nrs(FetchForAction.current_list_name)
-        #         look_up_list = FetchForAction.navigate_by_content_pos(action_list, FetchForAction.current_mapping_pos)
-        #         temp = total_table
-        #         for x in look_up_list:
-        #             temp = temp["sublist"][x]
-        #         return  FetchForAction.get_mapping_list_part(temp)
-        # else:
-        #     temp_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
-        #     temp_table = temp_list.do_mapping()
-        #     FetchForAction.experiment_config_handler.set_mapping(FetchForAction.current_list_name, temp_table)
+        if FetchForAction.experiment_config_handler.has_mapping(FetchForAction.current_list_name):
+            total_table = FetchForAction.experiment_config_handler.get_map(FetchForAction.current_list_name)
+            if FetchForAction.current_mapping_pos[0] == -1:
+                return get_mapping_list_part(total_table)
+            else:
+                action_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
+                action_list = action_list.nr_dictify()
+                look_up_list = navigate_by_content_pos(action_list, FetchForAction.current_mapping_pos)
+                temp = total_table
+                for x in look_up_list:
+                    temp = temp["sublist"][x]
+                return get_mapping_list_part(temp)
+        else:
+            temp_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
+            temp_table = temp_list.do_mapping()
+            FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, temp_table)
             return {0: "ip0", 1: "ip0",} #temp_table
 
 
@@ -264,7 +288,7 @@ class FetchForAction:
     @app.route("/api/set_mapping_in_table", methods=['POST'])
     @staticmethod
     def set_mapping_in_table():
-        total= FetchForAction.experiment_config_handler.get_mapping_table(FetchForAction.current_action_list.name)
+        total= FetchForAction.experiment_config_handler.get_map(FetchForAction.current_list_name)
         list =  total
         data = request.get_json()
         if not FetchForAction.current_mapping_pos[0] == -1:
@@ -281,8 +305,9 @@ class FetchForAction:
         #else:
            # total = list
     
-        FetchForAction.experiment_config_handler.set_mapping(FetchForAction.current_action_list, total)   
-        FetchForAction.experiment_config_handler.set_shortcut_map(FetchForAction.current_button_index, total)
+        FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, total)  
+        if not FetchForAction.current_mapping_pos[0] == -1:
+            FetchForAction.experiment_config_handler.set_shortcut_map(FetchForAction.current_button_index, total)
         return "Done", 201
    
     @app.route("/api/set_mapping_pos", methods=['POST'])
@@ -297,27 +322,11 @@ class FetchForAction:
     @app.route("/api/set_button_index", methods=['POST'])
     @staticmethod
     def set_button_index():
-        data = request.get_json()
-        FetchForAction.current_button_index = data
-        print("\n\n\njaaaaaaaaaaaaaaaa")
+        #data = request.get_json() test
+        FetchForAction.current_button_index = 0 #data test
         return "Done", 201
     
 
 
 
    
-
-    def replace_sub_list_buttom_up(main_list, list, position: list[int]):
-        toplist = main_list["sublist"]
-        if len(position)== 0:
-           list["sublist"] = toplist
-           return list
-        else:  
-            next_list = toplist[position[0]]
-            print(position), print("position")
-            new_position = position
-            new_position.pop(0)
-            print(position)
-            toplist.insert(position[0],FetchForAction.replace_sub_list_buttom_up(next_list, list, new_position))
-        main_list["sublist"] = toplist
-        return main_list

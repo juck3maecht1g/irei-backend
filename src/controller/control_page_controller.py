@@ -63,7 +63,8 @@ class ControlPageController:
 
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
         
 
@@ -82,7 +83,8 @@ class ControlPageController:
 
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
     
 
@@ -101,7 +103,8 @@ class ControlPageController:
 
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
     
 
@@ -119,7 +122,8 @@ class ControlPageController:
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
     
 
@@ -140,7 +144,8 @@ class ControlPageController:
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
         
 
@@ -152,7 +157,7 @@ class ControlPageController:
     @app.route("/api/" + marker_save_position, methods=['POST'])
     @staticmethod
     def post_save_position() -> Tuple[str, int]:
-        #try:
+        try:
             data = request.get_json()
 
             if data["marker"] == ControlPageController.marker_save_position:
@@ -160,7 +165,6 @@ class ControlPageController:
                 robots = ChooseLRController.get_robots_from_ip([result])
                 robot_dict = dict()
                 robot = robots[0]
-                print("\n\n"), print(ControlPageController.exp_config_handler.get_position_ip())
                 robot_dict["name"]= robot.get_name()
                 robot_dict["ip"]= robot.get_ip()
              
@@ -170,8 +174,9 @@ class ControlPageController:
                 return "Done", 201
             else:
                 return 'marker missmatched', 201
-        #except Exception as e:
-            #return str(e)
+        except Exception as e: 
+            print("ERROR",e.__str__())
+            return str(e)
         
 
 
@@ -202,7 +207,8 @@ class ControlPageController:
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
         
 
@@ -229,7 +235,8 @@ class ControlPageController:
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201
-        except Exception as e:
+        except Exception as e: 
+            print("ERROR",e.__str__())
             return str(e)
         
 

@@ -31,10 +31,6 @@ class SimpleExp(threading.Thread):
 
         self.scene.start()
 
-        print()
-        print()
-        print("after start")
-
         self.selected_mode = None
         self.stop_all = False
         self.flipper = 1
@@ -223,7 +219,7 @@ class SimpleExp(threading.Thread):
 if __name__ == "__main__":
     register_experiment(SimpleExp) 
     initialize()
-    #exp = SimpleExp([{"name": "test"}, {"name": "test2"}])
+    exp = SimpleExp([{"name": "test"}, {"name": "test2"}])
    
   
     #exp.set_mode("mode_a")
