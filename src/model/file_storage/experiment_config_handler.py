@@ -71,7 +71,11 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     # todo
     # method overwrites old var if they have the same name
     def set_var(self, var: Variable) -> bool:
-        super().read()["variables"].update({var.get_name(): var.to_dict()[var.get_name()]})
+        super().read()
+        if self.data["variables"] is None:
+            self.data["variables"] = var.to_dict()
+        else:
+            self.data["variables"].update(var.to_dict())
         self.write()
 
         return True

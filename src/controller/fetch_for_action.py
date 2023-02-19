@@ -20,9 +20,9 @@ class FetchForAction:
     experiment_config_handler: ExperimentConfigHandler
     alr_interface: AlrInterface
     listable_factory: ListableFactory
-    current_button_index= 3
-    current_mapping_pos= [1,0]
-    current_list_name = "some list"
+    current_button_index= 0
+    current_mapping_pos= 0
+    current_list_name = 0
 
     @staticmethod
     def set_experiment_config_handler(experiment_config_handler) -> None:
@@ -62,7 +62,7 @@ class FetchForAction:
     @staticmethod
     def set_current_list():
         try:
-            data = "some list" #request.get_json() test
+            data = request.get_json() 
            
             
             for action_list in FetchForAction.action_list_handler.get_lists():
@@ -109,7 +109,7 @@ class FetchForAction:
     @staticmethod
     def append_action():
         try:
-            data = {"marker": "append_action", "key": "wait", "robot": ["ex_ip1"], "time": 71283956238}#request.get_json() test
+            data = request.get_json()#{"marker": "append_action", "key": "wait", "robot": ["ex_ip1"], "time": 71283956238}#request.get_json() 
             action: Action
             print("DATA",data)
             if data["marker"] == "append_action":
@@ -153,6 +153,7 @@ class FetchForAction:
     def delete_action():
         try:
             data = request.get_json()
+            print(data)
             if data["marker"] == "delete_action":
                 action_list = FetchForAction.action_list_handler.get_list(FetchForAction.current_list_name)
                 FetchForAction.action_list_handler.del_action(FetchForAction.current_list_name, data["position"])
@@ -188,7 +189,7 @@ class FetchForAction:
     @staticmethod
     def create_action_list():
         try:
-            data = {"marker": "create_action_list", "name": "some list", "key": "sequential_list"} #request.get_json() test
+            data = request.get_json() 
             if data["marker"] == "create_action_list":
                 FetchForAction.action_list_handler.create(data["name"], data["key"])
                 return 'Done', 201
@@ -209,9 +210,10 @@ class FetchForAction:
         try:
             data = request.get_json()
             if data["marker"] == "execute_action_list":
-                name = FetchForAction.experiment_config_handler.get_shortcuts[data["pos"]]
+                name = FetchForAction.experiment_config_handler.get_shortcuts()[FetchForAction.current_button_index]
+                print(name), print("test")
                 action_list = FetchForAction.action_list_handler.get_list(name)
-                map = FetchForAction.experiment_config_handler.get_shortcut_map[data["pos"]]
+                map = FetchForAction.experiment_config_handler.get_shortcut_map[FetchForAction.current_button_index]
                 to_execute = action_list.map_dictify(map)
                 FetchForAction.alr_interface.execute_sequenzial_list(to_execute)
                 return 'Done', 201
@@ -288,44 +290,58 @@ class FetchForAction:
     @app.route("/api/set_mapping_in_table", methods=['POST'])
     @staticmethod
     def set_mapping_in_table():
-        total= FetchForAction.experiment_config_handler.get_map(FetchForAction.current_list_name)
-        list =  total
-        data = request.get_json()
-        if not FetchForAction.current_mapping_pos[0] == -1:
-            for x in FetchForAction.current_mapping_pos:       
-                list = list["sublist"] [x]
+        try:
+            total= FetchForAction.experiment_config_handler.get_map(FetchForAction.current_list_name)
+            list =  total
+            data = request.get_json()
+            if not FetchForAction.current_mapping_pos[0] == -1:
+                for x in FetchForAction.current_mapping_pos:       
+                    list = list["sublist"] [x]
+            
+
+            for elem in data:
+                for key in elem:
+                    list[int(key)] = elem[key] 
+
+            #if not FetchForAction.current_mapping_pos[0] == -1:
+                #total = FetchForAction.replace_sub_list_buttom_up(total, list, FetchForAction.current_mapping_pos)
+            #else:
+            # total = list
         
-
-        for elem in data:
-            for key in elem:
-                list[int(key)] = elem[key] 
-
-        #if not FetchForAction.current_mapping_pos[0] == -1:
-            #total = FetchForAction.replace_sub_list_buttom_up(total, list, FetchForAction.current_mapping_pos)
-        #else:
-           # total = list
-    
-        FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, total)  
-        if not FetchForAction.current_mapping_pos[0] == -1:
-            FetchForAction.experiment_config_handler.set_shortcut_map(FetchForAction.current_button_index, total)
-        return "Done", 201
+            FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, total)  
+            if not FetchForAction.current_mapping_pos[0] == -1:
+                FetchForAction.experiment_config_handler.set_shortcut_map(FetchForAction.current_button_index, total)
+            return "Done", 201
+        except Exception as e: 
+                print("ERROR",e.__str__())
+                return str(e)
+        
    
     @app.route("/api/set_mapping_pos", methods=['POST'])
     @staticmethod
     def set_mapping_pos():
-        data = request.get_json()
-        FetchForAction.current_mapping_pos = data
+        try:
+            data = request.get_json()
+            FetchForAction.current_mapping_pos = data
 
-        return "Done", 201
-       
+            return "Done", 201
+        except Exception as e: 
+                    print("ERROR",e.__str__())
+                    return str(e)
+        
 
     @app.route("/api/set_button_index", methods=['POST'])
     @staticmethod
     def set_button_index():
-        #data = request.get_json() test
-        FetchForAction.current_button_index = 0 #data test
-        return "Done", 201
-    
+        try :
+            data = request.get_json() 
+            FetchForAction.current_button_index = data 
+            print(FetchForAction.current_button_index)
+            return "Done", 201
+        except Exception as e: 
+                print("ERROR",e.__str__())
+                return str(e)
+        
 
 
 

@@ -54,7 +54,8 @@ class ActionListHandler(YamlFile, PathObserver):
     def get_lists(self) -> list[str]:
         return os.listdir(self.path)
 
-    def get_list(self, name) -> ActionList:
+    def get_list(self, name: str) -> ActionList:
+        print(name), print("\n\nname")
         sublist = 0
         self.file_name = name
         self.read()

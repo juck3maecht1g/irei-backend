@@ -39,6 +39,7 @@ class PcDataHandler(PathSubject):
         with open(os.path.join(self.path, file_name), 'wb') as f:
             pickle.dump(data, f)
 
+
     def delete_directory(self, name):
         remove_path = os.path.join(self.path, name)
         shutil.rmtree(remove_path)

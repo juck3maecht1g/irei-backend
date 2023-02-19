@@ -3,10 +3,10 @@
 from src.controller.irei import initialize, register_experiment
 import enum
 import threading
-#import multiprocessing
+import multiprocessing
 import time
 from typing import Dict
-#from alr_sim.sims import SimFactory
+from alr_sim.sims import SimFactory
 
 
 
@@ -24,8 +24,8 @@ class SimpleExp(threading.Thread):
         factory = SimFactory.SimRepository.get_factory("pybullet")
         self.scene = factory.create_scene()
         self.robots: Dict[SimFactory.RobotBase] = {}
-        for i, r in enumerate(robots):
-            self.robots[r["name"]] = factory.create_robot(
+        for i, r in enumerate(robots):#
+            self.robots[r["ip"]] = factory.create_robot(
                 self.scene, base_position=[i, 0, 0]
             )
 
@@ -34,7 +34,7 @@ class SimpleExp(threading.Thread):
         self.selected_mode = None
         self.stop_all = False
         self.flipper = 1
-        #self.start()
+        self.start()
 
 
 
@@ -86,6 +86,7 @@ class SimpleExp(threading.Thread):
 
     # resets the scene of the experiment
     def reset(self) -> bool:
+        print(self.get_name()) # test
         self.scene.reset()
         return True
 
@@ -115,25 +116,31 @@ class SimpleExp(threading.Thread):
     # positional
     # returns the current cartesian position data of thr robot dict{"name":str,"ip":str}with the given ip
     def get_cartesian_position_of(self, robot: dict) -> dict:
-        return self.robots[robot["name"]].current_c_pos
+        print(robot)
+        return self.robots[robot].current_c_pos
 
     # returns the current joint position data of thr robot dict{"name":str,"ip":str}with the given ip
     def get_joint_position_of(self, robot: dict) -> dict:
-        return self.robots[robot["name"]].current_j_pos
+        return self.robots[robot].current_j_pos
 
     # gripper
     # changes state of all robots list[dict{"name":str,"ip"str}] which ips are in the given list
-    def change_grippper_state(self, robots: list[dict]) -> bool:
-        pass
+    def change_grippper_state(self, robot, robots: list[dict]) -> bool:
+        print("Only Support JOINT for now")
+        # For Cartesian use gotoCartPositionAndQuat() instead of gotoJointPosition()
+        self.robots[robot].gotoJointPosition(
+            [-10,3.2,3,3.2,-5,3,3], block=True
+        )
+        
 
     # opens the gripper of the robot dict{"name":str,"ip":str}specified by ip
     def open_gripper(self, robot: dict) -> bool:
-        self.robots[robot["name"]].open_fingers()
+        self.robots[robot].open_fingers()
         return True
 
     # closes the gripper of the robot dict{"name":str,"ip":str}specified by ip
     def close_gripper(self, robot: dict) -> bool:
-        self.robots[robot["name"]].close_fingers()
+        self.robots[robot].close_fingers()
         return True
 
     # action
@@ -196,17 +203,17 @@ class SimpleExp(threading.Thread):
             # For Cartesian use gotoCartPositionAndQuat() instead of gotoJointPosition()
 
             for r in action["robots"][:-1]:
-                self.robots[r["name"]].gotoJointPosition(
+                self.robots[r["ip"]].gotoJointPosition(
                     action["coordinate"], block=False
                 )
-            self.robots[action["robots"][-1]["name"]].gotoJointPosition(
+            self.robots[action["robots"][-1]["ip"]].gotoJointPosition(
                 action["coordinate"], block=True
             )
         elif key == "wait":
 
             for r in action["robots"][:-1]:
-                self.robots[r["name"]].wait(action["time"], block=False)
-            self.robots[action["robots"][-1]["name"]].wait(action["time"], block=True)
+                self.robots[r["ip"]].wait(action["time"], block=False)
+            self.robots[action["robots"][-1]["ip"]].wait(action["time"], block=True)
 
         else:
             raise NotImplementedError(f"Action {key} is not implemented")

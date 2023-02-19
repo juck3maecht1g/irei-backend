@@ -40,8 +40,8 @@ class Variable:
     def get_used_space(self) -> str:
         return self.used_space
 
-    def get_cartesian(self) -> Cartesian:
+    def get_cartesian(self) -> dict:
         return self.cartesian.get_coordinate()
 
-    def get_joint(self) -> Joint:
+    def get_joint(self) -> dict:
         return self.joint.get_coordinate()
