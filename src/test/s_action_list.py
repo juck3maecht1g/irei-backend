@@ -57,6 +57,7 @@ class TestSoloActionList(unittest.TestCase):
         self.assertEqual(action2.nr_dictify(),self.action_list.get_list(name).nr_dictify()["content"][0])
         self.assertEqual(action1.nr_dictify(),self.action_list.get_list(name).nr_dictify()["content"][1])
 
+
     def test_del_action(self):
         name = "List1"
         action = CloseGripper([1])
@@ -65,6 +66,30 @@ class TestSoloActionList(unittest.TestCase):
         self.assertEqual(action.nr_dictify(),self.action_list.get_list(name).nr_dictify()["content"][0])
         self.action_list.del_action(name, 0)
         self.assertEqual([], self.action_list.get_list(name).nr_dictify()["content"])
+
+    def test_list_in_list(self):
+        pass
+
+    
+    #edgecases
+    def test_get_lists_without_folder(self):
+        self.assertEqual([], self.action_list.get_lists())
+
+    def test_create_root(self):
+        self.pc_data.navigate_to_parent()
+        with self.assertRaises(ValueError):
+            self.action_list.create("test", "sequential_list")
+
+    def test_name_already_exists(self):
+        name = "List1"
+        self.action_list.create(name, "sequential_list")
+        with self.assertRaises(ValueError):
+            self.action_list.create(name, "parallel_list")
+
+    def test_sublist_does_not_exists(self):
+        passgit 
+        
+    
         
 
 if __name__ == '__main__':

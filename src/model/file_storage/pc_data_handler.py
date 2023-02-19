@@ -50,3 +50,6 @@ class PcDataHandler(PathSubject):
     def delete_all_content(self):
         self.delete_directory("")
         os.mkdir(self.path)
+
+    def get_path(self):
+        return self.path
