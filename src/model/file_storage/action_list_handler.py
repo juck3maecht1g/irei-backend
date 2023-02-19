@@ -29,79 +29,79 @@ class ActionListHandler(YamlFile, PathObserver):
         super().__init__(root, None, self.data)
         self.root = root
 
+    def __folder_exists(self):
+        if os.path.dirname(self.path) == self.root:
+            raise ValueError(f"There can't be an action list in your root path: {self.root}")
+        if not os.path.exists(self.path):
+            os.mkdir(self.path)
+
+    def __is_list(self, name):
+        self.__folder_exists()
+        if not name in os.listdir(self.path):
+            raise ValueError(f"There is no action list named {name} in {self.path}")
+        
+        self.file_name = name
+        self.read()
 
     def create(self, name: str, type: str):
         self.file_name = name
+
+        self.__folder_exists()
+        if (name in os.listdir(self.path)):
+            raise ValueError(f"There is already an action list named {name} in {self.path}")
+            
         self.data["type"] = type
-        parent_path = os.path.dirname(self.path)
-        print(self.path)
-        print(self.root)
-        if not (self.path == self.root):
-            print("asd")
-
-            if not (ActionListHandler.folder_name in os.listdir(parent_path)):
-                print("gnfdkmgdlf")
-                os.mkdir(self.path)
-
-            if not name in os.listdir(self.path):
-                print("asdg bjansklfv sijv")
-                self.write()
+        self.write()
+            
 
     def update_path(self, path):
         self.path = os.path.join(path, ActionListHandler.folder_name)
 
 
     def get_lists(self) -> list[str]:
+        self.__folder_exists()
         return os.listdir(self.path)
 
     def get_list(self, name: str) -> ActionList:
         print(name), print("\n\nname")
         sublist = 0
-        self.file_name = name
-        self.read()
+        self.__is_list(name)
         out = ActionList(name, self.data["type"])
         for action in self.data["content"]:
-            print("\n\naction", action["key"])
-            print(action)
             if action["key"] == "file":
                 out.add_action(self.get_list(action["name"]))
                 sublist += 1
                 self.file_name = name
             else:
-                print(action) # test
                 out.add_action(ListableFactory.create_single_action(action))
                
         return out
 
     def add_action(self, name, action: Action):
-        print("add acation")
-        self.file_name = name
-        self.read()
+        self.__is_list(name)
         new = action.nr_dictify()
-        print("\nnew",new)
         if "list" in new["key"]:
             new["key"] = "file"
-            new["name"] = action.nr_dictify()["name"]
             del new["content"]
-        print("\nnew2",new)
+            new["name"] = action.nr_dictify()["name"]
         self.data["content"].append(new)
         self.write()
 
+    def print(self, name):
+        self.__is_list(name)
+        print(self.data)
+
     def del_action(self, name: str, index: int) -> bool:
-        self.file_name = name
-        self.read()
+        self.__is_list(name)
         self.data["content"].pop(index)
         self.write()
 
     def swap_action(self, name: str, index1: int, index2: int) -> bool:
-        self.file_name = name
-        self.read()
+        self.__is_list(name)
         temp = self.data["content"][index1]
         self.data["content"][index1] = self.data["content"][index2]
         self.data["content"][index2] = temp
         self.write()
-
-    
 
     
    

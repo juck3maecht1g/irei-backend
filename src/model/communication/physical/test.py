@@ -1,1 +1,0 @@
-from src.model.communication.physical.laboratory import Laboratory

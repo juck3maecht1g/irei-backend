@@ -31,7 +31,7 @@ class PcDataHandler(PathSubject):
         return os.listdir(self.path)
 
     def create_directory(self, name):
-        if not (name in self.get_dir_content()):
+        if not name in self.get_dir_content():
             new_dir = os.path.join(self.path, name)
             os.mkdir(new_dir)
 
@@ -47,3 +47,10 @@ class PcDataHandler(PathSubject):
     def delete_file(self, name):
         remove_path = os.path.join(self.path, name)
         os.remove(remove_path)
+
+    def delete_all_content(self):
+        self.delete_directory("")
+        os.mkdir(self.path)
+
+    def get_path(self):
+        return self.path
