@@ -9,7 +9,7 @@ from src.model.action.action_list import ActionList
 
 from src.root_dir import root_path
 
-class TestSoloActionList(unittest.TestCase):
+class TestSoloActionListHandler(unittest.TestCase):
 
     def setUp(self):
         self.pc_data = PcDataHandler(root_path)
