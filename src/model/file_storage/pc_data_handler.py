@@ -22,7 +22,7 @@ class PcDataHandler(PathSubject):
             self.notify(self.path)
 
     def is_exp(self) -> bool:
-        return "experiment_config" in os.listdir(self.path)
+        return "experiment_config.yml" in os.listdir(self.path)
 
     def get_sub_dir(self):
         return list(filter(lambda x: os.path.isdir(os.path.join(self.path, x)), os.listdir(self.path)))

@@ -7,6 +7,7 @@ from src.model.file_storage.file_interface import FileInterface
 class YamlFile(FileInterface):
 
     def write(self):
+        print("\nWRITING YAML\n")
         with open(os.path.join(self.path, self.file_name), 'w') as outfile:
             yaml.dump(self.data, outfile, sort_keys=False,
                       default_flow_style=None)

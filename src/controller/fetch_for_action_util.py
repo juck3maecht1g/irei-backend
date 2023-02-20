@@ -17,6 +17,7 @@ def extend_mapping(mapping: dict, ips: list[str]) -> dict:
 
 def convert_ip_to_nrs(mapping:dict, ips:list[str]) -> list[str]:
     numbers = []
+    print("ips ", ips)
     for ip in ips:
         if ip in mapping.values():
             for k in mapping.keys():
@@ -27,6 +28,7 @@ def convert_ip_to_nrs(mapping:dict, ips:list[str]) -> list[str]:
             while free_key in mapping.keys():
                 free_key +=1
             numbers.append(free_key)
+    print("numbers", numbers)
     return numbers
 
 def replace_sub_list_buttom_up(main_list, list, position: list[int]):

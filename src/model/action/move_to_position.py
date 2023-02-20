@@ -6,10 +6,10 @@ from src.model.communication.position.variable import Variable
 class MoveToPosition(ListableAction):
     key: str = "move"
 
-    def __init__(self, robot_nrs: list[int], position: Variable) -> None:
+    def __init__(self, robot_nrs: list[int], position: Variable, type: str) -> None:
         super().__init__(robot_nrs)
         self.position = position
-        self.type = position.get_used_space()
+        self.type = type
 
     def map_dictify(self, map: dict) -> dict:
         to_return = dict()

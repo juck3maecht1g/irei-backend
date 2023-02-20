@@ -26,13 +26,13 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
             "lab": "labname dummy",
             "experiment robots": ["ex_ip1", "ex_ip2"],
             "mode": "test_mode",
-            "save position ip": "save_ip",
+            "save position ip": "ex_ip2",
             "open gripper ips": ["open_ip", "open_ip1"],
             "close gripper ips": ["close_ip"],
             "switch gripper ips": ["switch_ip"],
+            "used space": "joint",
             "variables": {
                 "example_name1": {
-                    "used space": "joint",
                     "cartesian": {
                         "coord": [10, 10, 10],
                         "quat": [10, 1, 1, 1]
@@ -44,7 +44,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
             }
         }
         
-        super().__init__(root, "experiment_config", self.data)
+        super().__init__(root, "experiment_config.yml", self.data)
         self.root = root
         
 
@@ -72,10 +72,11 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     # method overwrites old var if they have the same name
     def set_var(self, var: Variable) -> bool:
         super().read()
+        to_write = var.to_dict()
         if self.data["variables"] is None:
-            self.data["variables"] = var.to_dict()
+            self.data["variables"] = to_write
         else:
-            self.data["variables"].update(var.to_dict())
+            self.data["variables"].update(to_write)
         self.write()
 
         return True
@@ -95,7 +96,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
                 if not (var_name in no_overwrite):
                     var_data = {var_name: file_variables[var_name]}
                     no_overwrite.append(var_name)
-                    out.append(var_data)
+                    out.append(Variable(var_data))
 
             self.path = os.path.dirname(self.path)
 
@@ -104,11 +105,12 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def get_shortcuts(self) -> list[str]:
         self.read()
-        print("test") 
-        print([i.keys() for i in self.data["shortcuts"]])
-        return [i.keys() for i in self.data["shortcuts"]]
+        print("get shortcuts",[list(i.keys()) for i in self.data["shortcuts"]])
+        return [list(i.keys())  for i in self.data["shortcuts"]]
 
     def set_shortcut(self, pos, name, mapping):
+        
+        print("set shortcuts")
         
         self.data["shortcuts"][pos] = {name: mapping}
 
@@ -122,6 +124,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def has_mapping(self, name:str) -> bool:
         self.read()
+        print("has mapping")
         return name in self.data["mapped"].keys()
     
     def set_map(self, name: str, map: dict):
@@ -130,6 +133,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
 
     def get_shortcut_map(self, index: int) -> list:
+        print("get shortcut map")
         self.read()
         list_name = list(self.data["shortcuts"][index].keys())[0]
         return self.data["shortcuts"][index][list_name]
@@ -141,7 +145,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def _get_file_vars(self):
         self.read()
-        return super().read()["variables"]
+        return self.data["variables"]
 
     def get_exp_interface(self) -> str:
         self.read()
@@ -193,7 +197,6 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def get_position_ip(self) -> str:
         self.read()
-        print("\n\n"), print(self.data["save position ip"])
         return self.data["save position ip"]
 
     def set_position_ip(self, ip: str) -> None:
@@ -228,8 +231,10 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         self.data["switch gripper ips"] = ip
         self.write()
     
-    def get_use_space(self):
-        pass
+    def get_used_space(self):
+        self.read()
+        return self.data["used space"]
 
     def set_use_space(self, type):
-        pass
+        self.data["used space"] = type
+        self.write()

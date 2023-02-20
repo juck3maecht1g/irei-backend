@@ -44,6 +44,7 @@ class ActionListHandler(YamlFile, PathObserver):
         self.read()
 
     def create(self, name: str, type: str):
+        print("\n\n"), print(name)
         self.file_name = name
 
         self.__folder_exists()
@@ -63,7 +64,7 @@ class ActionListHandler(YamlFile, PathObserver):
         return os.listdir(self.path)
 
     def get_list(self, name: str) -> ActionList:
-        print(name), print("\n\nname")
+        print("name it" ,name)
         sublist = 0
         self.__is_list(name)
         out = ActionList(name, self.data["type"])

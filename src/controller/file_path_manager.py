@@ -61,7 +61,7 @@ class FilePathManager:
     def create_dir():
         try:
             data = request.get_json()
-            if data["marker"] == "crerate":
+            if data["marker"] == "create":
 
                 FilePathManager.pc_data_handler.create_directory(data["name"])
                 FilePathManager.pc_data_handler.navigate_to_child(data["name"])

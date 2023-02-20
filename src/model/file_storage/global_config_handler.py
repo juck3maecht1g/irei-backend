@@ -38,7 +38,7 @@ class GlobalConfigHandler(YamlFile):
                 }
             }
         }
-        super().__init__(path, "global_config", data)
+        super().__init__(path, "global_config.yml", data)
 
     def create(self):
         if not (self.file_name in os.listdir(self.path)):

@@ -50,11 +50,12 @@ class AlrInterface:
         print("saving") #[0.2,0.2,0.2,0.2,0.2,0,0]
         print(self.active_experiment)
         cartesian = self.active_experiment.get_cartesian_position_of(robot)
-        print(cartesian)
+        print("CART", cartesian)
         joint = self.active_experiment.get_joint_position_of(robot)
         cart_dict = {"coord": cartesian, "quat": [1, 0, 0, 0]} # test
         joint_dict = {"values": joint}
         var_dict = {name: {"used space": "joint", "cartesian": cart_dict, "joint": joint_dict}}
+        print("CREATE VAR")
         position = Variable(var_dict)
         print("saved position in alr-sim")
         print(joint)
@@ -78,8 +79,8 @@ class AlrInterface:
         self.active_experiment.set_mode(mode)
         print("sets the experiment in the specified mode")
 
-    def execute_sequenzial_list(self, action_list_dict: dict):
-        self.active_experiment.execute_sequenzial_list(action_list_dict)
+    def execute_list(self, action_list_dict: dict):
+        self.active_experiment.execute_list(action_list_dict)
         print("would exec list")
 
     def validate_action(self, action: dict) -> bool:

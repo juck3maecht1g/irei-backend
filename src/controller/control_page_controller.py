@@ -164,9 +164,9 @@ class ControlPageController:
 
             if data["marker"] == ControlPageController.marker_save_position:
                 result = ControlPageController.exp_config_handler.get_position_ip()
-                print("testtest")
+                print("testtest", result)
                 robots = ChooseLRController.get_robots_from_ip([result])
-                
+                print(robots)
                 robot_dict = dict()
                 robot = robots[0]
                 robot_dict["name"]= robot.get_name()
@@ -224,8 +224,9 @@ class ControlPageController:
     @app.route("/api/" + marker_get_mode)
     @staticmethod
     def get_mode() -> str:
-
+        print("results")
         result = ControlPageController.exp_config_handler.get_mode()
+        print(result)
         return json.dumps(result)
 
     marker_emergeny_stop = "emergency_stop"
