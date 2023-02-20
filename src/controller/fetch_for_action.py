@@ -113,29 +113,31 @@ class FetchForAction:
     @app.route("/api/append_action", methods=['POST'])
     @staticmethod
     def append_action():
-        try:
+        #try:
             data = request.get_json()#{"marker": "append_action", "key": "wait", "robot": ["ex_ip1"], "time": 71283956238}#request.get_json() 
             action: Action
             print("DATA",data)
             if data["marker"] == "append_action":
-                print(data)
                 if data["key"] == "move":
+                   
                     positions = FetchForAction.experiment_config_handler.get_vars()
+                    print("hier", data)
                     for position in positions:
-                        if data["position"]== position.get_name():
-                            data["position"]= position
-                            data["type"] = FetchForAction.experiment_config_handler.get_coordinate_type()
+                        type = FetchForAction.experiment_config_handler.get_used_space()
+                        if data["position"]== position.get_name(): 
+                            data["name"]= position.get_name()
+                            data["coord"] = position.get_coordinate(type)
+                            data["type"] = type
+                            print("hier", data)
                 if not "list" in data["key"]:
-                    print("2AIFBNA")
+                   
                     print(FetchForAction.current_button_index)
                     map = FetchForAction.experiment_config_handler.get_shortcut_map(FetchForAction.current_button_index)
-                    print("map", map)
+                   
                     new_mapping = extend_mapping(map, data["robot"])
                     print("map", map)
                     print(convert_ip_to_nrs(map, data["robot"]))
                     data["robot_nrs"] = convert_ip_to_nrs(map, data["robot"]) #missing mapping dict
-                    print("data",data["robot_nrs"])
-                    print("data ",data["key"])
                     print(data)
                     action = ListableFactory.create_single_action(data)
                     print("action:    aasfhbwgijfklsmadk",action)
@@ -147,7 +149,7 @@ class FetchForAction:
                 FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, new_mapping)   
                 FetchForAction.experiment_config_handler.set_shortcut_map(FetchForAction.current_button_index, new_mapping)
                 return 'Done', 201
-        except Exception as e: 
+        #except Exception as e: 
             print("ERROR",e.__str__())
             return str(e)       
 

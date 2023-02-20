@@ -18,7 +18,7 @@ class ListableFactory:
         elif action["key"] == "custom":
             return CustomAction(action["robot_nrs"], action["action"])
         elif action["key"] == "move":
-            return MoveToPosition(action["robot_nrs"], action["position"])
+            return MoveToPosition(action["robot_nrs"], action["name"], action["coord"], action["type"])
         elif action["key"] == "open_gripper":
             return OpenGripper(action["robot_nrs"])
         elif action["key"] == "wait":
