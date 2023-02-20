@@ -3,7 +3,6 @@ from src.model.communication.position.variable import Variable
 
 class AlrInterface:
     # cunstruktor
-    active_experiment = None
 
     def __init__(self, active_experiment):
         self.active_experiment = active_experiment
@@ -18,9 +17,10 @@ class AlrInterface:
         print("logging canceled")
 
     def stop_log(self):
-        self.active_experiment.stop_log()
-        print("stop")
-        return {"log1": "234715623478568127"}  # to be deleted
+        print("stop log")
+        to_return = self.active_experiment.stop_log()
+        #print(to_return)
+        return to_return  # to be deleted
 
     def reset_scene(self):
         self.active_experiment.reset()
@@ -47,20 +47,28 @@ class AlrInterface:
             self.active_experiment.approach_joint(robot, position.get_joint)
 
     def save_posiiton(self, robot, name):
-        cartesian = self.get_cartesian_position_of(robot)
-        joint = self.get_joint_position_of(robot)
-        position = Variable(cartesian, joint)
+        print("saving") #[0.2,0.2,0.2,0.2,0.2,0,0]
+        print(self.active_experiment)
+        cartesian = self.active_experiment.get_cartesian_position_of(robot)
+        print(cartesian)
+        joint = self.active_experiment.get_joint_position_of(robot)
+        cart_dict = {"coord": cartesian, "quat": [1, 0, 0, 0]} # test
+        joint_dict = {"values": joint}
+        var_dict = {name: {"used space": "joint", "cartesian": cart_dict, "joint": joint_dict}}
+        position = Variable(var_dict)
         print("saved position in alr-sim")
-        return Variable(dict({name: dict({
-                    "used space": "joint",
-                    "cartesian": {
-                        "coord": [15, 15, 15],
-                        "quat": [10, 1, 1, 1]
-                    },
-                    "joint": {
-                        "values": [105, 150, 150, 10, 150, 10, 10]
-                    }
-                })}))
+        print(joint)
+        # return Variable(dict({name: dict({
+        #             "used space": "joint",
+        #             "cartesian": {
+        #                 "coord": [15, 15, 15],
+        #                 "quat": [10, 1, 1, 1]
+        #             },
+        #             "joint": {
+        #                 "values": [105, 150, 150, 10, 150, 10, 10]
+        #             }
+        #         })}))
+        return position
 
     def emergency_stop(self):
         self.active_experiment.emergency_stop()
@@ -76,15 +84,16 @@ class AlrInterface:
 
     def validate_action(self, action: dict) -> bool:
          print("would test the action")
-         return self.active_experiment.validate_action(dict)
+         return self.active_experiment.validate_action(action)
        
 
-    def change_gripper_state(self, robots: list[dict]):
+    def change_gripper_state(self, robot, robots: list[str]):
         print("would change state of all chosen gripppers")
-        return self.active_experiment.change_grippper_state(robots)
+        return self.active_experiment.change_grippper_state(robot, robots)
         
 
     def run_exp(self):
         print("todo")
-        #self.active_experiment.run()
+        print(self.active_experiment)
+        self.active_experiment.run()
         

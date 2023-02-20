@@ -61,9 +61,9 @@ class ActionListHandler(YamlFile, PathObserver):
     def get_lists(self) -> list[str]:
         self.__folder_exists()
         return os.listdir(self.path)
-        
 
     def get_list(self, name: str) -> ActionList:
+        print(name), print("\n\nname")
         sublist = 0
         self.__is_list(name)
         out = ActionList(name, self.data["type"])

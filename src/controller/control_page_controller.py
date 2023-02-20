@@ -113,16 +113,16 @@ class ControlPageController:
     @app.route("/api/" + marker_stop, methods=['POST'])
     @staticmethod
     def post_stop() -> Tuple[str, int]:
-        try:
+        #try:
             data = request.get_json()
             if data["marker"] == ControlPageController.marker_stop:
                 result = ControlPageController.alr_interface.stop_log()
-                ControlPageController.pc_data_handler.save_log(
-                    result, data["name"])
+                ControlPageController.pc_data_handler.save_log(data["name"], 
+                    result)
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201
-        except Exception as e: 
+        #except Exception as e: 
             print("ERROR",e.__str__())
             return str(e)
     
@@ -140,7 +140,7 @@ class ControlPageController:
                 ips: list[str] = []
                 for robot in robots: #used if shdssdhdfsrdftzhgfklhjklödfghl
                     ips.append(robot)
-                ControlPageController.alr_interface.change_gripper_state(ips)
+                ControlPageController.alr_interface.change_gripper_state(ips[0], ips)
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201
@@ -157,12 +157,16 @@ class ControlPageController:
     @app.route("/api/" + marker_save_position, methods=['POST'])
     @staticmethod
     def post_save_position() -> Tuple[str, int]:
+        
         try:
             data = request.get_json()
+            print("data", data)
 
             if data["marker"] == ControlPageController.marker_save_position:
                 result = ControlPageController.exp_config_handler.get_position_ip()
+                print("testtest")
                 robots = ChooseLRController.get_robots_from_ip([result])
+                
                 robot_dict = dict()
                 robot = robots[0]
                 robot_dict["name"]= robot.get_name()
@@ -170,6 +174,7 @@ class ControlPageController:
              
                 position = ControlPageController.alr_interface.save_posiiton(
                     result, data["name"])
+                print("ok")
                 ControlPageController.exp_config_handler.set_var(position)
                 return "Done", 201
             else:
@@ -256,4 +261,21 @@ class ControlPageController:
         to_return = f"position_from_{ControlPageController.get_identifier()}"
         return json.dumps(to_return)
     
+
+    marker_start_request = "start_request"
+    @app.route("/api/start_request", methods=['POST'])
+    @staticmethod
+    def start_request() -> Tuple[str, int]:
+        try:
+            data = request.get_json()
+            if data == ControlPageController.marker_start_request:
+                ControlPageController.alr_interface.run_exp()
+                return 'Done', 201
+            else:
+                return 'marker missmatched', 201
+        except Exception as e: 
+            print("ERROR",e.__str__())
+            return str(e)
+        
+
     

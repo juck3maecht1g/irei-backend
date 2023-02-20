@@ -202,7 +202,7 @@ class ChooseLRController:
                     ChooseLRController.experiment_config_handler.set_exp_interface(data["experiment"])
                     return "Done", 201
                 else :
-                    return "could not set up experiment", 201
+                    return str(text) + " could not set up experiment", 201
             else :
                 return 'marker missmatched', 201   
         except Exception as e: 
