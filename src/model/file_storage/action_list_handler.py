@@ -82,9 +82,16 @@ class ActionListHandler(YamlFile, PathObserver):
         self.__is_list(name)
         new = action.nr_dictify()
         if "list" in new["key"]:
-            new["key"] = "file"
-            del new["content"]
-            new["name"] = action.nr_dictify()["name"]
+            new_name = action.nr_dictify()["name"]
+            if not new_name == name:
+                if new_name in os.listdir(self.path):
+                    new["key"] = "file"
+                    del new["content"]
+                    new["name"] = new_name
+                else:
+                    raise ValueError(f"There is no saved action list with the name {name} in {self.path}.")
+            else:
+                raise ValueError(f"An action list must not contain itself.")
         self.data["content"].append(new)
         self.write()
 
@@ -103,6 +110,7 @@ class ActionListHandler(YamlFile, PathObserver):
         self.data["content"][index1] = self.data["content"][index2]
         self.data["content"][index2] = temp
         self.write()
+
 
     
    
