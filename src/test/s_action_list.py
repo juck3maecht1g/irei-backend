@@ -5,6 +5,7 @@ from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from src.model.action.close_gripper import CloseGripper
+from src.model.action.action_list import ActionList
 
 from src.root_dir import root_path
 
@@ -68,7 +69,21 @@ class TestSoloActionList(unittest.TestCase):
         self.assertEqual([], self.action_list.get_list(name).nr_dictify()["content"])
 
     def test_list_in_list(self):
-        pass
+        name1 = "List1"
+        name2 = "List2"
+        self.action_list.create(name1, "sequential_list")
+        self.action_list.create(name2, "parallel_list")
+        action1 = CloseGripper([0])
+        action2 = CloseGripper([1])
+        self.action_list.add_action(name1, action1)
+        self.action_list.add_action(name2, action2)
+        list2 = self.action_list.get_list(name2)
+        self.action_list.add_action(name1, list2)
+        self.assertEqual({'key': 'sequential_list', 'name': 'List1', 'content': [{'key': 'close_gripper', 'robots': [0],
+        'robot_nrs': [0]}, {'key': 'parallel_list', 'name':'List2', 'content': [{'key': 'close_gripper', 'robots': [1],
+        'robot_nrs': [1]}]}]}, self.action_list.get_list(name1).nr_dictify())
+    
+        
 
     
     #edgecases
@@ -87,7 +102,24 @@ class TestSoloActionList(unittest.TestCase):
             self.action_list.create(name, "parallel_list")
 
     def test_sublist_does_not_exists(self):
-        passgit 
+        name1 = "List1"
+        name2 = "List2"
+        self.action_list.create(name1, "sequential_list")
+        unsaved_action_list = ActionList(name2, "parallel_list")
+        with self.assertRaises(ValueError):
+            self.action_list.add_action(name1, unsaved_action_list)
+
+    def test_self_invocation_recursion_depth_one(self):
+        name1 = "List1"
+        name2 = "List2"
+        self.action_list.create(name1, "sequential_list")
+        list1 = self.action_list.get_list(name1)
+        with self.assertRaises(ValueError):
+            self.action_list.add_action(name1, list1)
+
+
+
+    
         
     
         
