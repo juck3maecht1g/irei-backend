@@ -247,4 +247,4 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     def decrease_shortcuts(self):
         self.read()
         self.data["shortcuts"].pop()
-        self.write
+        self.write()

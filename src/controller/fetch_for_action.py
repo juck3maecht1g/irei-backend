@@ -159,7 +159,7 @@ class FetchForAction:
                 mapping = FetchForAction.experiment_config_handler.get_shortcut_map(FetchForAction.current_button_index)
                 new_mapping = mapping_delete(action_list, mapping, data["position"])
                 FetchForAction.experiment_config_handler.set_map(FetchForAction.current_list_name, new_mapping)   
-                FetchForAction.experiment_config_handler.set_shortcut(FetchForAction.current_button_index, new_mapping)
+                FetchForAction.experiment_config_handler.set_shortcut(FetchForAction.current_button_index, FetchForAction.current_list_name,new_mapping)
             return 'Done', 201
         except Exception as e: 
             print("ERROR",e.__str__())
