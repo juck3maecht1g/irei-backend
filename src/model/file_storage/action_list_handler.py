@@ -44,7 +44,6 @@ class ActionListHandler(YamlFile, PathObserver):
         self.read()
 
     def create(self, name: str, type: str):
-        print("\n\n"), print(name)
         self.file_name = name
 
         self.__folder_exists()
@@ -52,6 +51,7 @@ class ActionListHandler(YamlFile, PathObserver):
             raise ValueError(f"There is already an action list named {name} in {self.path}")
             
         self.data["type"] = type
+        self.data["content"] = []
         self.write()
             
 
@@ -64,9 +64,11 @@ class ActionListHandler(YamlFile, PathObserver):
         return os.listdir(self.path)
 
     def get_list(self, name: str) -> ActionList:
-        print("name it" ,name)
         sublist = 0
         self.__is_list(name)
+        self.file_name = name
+        self.data = self.read()
+        print("DATA", self.data)
         out = ActionList(name, self.data["type"])
         for action in self.data["content"]:
             if action["key"] == "file":
@@ -95,9 +97,9 @@ class ActionListHandler(YamlFile, PathObserver):
         self.data["content"].append(new)
         self.write()
 
-    def print(self, name):
-        self.__is_list(name)
-        print(self.data)
+    # def print(self, name):
+    #     self.__is_list(name)
+    #     print(self.data)
 
     def del_action(self, name: str, index: int) -> bool:
         self.__is_list(name)

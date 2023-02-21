@@ -113,7 +113,7 @@ class ControlPageController:
     @app.route("/api/" + marker_stop, methods=['POST'])
     @staticmethod
     def post_stop() -> Tuple[str, int]:
-        #try:
+        try:
             data = request.get_json()
             if data["marker"] == ControlPageController.marker_stop:
                 result = ControlPageController.alr_interface.stop_log()
@@ -122,7 +122,7 @@ class ControlPageController:
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201
-        #except Exception as e: 
+        except Exception as e: 
             print("ERROR",e.__str__())
             return str(e)
     
@@ -160,13 +160,10 @@ class ControlPageController:
         
         try:
             data = request.get_json()
-            print("data", data)
 
             if data["marker"] == ControlPageController.marker_save_position:
                 result = ControlPageController.exp_config_handler.get_position_ip()
-                print("testtest", result)
                 robots = ChooseLRController.get_robots_from_ip([result])
-                print(robots)
                 robot_dict = dict()
                 robot = robots[0]
                 robot_dict["name"]= robot.get_name()
@@ -174,7 +171,6 @@ class ControlPageController:
              
                 position = ControlPageController.alr_interface.save_posiiton(
                     result, data["name"])
-                print("ok")
                 ControlPageController.exp_config_handler.set_var(position)
                 return "Done", 201
             else:
@@ -224,9 +220,9 @@ class ControlPageController:
     @app.route("/api/" + marker_get_mode)
     @staticmethod
     def get_mode() -> str:
-        print("results")
+      
         result = ControlPageController.exp_config_handler.get_mode()
-        print(result)
+      
         return json.dumps(result)
 
     marker_emergeny_stop = "emergency_stop"
@@ -278,5 +274,37 @@ class ControlPageController:
             print("ERROR",e.__str__())
             return str(e)
         
+
+    marker_dec_shortcuts = "decrease_shortcuts"
+    @app.route("/api/decrease_shortcuts", methods=['POST'])
+    @staticmethod
+    def dec_shortcuts() -> Tuple[str, int]:
+        try:
+            data = request.get_json()
+            if data["marker"] == ControlPageController.marker_dec_shortcuts:
+                ControlPageController.exp_config_handler.decrease_shortcuts()
+                return 'Done', 201
+            else:
+                return "marker missmatched", 201
+        except Exception as e:
+            print("ERROR", e.__str__())
+            return str(e)
+
+
+
+    marker_inc_shortcuts = "increase_shortcuts"
+    @app.route("/api/increase_shortcuts", methods=['POST'])
+    @staticmethod
+    def inc_shortcuts() -> Tuple[str, int]:
+        try:
+            data = request.get_json()
+            if data["marker"] == ControlPageController.marker_inc_shortcuts:
+                ControlPageController.exp_config_handler.increase_shortcuts()
+                return 'Done', 201
+            else:
+                return "marker missmatched", 201
+        except Exception as e:
+            print("ERROR", e.__str__())
+            return str(e)
 
     

@@ -73,7 +73,6 @@ class ActionList(Action):
                     if not nr in to_return.keys():
                         to_return |= ({nr: "none"})
             else:
-                print(self.get_content()[c])
                 to_return["sublist"].append(self.get_content()[c].do_mapping())
 
         return to_return

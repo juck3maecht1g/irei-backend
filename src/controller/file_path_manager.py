@@ -40,7 +40,7 @@ class FilePathManager:
                 return "Done", 201
             return "F", 300
         except Exception as e: 
-            print(e.__str__())
+            print("ERROR",e.__str__())
             return e.__str__()
 
     @app.route("/api/navigate_down", methods=['Post'])

@@ -86,7 +86,6 @@ class SimpleExp(threading.Thread):
 
     # resets the scene of the experiment
     def reset(self) -> bool:
-        print(self.get_name()) # test
         self.scene.reset()
         return True
 
@@ -116,7 +115,6 @@ class SimpleExp(threading.Thread):
     # positional
     # returns the current cartesian position data of thr robot dict{"name":str,"ip":str}with the given ip
     def get_cartesian_position_of(self, robot: dict) -> dict:
-        print(robot)
         return self.robots[robot].current_c_pos
 
     # returns the current joint position data of thr robot dict{"name":str,"ip":str}with the given ip

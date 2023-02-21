@@ -6,7 +6,6 @@ class CustomAction(ListableAction):
     key: str = "custom"
 
     def __init__(self, robot_nrs: list[int], action: str) -> None:
-        print("\nwhere????????????")
         super().__init__(robot_nrs)
         self.action = action
 

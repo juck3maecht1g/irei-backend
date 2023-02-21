@@ -21,8 +21,6 @@ class ListableAction(Action):
         else:
             new_ip = []
             for rob in self.robot_nrs:
-                print("nrs",self.robot_nrs)
-                print(map)
                 new_ip.append(map[rob])
             to_return["robots"] = new_ip
             

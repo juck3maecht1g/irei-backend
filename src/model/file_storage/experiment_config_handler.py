@@ -105,12 +105,12 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def get_shortcuts(self) -> list[str]:
         self.read()
-        print("get shortcuts",[list(i.keys()) for i in self.data["shortcuts"]])
+       
         return [list(i.keys())  for i in self.data["shortcuts"]]
 
     def set_shortcut(self, pos, name, mapping):
         
-        print("set shortcuts")
+       
         
         self.data["shortcuts"][pos] = {name: mapping}
 
@@ -124,7 +124,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def has_mapping(self, name:str) -> bool:
         self.read()
-        print("has mapping")
+      
         return name in self.data["mapped"].keys()
     
     def set_map(self, name: str, map: dict):
@@ -133,7 +133,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
 
     def get_shortcut_map(self, index: int) -> list:
-        print("get shortcut map")
+       
         self.read()
         list_name = list(self.data["shortcuts"][index].keys())[0]
         return self.data["shortcuts"][index][list_name]
@@ -238,3 +238,13 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     def set_use_space(self, type):
         self.data["used space"] = type
         self.write()
+
+    def increase_shortcuts(self):
+        self.read()
+        self.data["shortcuts"].append({"name": {}})
+        self.write()
+
+    def decrease_shortcuts(self):
+        self.read()
+        self.data["shortcuts"].pop()
+        self.write

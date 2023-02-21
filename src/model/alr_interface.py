@@ -47,18 +47,13 @@ class AlrInterface:
             self.active_experiment.approach_joint(robot, position.get_joint)
 
     def save_posiiton(self, robot, name):
-        print("saving") #[0.2,0.2,0.2,0.2,0.2,0,0]
         print(self.active_experiment)
         cartesian = self.active_experiment.get_cartesian_position_of(robot)
-        print("CART", cartesian)
         joint = self.active_experiment.get_joint_position_of(robot)
         cart_dict = {"coord": cartesian, "quat": [1, 0, 0, 0]} # test
         joint_dict = {"values": joint}
         var_dict = {name: {"used space": "joint", "cartesian": cart_dict, "joint": joint_dict}}
-        print("CREATE VAR")
         position = Variable(var_dict)
-        print("saved position in alr-sim")
-        print(joint)
         # return Variable(dict({name: dict({
         #             "used space": "joint",
         #             "cartesian": {
@@ -94,7 +89,6 @@ class AlrInterface:
         
 
     def run_exp(self):
-        print("todo")
-        print(self.active_experiment)
+        print("run ex / todo")
         self.active_experiment.run()
         
