@@ -1,4 +1,4 @@
 .DS_Store
 __pycache__/
 *.py[cod]
-.root_dir.py
+**root_dir.py
