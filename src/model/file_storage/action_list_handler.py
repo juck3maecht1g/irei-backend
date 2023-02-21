@@ -1,8 +1,5 @@
-from src.model.communication.physical.robot import Robot
-from src.model.communication.position.variable import Variable
 from src.model.file_storage.yaml_file import YamlFile
 from src.model.file_storage.path_observer import PathObserver
-from src.model.communication.physical.robot import Robot
 from src.model.action.action_list import ActionList
 from src.model.action.action import Action
 from src.model.action.listable_factory import ListableFactory
@@ -11,7 +8,6 @@ from src.model.action.listable_factory import ListableFactory
 
 import os
 
-# todo Observer
 
 
 class ActionListHandler(YamlFile, PathObserver):
@@ -67,8 +63,7 @@ class ActionListHandler(YamlFile, PathObserver):
         sublist = 0
         self.__is_list(name)
         self.file_name = name
-        self.data = self.read()
-        print("DATA", self.data)
+        self.read()   
         out = ActionList(name, self.data["type"])
         for action in self.data["content"]:
             if action["key"] == "file":
