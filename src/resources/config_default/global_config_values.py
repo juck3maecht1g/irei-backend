@@ -4,7 +4,6 @@ from enum import Enum
 class GlobalConfigValues(Enum):
     CONFIG_NAME = "global_config"
     LABS = "laboratories"
-    LAB_NAMES = "laboratorie_names"
     ROBOTS = "robots"
     NAME = "name"
     IP = "ip"
@@ -15,7 +14,7 @@ class GlobalConfigValues(Enum):
 
     DEFAULT_DATA = {
             LABS: {
-                LAB_NAMES: {
+                "Lab Name 1": {
                     ROBOTS: {
                         "11.11.11.11":{
                             NAME: "Robname 1",
