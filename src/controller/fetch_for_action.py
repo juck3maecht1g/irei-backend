@@ -106,9 +106,9 @@ class FetchForAction:
         try:
             data = request.get_json()#{"marker": "append_action", "key": "wait", "robot": ["ex_ip1"], "time": 71283956238}#request.get_json() 
             action: Action
-            print("MARKER", data["marker"])
+            print("MARKER", data)
             if data["marker"] == "append_action":
-                print("KEY", data["key"])
+               
                 if data["key"] == "move":
                     positions = FetchForAction.experiment_config_handler.get_vars()
                     for position in positions:

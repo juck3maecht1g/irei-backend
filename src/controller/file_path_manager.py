@@ -110,3 +110,9 @@ class FilePathManager:
     def get_file_name() -> str:
         to_return = FilePathManager.pc_data_handler.get_path()
         return json.dumps(to_return)
+
+    @app.route("/api/" + "is_top")
+    @staticmethod
+    def get_file_name() -> str:
+        to_return = FilePathManager.pc_data_handler.get_path()
+        return json.dumps(to_return)

@@ -13,34 +13,25 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     def __init__(self, root: str):
         
         self.data = {
-            "experiment interface": "max",
-            "active actionlist": "action",
+            "experiment interface": "",
+            "active actionlist": "",
             "number of shortcuts": 1,
             "shortcuts": [{
                "name": {}
             }],
             "mapped": {
-                "alName": [[[]]],
-                "alName2": [],
+              
                 },
             "lab": "labname dummy",
-            "experiment robots": ["ex_ip1", "ex_ip2"],
-            "mode": "test_mode",
+            "experiment robots": [],
+            "mode": "mode 1",
             "save position ip": "ex_ip2",
-            "open gripper ips": ["open_ip", "open_ip1"],
-            "close gripper ips": ["close_ip"],
-            "switch gripper ips": ["switch_ip"],
+            "open gripper ips": [],
+            "close gripper ips": [],
+            "switch gripper ips": [],
             "used space": "joint",
             "variables": {
-                "example_name1": {
-                    "cartesian": {
-                        "coord": [10, 10, 10],
-                        "quat": [10, 1, 1, 1]
-                    },
-                    "joint": {
-                        "values": [10, 10, 10, 10, 10, 10, 10]
-                    }
-                }
+              
             }
         }
         

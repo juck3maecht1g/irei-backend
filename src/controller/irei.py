@@ -19,11 +19,11 @@ _registered_experiments = []
 def _build_data_structure(pc_data: PcDataHandler, global_config: GlobalConfigHandler, exp_config: ExperimentConfigHandler) -> None:
    if not ("global_config" in pc_data.get_dir_content()):
         global_config.create()
-        for user in global_config.get_users():
-            pc_data.create_directory(user)
-            pc_data.navigate_to_child(user)
-            exp_config.create()
-            pc_data.navigate_to_parent()
+        # for user in global_config.get_users():
+        #     pc_data.create_directory(user)
+        #     pc_data.navigate_to_child(user)
+        #     exp_config.create()
+        #     pc_data.navigate_to_parent()
             
 
 @staticmethod
@@ -56,8 +56,9 @@ def initialize() -> None:
 @staticmethod
 def setup_experiment(experiment, robots) -> None:
     #robots = [{"name": "test"}, {"name": "test2"}]
-    exp = experiment(robots)
+    exp = experiment(robots)           
     alr_interface = AlrInterface(exp)
+    # alr_interface = AlrInterface("delete")
     ControlPageController.set_alr_interface(alr_interface)
     FetchForAction.set_alr_interface(alr_interface)
   

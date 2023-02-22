@@ -14,18 +14,18 @@ class GlobalConfigHandler(YamlFile):
                 "Lab name": {
                     "Robots": {
                         "ex_ip1":{
-                            "name": "Cooler Rob"
+                            "name": "first"
                         },
                        "ex_ip2": {
-                            "name": "Cooler",
+                            "name": "second",
                         },
                         "ex_ip3": {
-                            "name": "Coolr Rob",
+                            "name": "third",
                         }
                     },
                 },
             },
-            "experiment modes": ["cooler mode 1", "cooler mode 2", "test_mode"],
+            "experiment modes": ["mode 1", "mode 2", "mode3"],
 
             "ActiveUser": "Max",
             "Users": {
