@@ -145,6 +145,7 @@ class SimpleExp(threading.Thread):
     # action
     # validates is the given dictionarry is a valid action or action list
     def validate_action(self, action: dict, parallel=False) -> bool:
+        print("\n\n\n", action)
         if action["key"] == "parallel_list":
             if parallel:
                 return False
@@ -179,40 +180,42 @@ class SimpleExp(threading.Thread):
     def execute_list(self, action: dict, nested=False) -> bool:
         if not nested:
             self.selected_mode = self.Mode.MODE_PLAY_VARS
-
+        print("ACTION", action)
         key = action["key"]
-        content = action["content"]
+        #content = action["content"]
+        #print("CONTENT", content)
+      
         if key == "parallel_list":
             raise NotImplementedError("Parallel Actions are not supported right now")
 
         elif key == "sequential_list":
-            for sub_action in content:
+            for sub_action in action["content"]:
                 self.execute_list(sub_action, True)
 
         elif key == "close_gripper":
-            for r in content:
+            for r in action["robots"]:
                 self.close_gripper(r)
 
         elif key == "open_gripper":
-            for r in content:
+            for r in action["robots"]:
                 self.open_gripper(r)
 
         elif key == "move":
             print("Only Support JOINT for now")
             # For Cartesian use gotoCartPositionAndQuat() instead of gotoJointPosition()
 
-            for r in action["robots"][:-1]:
-                self.robots[r["ip"]].gotoJointPosition(
-                    action["coordinate"], block=False
+            for r in action["robots"]:
+                self.robots[r].gotoJointPosition(
+                    action["coord"]["values"], block=False
                 )
-            self.robots[action["robots"][-1]["ip"]].gotoJointPosition(
-                action["coordinate"], block=True
-            )
+            # self.robots[action["robots"]].gotoJointPosition(
+            #     action["coord"]["values"], block=True
+            # )
         elif key == "wait":
 
-            for r in action["robots"][:-1]:
-                self.robots[r["ip"]].wait(action["time"], block=False)
-            self.robots[action["robots"][-1]["ip"]].wait(action["time"], block=True)
+            for r in action["robots"]:
+                self.robots[r].wait(action["time"], block=False)
+            self.robots[action["robots"]].wait(action["time"], block=True)
 
         else:
             raise NotImplementedError(f"Action {key} is not implemented")
