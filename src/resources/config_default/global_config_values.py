@@ -1,9 +1,10 @@
 from enum import Enum
 
 
-class global_config(Enum):
-    LAB = "laboratories"
-    LAB_NAME = "laboratorie_names"
+class GlobalConfigValues(Enum):
+    CONFIG_NAME = "global_config"
+    LABS = "laboratories"
+    LAB_NAMES = "laboratorie_names"
     ROBOTS = "robots"
     NAME = "name"
     IP = "ip"
@@ -13,8 +14,8 @@ class global_config(Enum):
     LANGUAGE = "language"
 
     DEFAULT_DATA = {
-            LAB: {
-                LAB_NAME: {
+            LABS: {
+                LAB_NAMES: {
                     ROBOTS: {
                         "11.11.11.11":{
                             NAME: "Iva die Schreckliche",
@@ -23,7 +24,7 @@ class global_config(Enum):
                             NAME: "Paulaner das Wundervolle",
                         },
                         "33.33.33.33": {
-                            NAME: "Mirco der Gnädige",
+                            NAME: "Mirco der Gnaedige",
                         }
                     },
                 },

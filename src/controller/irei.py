@@ -17,7 +17,7 @@ _registered_experiments = []
 
 @staticmethod
 def _build_data_structure(pc_data: PcDataHandler, global_config: GlobalConfigHandler, exp_config: ExperimentConfigHandler) -> None:
-   if not ("global_config" in pc_data.get_dir_content()):
+   if not (global_config.get_extended_name() in pc_data.get_dir_content()):
         global_config.create()
         # for user in global_config.get_users():
         #     pc_data.create_directory(user)
