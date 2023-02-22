@@ -16,6 +16,7 @@ class GlobalConfigHandler(YamlFile):
 
     def create(self):
         if not (self.get_extended_name() in os.listdir(self.path)):
+            self.data = GlobalConfigValues.DEFAULT_DATA.value
             self.write()
         else:
             raise FileNameAlreadyUsedError(self.get_extended_name(),self.path)
