@@ -246,14 +246,19 @@ class ChooseLRController:
     def set_save_pos():
         try:
             data = request.get_json()
-            if data["marker"] != "SetSavePositionRobots":
-                return "F", 300
+        
+            if not data["marker"] == "SetSavePositionRobots":
+                return "marker Error", 300
             for robot in ChooseLRController.get_robots_from_ip(ChooseLRController.experiment_config_handler.get_exp_robots()):
-                if data["robot_ip"] == robot.get_ip():
-                    pos_robot = Robot(ip=data.robot_ip, name=robot.get_name())
+                print("DATAAA", data["robot_ip"][0], robot.get_ip())
+                if data["robot_ip"][0] == robot.get_ip():
+                    print("DATAAA", data["robot_ip"][0])
+                    #pos_robot = Robot(ip=data.robot_ip, name=robot.get_name())
                     ChooseLRController.experiment_config_handler.set_position_ip(
-                       pos_robot.get_ip())
+                     robot.get_ip())
                     return 'Done', 201
+            else:
+                return "something went wrong"
         except Exception as e: 
             print("ERROR",e.__str__())
             return str(e)
