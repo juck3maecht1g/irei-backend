@@ -104,3 +104,9 @@ class FilePathManager:
     def get_base_name_dir() -> str:
         to_return = f"dir_from_{ControlPageController.get_identifier()}"
         return json.dumps(to_return)
+    
+    @app.route("/api/" + "file_name")
+    @staticmethod
+    def get_file_name() -> str:
+        to_return = FilePathManager.pc_data_handler.get_path()
+        return json.dumps(to_return)
