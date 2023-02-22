@@ -43,6 +43,7 @@ class TestSoloActionListHandler(unittest.TestCase):
         self.assertEqual(self.action_list.get_lists(), [name1, name2])
 
 
+
     def test_add_action(self):
         name = "List1"
         action = CloseGripper([1])
@@ -91,6 +92,15 @@ class TestSoloActionListHandler(unittest.TestCase):
 
     
     #edgecases
+    def test_new_data_empty(self):
+        name1 = "test1"
+        name2 = "test2"
+        self.action_list.create(name1, AlValues.PARALLEL_TYPE.value)
+        action = CloseGripper([1])
+        self.action_list.add_action(name1, action)
+        self.action_list.create(name2, AlValues.PARALLEL_TYPE.value)
+        self.assertEqual(self.action_list.get_list(name2).get_content(), [])
+
     def test_get_lists_without_folder(self):
         self.assertEqual([], self.action_list.get_lists())
 

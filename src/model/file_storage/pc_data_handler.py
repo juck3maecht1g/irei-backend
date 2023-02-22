@@ -36,7 +36,7 @@ class PcDataHandler(PathSubject):
             if os.path.isdir(dir_path):
                 if "experiment_config.yml" in os.listdir(dir_path):
                     out.append(dir)
-        return out
+        return sorted(out)
 
 
     def get_dir_content(self):
