@@ -5,14 +5,11 @@ from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
 
-
-from src.resources.config_default.experiment_config_values import ExpConfigValues
-from src.resources.errors.action_list_errors import IndexOutOfBoundsError
-from src.resources.errors.file_errors import FileNotAllowedInRootError,FileNameAlreadyUsedError,FileNotExistsError
+from src.resources.errors.file_errors import FileNotAllowedInRootError,FileNameAlreadyUsedError,FileNotExistsError, RootHasNoParentError
 
 from src.root_dir import root_path
 
-class TestSoloActionListHandler(unittest.TestCase):
+class TestSoloPcDataHandler(unittest.TestCase):
 
     def setUp(self):
         self.pc_data = PcDataHandler(root_path)
@@ -24,18 +21,33 @@ class TestSoloActionListHandler(unittest.TestCase):
 
         self.pc_data.delete_all_content()
 
-        if not ("global_config" in self.pc_data.get_dir_content()):
+        if not (self.global_config.get_extended_name() in self.pc_data.get_dir_content()):
             self.global_config.create()
             for user in self.global_config.get_users():
                 self.pc_data.create_directory(user)
                 self.pc_data.navigate_to_child(user)
                 self.exp_config.create()
                 self.pc_data.navigate_to_parent()
-            self.pc_data.navigate_to_child(self.global_config.get_users()[0])
+            
 
-    def test_get_mode(self):
-        self.assertEqual(self.exp_config.get_mode(), ExpConfigValues.DEFAULT_DATA.value[ExpConfigValues.MODE.value])
+    def test_get_sub_dir(self):
+        self.pc_data.create_directory("no_exp")
+        self.assertEqual(self.pc_data.get_sub_dir(), self.global_config.get_users())
 
+    #edgecase
+    def test_navigate_up_from_root(self):
+        with self.assertRaises(RootHasNoParentError):
+            self.pc_data.navigate_to_parent()
 
+    def test_navigate_down_with_wrong_name(self):
+        with self.assertRaises(FileNotExistsError):
+            self.pc_data.navigate_to_child("not there")
+
+    
+    def test_create_duplicate(self):
+        self.pc_data.create_directory("test")
+        with self.assertRaises(FileNameAlreadyUsedError):
+            self.pc_data.create_directory("test")
+    
 if __name__ == '__main__':
     unittest.main()

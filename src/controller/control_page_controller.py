@@ -10,7 +10,6 @@ from src.model.file_storage.action_list_handler import ActionListHandler
 from src.model.file_storage.experiment_config_handler import ExperimentConfigHandler
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from src.model.file_storage.pc_data_handler import PcDataHandler
-from src.controller.choose_lr_controller import ChooseLRController
 from src.model.file_storage.global_config_handler import GlobalConfigHandler
 from datetime import datetime
 
@@ -21,7 +20,10 @@ class ControlPageController:
     action_list_handler: ActionListHandler
     exp_config_handler: ExperimentConfigHandler
     glob_config_handler: GlobalConfigHandler
-
+    started = False
+    
+    def reset_started():
+        ControlPageController.started = False
     @staticmethod
     def set_pc_data_handler(data_handler: PcDataHandler) -> None:
         ControlPageController.pc_data_handler = data_handler
@@ -157,7 +159,7 @@ class ControlPageController:
     @app.route("/api/" + marker_save_position, methods=['POST'])
     @staticmethod
     def post_save_position() -> Tuple[str, int]:
-        
+        from src.controller.choose_lr_controller import ChooseLRController
         try:
             data = request.get_json()
 
@@ -260,13 +262,18 @@ class ControlPageController:
     
 
     marker_start_request = "start_request"
+    started = False
     @app.route("/api/start_request", methods=['POST'])
     @staticmethod
     def start_request() -> Tuple[str, int]:
         try:
             data = request.get_json()
             if data == ControlPageController.marker_start_request:
-                ControlPageController.alr_interface.run_exp()
+                print("STARTED???",   ControlPageController.started)
+                if not ControlPageController.started:
+                    ControlPageController.started = True
+                    ControlPageController.alr_interface.run_exp()
+                
                 return 'Done', 201
             else:
                 return 'marker missmatched', 201

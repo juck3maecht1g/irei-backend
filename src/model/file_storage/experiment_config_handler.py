@@ -3,6 +3,9 @@ from src.model.communication.position.variable import Variable
 from src.model.file_storage.yaml_file import YamlFile
 from src.model.file_storage.path_observer import PathObserver
 
+from src.resources.config_default.experiment_config_values import ExpConfigValues
+from src.resources.errors.file_errors import FileNameAlreadyUsedError, FileNotAllowedInRootError
+
 import os
 
 # todo Observer
@@ -11,72 +14,31 @@ import os
 class ExperimentConfigHandler(YamlFile, PathObserver):
 
     def __init__(self, root: str):
-        
-        self.data = {
-            "experiment interface": "max",
-            "active actionlist": "action",
-            "number of shortcuts": 1,
-            "shortcuts": [{
-               "name": {}
-            }],
-            "mapped": {
-                "alName": [[[]]],
-                "alName2": [],
-                },
-            "lab": "labname dummy",
-            "experiment robots": ["ex_ip1", "ex_ip2"],
-            "mode": "test_mode",
-            "save position ip": "ex_ip2",
-            "open gripper ips": ["open_ip", "open_ip1"],
-            "close gripper ips": ["close_ip"],
-            "switch gripper ips": ["switch_ip"],
-            "used space": "joint",
-            "variables": {
-                "example_name1": {
-                    "cartesian": {
-                        "coord": [10, 10, 10],
-                        "quat": [10, 1, 1, 1]
-                    },
-                    "joint": {
-                        "values": [10, 10, 10, 10, 10, 10, 10]
-                    }
-                }
-            }
-        }
-        
-        super().__init__(root, "experiment_config.yml", self.data)
+        super().__init__(root, ExpConfigValues.CONFIG_NAME.value, ExpConfigValues.DEFAULT_DATA.value)
         self.root = root
         
-
-
     def update_path(self, path):
         self.path = path
 
-    #todo copy for sub?
     def create(self):
         if not (self.path == self.root):
-
-            if not (self.file_name in os.listdir(self.path)):
+            if not (self.get_extended_name() in os.listdir(self.path)):
                 self.write()
+            else:
+                raise FileNameAlreadyUsedError(self.get_extended_name(), self.path)
+        else:
+            raise FileNotAllowedInRootError(self.get_extended_name(), self.root)
 
-            """
-            elif not (self.name in os.listdir(self.path)):
-                self.data1_handler.copy_file_from_parent(self.file)
-                self.data1.update({"Variables": {}})
-                self.__write_config()
-            """
-
-    
 
     # todo
     # method overwrites old var if they have the same name
     def set_var(self, var: Variable) -> bool:
         super().read()
         to_write = var.to_dict()
-        if self.data["variables"] is None:
-            self.data["variables"] = to_write
+        if self.data[ExpConfigValues.VARIABLES.value] is None:
+            self.data[ExpConfigValues.VARIABLES.value] = to_write
         else:
-            self.data["variables"].update(to_write)
+            self.data[ExpConfigValues.VARIABLES.value].update(to_write)
         self.write()
 
         return True
@@ -106,145 +68,140 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
     def get_shortcuts(self) -> list[str]:
         self.read()
        
-        return [list(i.keys())  for i in self.data["shortcuts"]]
+        return [list(i.keys()) for i in self.data[ExpConfigValues.SHORTCUTS.value]]
 
     def set_shortcut(self, pos, name, mapping):
-        
-       
-        
-        self.data["shortcuts"][pos] = {name: mapping}
+        self.data[ExpConfigValues.SHORTCUTS.value][pos] = {name: mapping}
 
         self.write()
         
-
-
     def get_map(self, name:str) -> list:
         self.read()
-        return self.data["mapped"][name]
+        return self.data[ExpConfigValues.MAPPING.value][name]
 
     def has_mapping(self, name:str) -> bool:
         self.read()
       
-        return name in self.data["mapped"].keys()
+        return name in self.data[ExpConfigValues.MAPPING.value].keys()
     
     def set_map(self, name: str, map: dict):
-        self.data["mapped"][name] = map
+        self.data[ExpConfigValues.MAPPING.value][name] = map
         self.write()
 
 
     def get_shortcut_map(self, index: int) -> list:
        
         self.read()
-        list_name = list(self.data["shortcuts"][index].keys())[0]
-        return self.data["shortcuts"][index][list_name]
+        list_name = list(self.data[ExpConfigValues.SHORTCUTS.value][index].keys())[0]
+        return self.data[ExpConfigValues.SHORTCUTS.value][index][list_name]
     
     def set_shortcut_map(self, pos: int, map: dict):
         self.read()
-        list_name = list(self.data["shortcuts"][pos].keys())[0]
-        self.data["shortcuts"][pos][list_name] = map
+        list_name = list(self.data[ExpConfigValues.SHORTCUTS.value][pos].keys())[0]
+        self.data[ExpConfigValues.SHORTCUTS.value][pos][list_name] = map
 
     def _get_file_vars(self):
         self.read()
-        return self.data["variables"]
+        return self.data[ExpConfigValues.VARIABLES.value]
 
     def get_exp_interface(self) -> str:
         self.read()
-        return self.data["experiment interface"]
+        return self.data[ExpConfigValues.EXPERIMENT_INTERFACE.value]
 
     def set_exp_interface(self, exp_interface: str) -> None:
         self.read()
-        self.data["experiment interface"] = exp_interface
+        self.data[ExpConfigValues.EXPERIMENT_INTERFACE.value] = exp_interface
         self.write()    
 
     def get_active_actionlist(self) -> str:
         self.read()
-        return self.data["active actionlist"]
+        return self.data[ExpConfigValues.ACTIVE_ACTIONLIST.value]
 
     def set_active_actionlist(self, action_list: str) -> None:
         self.read()
-        self.data["active actionlist"] = action_list
+        self.data[ExpConfigValues.ACTIVE_ACTIONLIST.value] = action_list
         self.write() 
 
     def get_lab(self) -> str:
         self.read()
-        return self.data["lab"]
+        return self.data[ExpConfigValues.LAB.value]
 
     def set_lab(self, lab_name: str) -> None:
         self.read()
-        self.data["lab"] = lab_name
+        self.data[ExpConfigValues.LAB.value] = lab_name
         self.write()  
 
     def get_exp_robots(self) -> list[str]:
         self.read()
-        return self.data["experiment robots"]
+        return self.data[ExpConfigValues.EXP_ROBS.value]
 
     def set_exp_robot(self, robots: list[Robot]) -> None:
         self.read()
         new_robots_ip = []
         for robot in robots:
             new_robots_ip.append(robot.get_ip())
-        self.data["experiment robots"] = new_robots_ip
+        self.data[ExpConfigValues.EXP_ROBS.value] = new_robots_ip
         self.write()
 
     def get_mode(self) -> str:
         self.read()
-        return self.data["mode"]
+        return self.data[ExpConfigValues.MODE.value]
     
     def set_mode(self, mode: str) -> None:
         self.read()
-        self.data["mode"] = mode
+        self.data[ExpConfigValues.MODE.value] = mode
         self.write()
 
     def get_position_ip(self) -> str:
         self.read()
-        return self.data["save position ip"]
+        return self.data[ExpConfigValues.SAVE_POS_ROB.value]
 
     def set_position_ip(self, ip: str) -> None:
         self.read()
-        self.data["save position ip"] = ip
+        self.data[ExpConfigValues.SAVE_POS_ROB.value] = ip
         self.write()
 
     def get_open_gripper_ip(self) -> list[str]:
         self.read()
-        return self.data["open gripper ips"]
+        return self.data[ExpConfigValues.OPEN_GRIPPER_ROB.value]
 
     def set_open_gripper_ip(self, ip: list[str]) -> None:
         self.read()
-        self.data["open gripper ips"] = ip
+        self.data[ExpConfigValues.OPEN_GRIPPER_ROB.value] = ip
         self.write()
 
     def get_close_gripper_ip(self) -> list[str]:
         self.read()
-        return self.data["close gripper ips"]
+        return self.data[ExpConfigValues.CLOSE_GRIPPER_ROB.value]
 
     def set_close_gripper_ip(self, ip: list[str]) -> None:
         self.read()
-        self.data["close gripper ips"] = ip
+        self.data[ExpConfigValues.CLOSE_GRIPPER_ROB.value] = ip
         self.write()
 
     def get_switch_gripper_ip(self) -> list[str]:
         self.read()
-        return self.data["switch gripper ips"]
+        return self.data[ExpConfigValues.SWITCH_GRIPPER_ROB.value]
 
     def set_switch_gripper_ip(self, ip: list[str]) -> None:
         self.read()
-        self.data["switch gripper ips"] = ip
+        self.data[ExpConfigValues.SWITCH_GRIPPER_ROB.value] = ip
         self.write()
     
     def get_used_space(self):
         self.read()
-        return self.data["used space"]
+        return self.data[ExpConfigValues.USED_SPACE.value]
 
     def set_use_space(self, type):
-        self.data["used space"] = type
+        self.data[ExpConfigValues.USED_SPACE.value] = type
         self.write()
 
     def increase_shortcuts(self):
         self.read()
-        self.data["shortcuts"].append({"name": {}})
+        self.data[ExpConfigValues.SHORTCUTS.value].append({ExpConfigValues.SHORTCUT_NAME.value: {}})
         self.write()
 
     def decrease_shortcuts(self):
         self.read()
-        self.data["shortcuts"].pop()
+        self.data[ExpConfigValues.SHORTCUTS.value].pop()
         self.write()

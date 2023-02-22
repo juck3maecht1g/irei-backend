@@ -194,12 +194,15 @@ class ChooseLRController:
     @app.route("/api/" + setup_exp_marker, methods=['POST'])
     @staticmethod
     def setup_exp():
+
+        from src.controller.control_page_controller import ControlPageController
         try:
             data = request.get_json() 
             if data["marker"] == "SetExperiment":
                 text = ChooseLRController.setup_exp_from_name(data["experiment"])
                 if text == "Done":
                     ChooseLRController.experiment_config_handler.set_exp_interface(data["experiment"])
+                    ControlPageController.reset_started()
                     return "Done", 201
                 else :
                     return str(text) + " could not set up experiment", 201
