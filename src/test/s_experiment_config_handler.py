@@ -36,6 +36,10 @@ class TestSoloActionListHandler(unittest.TestCase):
     def test_get_mode(self):
         self.assertEqual(self.exp_config.get_mode(), ExpConfigValues.DEFAULT_DATA.value[ExpConfigValues.MODE.value])
 
+    def test_name_already_exists(self):
+        with self.assertRaises(FileNameAlreadyUsedError):
+            self.exp_config.create()
+
     def test_get_vars(self):
         var1_data = {"var_name1": {
                     "used space": "joint",
@@ -79,7 +83,6 @@ class TestSoloActionListHandler(unittest.TestCase):
     
         self.assertEqual(self.exp_config.get_vars(), [var11, var2])
        
-        
                 
 
 
