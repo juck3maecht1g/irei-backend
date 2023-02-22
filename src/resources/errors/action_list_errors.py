@@ -1,4 +1,4 @@
-class IndexOutOfBoundsError(Exception):
+class IndexOutOfBoundsError(IndexError):
     #Exception raised if attempting to write an experiment specific file in the root path.
 
     def __init__(self, indices: list[int], list_length: int):
