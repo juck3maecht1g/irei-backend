@@ -75,8 +75,6 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
 
         self.write()
         
-
-
     def get_map(self, name:str) -> list:
         self.read()
         return self.data[ExpConfigValues.MAPPING.value][name]

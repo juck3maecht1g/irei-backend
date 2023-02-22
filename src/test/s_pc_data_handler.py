@@ -9,7 +9,7 @@ from src.resources.errors.file_errors import FileNotAllowedInRootError,FileNameA
 
 from src.root_dir import root_path
 
-class TestSoloActionListHandler(unittest.TestCase):
+class TestSoloPcDataHandler(unittest.TestCase):
 
     def setUp(self):
         self.pc_data = PcDataHandler(root_path)
@@ -21,7 +21,7 @@ class TestSoloActionListHandler(unittest.TestCase):
 
         self.pc_data.delete_all_content()
 
-        if not ("global_config" in self.pc_data.get_dir_content()):
+        if not (self.global_config.get_extended_name() in self.pc_data.get_dir_content()):
             self.global_config.create()
             for user in self.global_config.get_users():
                 self.pc_data.create_directory(user)
