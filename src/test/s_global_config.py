@@ -15,7 +15,7 @@ class TestSoloGlobalConfig(unittest.TestCase):
         self.global_config = GlobalConfigHandler(root_path)
         pc_data = PcDataHandler(root_path)
         pc_data.delete_all_content()
-        
+
     def test_create(self):
         self.global_config.create()
         self.assertIn(self.global_config.file_name + self.global_config.file_name_extension, os.listdir(root_path))
@@ -25,6 +25,7 @@ class TestSoloGlobalConfig(unittest.TestCase):
         with self.assertRaises(FileNameAlreadyUsedError):
             self.global_config.create()
 
+    
 
 if __name__ == '__main__':
     unittest.main()

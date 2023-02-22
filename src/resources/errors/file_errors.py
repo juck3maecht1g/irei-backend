@@ -17,4 +17,11 @@ class FileNameAlreadyUsedError(Exception):
         super().__init__(message.format(name = name, path = path))
 
 
+class RootHasNoParentError(Exception):
+     #Exception raised if attempting to navigate to parent from root
+
+    def __init__(self, message= "You can't navigate up from root."):
+        super().__init__(message)
+
+
     

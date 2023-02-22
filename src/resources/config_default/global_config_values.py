@@ -18,13 +18,13 @@ class GlobalConfigValues(Enum):
                 LAB_NAMES: {
                     ROBOTS: {
                         "11.11.11.11":{
-                            NAME: "Iva die Schreckliche",
+                            NAME: "Robname 1",
                         },
                        "22.22.22.22": {
-                            NAME: "Paulaner das Wundervolle",
+                            NAME: "Robname 2",
                         },
                         "33.33.33.33": {
-                            NAME: "Mirco der Gnaedige",
+                            NAME: "Robname 3",
                         }
                     },
                 },
