@@ -48,3 +48,6 @@ class Variable:
     
     def get_name(self) -> str:
         return self.name
+
+    def __eq__(self, obj):
+        return isinstance(obj, Variable) and self.to_dict() == obj.to_dict()
