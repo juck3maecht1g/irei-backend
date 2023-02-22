@@ -37,7 +37,8 @@ class ActionListHandler(YamlFile, PathObserver):
     def create(self, name: str, type: str):
         self.file_name = name
         self.__folder_exists()
-        if not (self._make_extended_name(name) in os.listdir(self.path)):   
+        if not (self._make_extended_name(name) in os.listdir(self.path)):
+            self.data = AlValues.DEFAULT_DATA.value   
             self.data[AlValues.TYPE.value] = type
             self.write()
         else:
