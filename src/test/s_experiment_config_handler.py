@@ -77,9 +77,8 @@ class TestSoloActionListHandler(unittest.TestCase):
         self.exp_config.create()
         self.exp_config.set_var(var11)
     
-        self.assertEqual(self.exp_config.get_vars()[0].to_dict(), var11.to_dict())
-        self.assertEqual(self.exp_config.get_vars()[1].to_dict(), var2.to_dict())
-        self.assertEqual(len(self.exp_config.get_vars()), 2)
+        self.assertEqual(self.exp_config.get_vars(), [var11, var2])
+       
         
                 
 
