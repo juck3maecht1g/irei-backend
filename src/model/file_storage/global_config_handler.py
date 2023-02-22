@@ -49,7 +49,7 @@ class GlobalConfigHandler(YamlFile):
     def get_lab(self, lab_name) -> Laboratory:
         self.read()
 
-        lab = self.data[GlobalConfigValues.LABS][lab_name][GlobalConfigValues.ROBOTS.value]
+        lab = self.data[GlobalConfigValues.LABS.value][lab_name][GlobalConfigValues.ROBOTS.value]
         lab_rob = []
 
         for rob_data in lab:

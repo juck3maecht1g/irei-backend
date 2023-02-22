@@ -124,11 +124,12 @@ class SimpleExp(threading.Thread):
     # gripper
     # changes state of all robots list[dict{"name":str,"ip"str}] which ips are in the given list
     def change_grippper_state(self, robot, robots: list[dict]) -> bool:
-        print("Only Support JOINT for now")
-        # For Cartesian use gotoCartPositionAndQuat() instead of gotoJointPosition()
-        self.robots[robot].gotoJointPosition(
-            [-10,3.2,3,3.2,-5,3,3], block=True
-        )
+        pass
+        # print("Only Support JOINT for now")
+        # # For Cartesian use gotoCartPositionAndQuat() instead of gotoJointPosition()
+        # self.robots[robot].gotoJointPosition(
+        #     [-10,3.2,3,3.2,-5,3,3], block=True
+        # )
         
 
     # opens the gripper of the robot dict{"name":str,"ip":str}specified by ip

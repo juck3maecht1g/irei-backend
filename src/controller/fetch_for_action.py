@@ -212,15 +212,16 @@ class FetchForAction:
             data = request.get_json()
            
             if data["marker"] == "execute_action_list":
-                name = FetchForAction.experiment_config_handler.get_shortcuts()[FetchForAction.current_button_index]
-                name = name[0]
-               
+                names = FetchForAction.experiment_config_handler.get_shortcuts()[FetchForAction.current_button_index]
+                name = names[FetchForAction.current_button_index]
+                print("INDEX", name)
                 action_list = FetchForAction.action_list_handler.get_list(name)
                 
+                print("BUILD", FetchForAction.current_button_index)
                 map = FetchForAction.experiment_config_handler.get_shortcut_map(FetchForAction.current_button_index)
-               
+                print("MAPPED", map)
                 to_execute = action_list.map_dictify(map)
-               
+                print("SOFAR")
                 FetchForAction.alr_interface.execute_list(to_execute)
                 return 'Done', 201
             else:

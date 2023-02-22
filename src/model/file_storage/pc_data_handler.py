@@ -68,3 +68,6 @@ class PcDataHandler(PathSubject):
 
     def get_path(self):
         return self.path
+    
+    def get_root(self):
+        return self.root

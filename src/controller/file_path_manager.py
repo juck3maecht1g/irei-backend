@@ -113,6 +113,9 @@ class FilePathManager:
 
     @app.route("/api/" + "is_top")
     @staticmethod
-    def get_file_name() -> str:
-        to_return = FilePathManager.pc_data_handler.get_path()
+    def get_is_top() -> str:
+        if FilePathManager.pc_data_handler.get_path() == FilePathManager.pc_data_handler.get_root():
+            to_return = "true"
+        else:
+            to_return = "false"
         return json.dumps(to_return)
