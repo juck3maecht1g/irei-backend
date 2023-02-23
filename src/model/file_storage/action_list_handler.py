@@ -25,7 +25,7 @@ class ActionListHandler(YamlFile, PathObserver):
         if not os.path.exists(self.path):
             os.mkdir(self.path)
 
-    def __is_list(self, name):
+    def __is_list(self, name: str):
         self.__folder_exists()
         if not self._make_extended_name(name) in os.listdir(self.path):
             raise FileNotExistsError(self._make_extended_name(name), self.path)
@@ -69,7 +69,7 @@ class ActionListHandler(YamlFile, PathObserver):
                
         return out
 
-    def add_action(self, name, action: Action):
+    def add_action(self, name: str, action: Action):
         self.__is_list(name)
         new = action.nr_dictify()
         if "list" in new["key"]:
