@@ -165,7 +165,7 @@ class ChooseLRController:
     @staticmethod
     def setup_exp_from_name(name):
         from src.controller.irei import get_registered_experiments, setup_experiment
-        
+        from src.controller.control_page_controller import ControlPageController
         test = get_registered_experiments()
         try:   
             for experiment in test:
@@ -174,6 +174,7 @@ class ChooseLRController:
                 if name == experiment.get_name():
                     robots = ChooseLRController.get_robots_exp()
                     setup_experiment(experiment, robots)
+                    ControlPageController.reset_started()
                     return "Done"
        
         except Exception as e: 
@@ -193,16 +194,14 @@ class ChooseLRController:
 
     @app.route("/api/" + setup_exp_marker, methods=['POST'])
     @staticmethod
-    def setup_exp():
-
-        from src.controller.control_page_controller import ControlPageController
+    def setup_exp():   
         try:
             data = request.get_json() 
             if data["marker"] == "SetExperiment":
                 text = ChooseLRController.setup_exp_from_name(data["experiment"])
                 if text == "Done":
-                    ChooseLRController.experiment_config_handler.set_exp_interface(data["experiment"])
-                    ControlPageController.reset_started()
+                    ChooseLRController.experiment_config_handler.set_exp_interface(data["experiment"]) 
+                    ChooseLRController.active_experiment = False
                     return "Done", 201
                 else :
                     return str(text) + " could not set up experiment", 201
@@ -285,12 +284,13 @@ class ChooseLRController:
                 return "something is wrong with the chosen lab in this folder", 201
      
             exp_name = ChooseLRController.experiment_config_handler.get_exp_interface()
-            
-            if ChooseLRController.setup_exp_from_name(exp_name):
+            text = ChooseLRController.setup_exp_from_name(exp_name)
+         
+            if text == "Done":
+                ChooseLRController.active_experiment = False
                 return "Done", 201
             else :
-                ChooseLRController.active_experiment = False
-                return "the experiment registered in this folder could not be run", 201
+                return str(text) + " could not set up experiment", 201
         except Exception as e: 
             print("ERROR",e.__str__())
             return str(e)

@@ -208,12 +208,13 @@ class FetchForAction:
     @app.route("/api/executeList", methods=['POST'])
     @staticmethod
     def post_execute_list():
-        try:
+        #try:
             data = request.get_json()
            
             if data["marker"] == "execute_action_list":
-                names = FetchForAction.experiment_config_handler.get_shortcuts()[FetchForAction.current_button_index]
-                name = names[FetchForAction.current_button_index]
+                print("INDENT", FetchForAction.current_button_index)
+                names = FetchForAction.experiment_config_handler.get_shortcuts()
+                name = names[FetchForAction.current_button_index][0]
                 print("INDEX", name)
                 action_list = FetchForAction.action_list_handler.get_list(name)
                 
@@ -227,7 +228,7 @@ class FetchForAction:
             else:
                 return 'marker missmatched', 201
 
-        except Exception as e: 
+        #except Exception as e: 
             print("ERROR",e.__str__())
             return str(e)
         
@@ -243,7 +244,7 @@ class FetchForAction:
         try:
             data = request.get_json()
             print("DATA", data)
-            if data["marker"] == "execute_action_list":
+            if data["marker"] == "set_coordinate_type":
                 FetchForAction.experiment_config_handler.set_use_space(data["type"])
                 return 'Done', 201
             else:
@@ -348,6 +349,9 @@ class FetchForAction:
         try :
             data = request.get_json() 
             FetchForAction.current_button_index = data 
+            names = FetchForAction.experiment_config_handler.get_shortcuts()
+            name = names[FetchForAction.current_button_index][0]
+            FetchForAction.current_list_name = name
             return "Done", 201
         except Exception as e: 
                 print("ERROR",e.__str__())
