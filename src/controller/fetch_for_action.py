@@ -242,6 +242,7 @@ class FetchForAction:
     def post_coordinate_type():
         try:
             data = request.get_json()
+            print("DATA", data)
             if data["marker"] == "execute_action_list":
                 FetchForAction.experiment_config_handler.set_use_space(data["type"])
                 return 'Done', 201

@@ -24,7 +24,7 @@ class ExpConfigValues(Enum):
     DEFAULT_DATA = {
         EXPERIMENT_INTERFACE: "",
             ACTIVE_ACTIONLIST: "",
-            SHORTCUTS: [{}],
+            SHORTCUTS: [{"list" :{}}],
             MAPPING: {},
             LAB: "",
             EXP_ROBS: [],

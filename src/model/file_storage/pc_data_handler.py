@@ -50,7 +50,7 @@ class PcDataHandler(PathSubject):
             raise FileNameAlreadyUsedError(name, self.path)
 
     def save_log(self, file_name, data):
-        with open(os.path.join(self.path, file_name), 'wb') as f:
+        with open(os.path.join(self.path, file_name + ".pkl"), 'wb') as f:
             pickle.dump(data, f)
 
 
