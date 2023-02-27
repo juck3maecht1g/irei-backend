@@ -9,8 +9,6 @@ from typing import Dict
 from alr_sim.sims import SimFactory
 
 
-
-
 class SimpleExp(threading.Thread):
     class Mode(enum.Enum):
         MODE_A = "mode_a"
@@ -18,13 +16,14 @@ class SimpleExp(threading.Thread):
         MODE_PLAY_VARS = "play_variables"
 
     def __init__(self, robots: list[dict]):
+        print("robots", robots)
         # Start Threading stuff
         super().__init__()
 
         factory = SimFactory.SimRepository.get_factory("pybullet")
         self.scene = factory.create_scene()
         self.robots: Dict[SimFactory.RobotBase] = {}
-        for i, r in enumerate(robots):#
+        for i, r in enumerate(robots):
             self.robots[r["ip"]] = factory.create_robot(
                 self.scene, base_position=[i, 0, 0]
             )
@@ -35,10 +34,6 @@ class SimpleExp(threading.Thread):
         self.stop_all = False
         self.flipper = 1
         self.start()
-
-
-
-
 
     def run(self) -> None:
 
@@ -113,32 +108,30 @@ class SimpleExp(threading.Thread):
         return log_dict
 
     # positional
-    # returns the current cartesian position data of thr robot dict{"name":str,"ip":str}with the given ip
-    def get_cartesian_position_of(self, robot: dict) -> dict:
+    # returns the current cartesian position data of the robot with the ip given as str
+    def get_cartesian_of(self, robot: str) -> dict:
         return self.robots[robot].current_c_pos
 
-    # returns the current joint position data of thr robot dict{"name":str,"ip":str}with the given ip
-    def get_joint_position_of(self, robot: dict) -> dict:
+    # returns the current quaternion data of the robot with the ip given as str
+    def get_quat_of(self, robot: str) -> dict:
+        return self.robots[robot].current_c_quat
+
+    # returns the current joint position data of thr robot with the ip given as str
+    def get_joint_of(self, robot: str) -> dict:
         return self.robots[robot].current_j_pos
 
     # gripper
-    # changes state of all robots list[dict{"name":str,"ip"str}] which ips are in the given list
-    def change_grippper_state(self, robot, robots: list[dict]) -> bool:
+    # changes state of all robots list[str] which ips are in the given list
+    def change_grippper_state(self, robot, robots: list[str]) -> bool:
         pass
-        # print("Only Support JOINT for now")
-        # # For Cartesian use gotoCartPositionAndQuat() instead of gotoJointPosition()
-        # self.robots[robot].gotoJointPosition(
-        #     [-10,3.2,3,3.2,-5,3,3], block=True
-        # )
-        
 
     # opens the gripper of the robot dict{"name":str,"ip":str}specified by ip
-    def open_gripper(self, robot: dict) -> bool:
+    def open_gripper(self, robot: str) -> bool:
         self.robots[robot].open_fingers()
         return True
 
     # closes the gripper of the robot dict{"name":str,"ip":str}specified by ip
-    def close_gripper(self, robot: dict) -> bool:
+    def close_gripper(self, robot: str) -> bool:
         self.robots[robot].close_fingers()
         return True
 
@@ -166,27 +159,26 @@ class SimpleExp(threading.Thread):
 
     # executes the actions specified by the given dictionary in the way specified by the dictionary
     #
-    # if key == "sequential_list" the "content"(list[dict]) is ment to be proccessed sequential
-    # if key == "parallel_list" the "content"(list[dict]) is ment to be proccessed parallel
-    # if key == "close_gripper" the gripper of "robots" (list[dict{"name":str,"ip"str}])is to be closed
-    # if key == "open_gripper" the gripper of "robots" (list[dict{"name":str,"ip"str}])is to be opend
-    # if key == "custom" the "robots" (list[dict{"name":str,"ip"str}])execute the "action"(string) containing a String specifying the custom action
-    # if key == "move" the "robots" (list[dict{"name":str,"ip"str}])to the "coordiante"(dict)wich are of "type"(string)
+    # if key == "sequential_list" the "content" (list[dict]) is meant to be proccessed sequential
+    # if key == "parallel_list" the "content" (list[dict]) is meant to be proccessed parallel
+    # if key == "close_gripper" the gripper of "robots" specified by their ip (list[str]) is to be closed
+    # if key == "open_gripper" the gripper of "robots" specified by their ip (list[str]) is to be opend
+    # if key == "custom" the "robots" specified by their ip (list[str]) execute the "action" (string) containing a String specifying the custom action
+    # if key == "move" the "robots" specified by their ip (list[str]) to the "coord"["values"] (dict) wich are of "type"(string)
     # für jeden type
-    # if key == "wait" the "robots" (list[dict{"name":str,"ip"str}])wait for "time" (int)
+    # if key == "wait" the "robots" specified by their ip (list[str]) wait for "time" (int)
     #
     #
     #
     def execute_list(self, action: dict, nested=False) -> bool:
         if not nested:
             self.selected_mode = self.Mode.MODE_PLAY_VARS
-        print("ACTION", action)
+
         key = action["key"]
-        #content = action["content"]
-        #print("CONTENT", content)
-      
+
         if key == "parallel_list":
-            raise NotImplementedError("Parallel Actions are not supported right now")
+            raise NotImplementedError(
+                "Parallel Actions are not supported right now")
 
         elif key == "sequential_list":
             for sub_action in action["content"]:
@@ -208,9 +200,7 @@ class SimpleExp(threading.Thread):
                 self.robots[r].gotoJointPosition(
                     action["coord"]["values"], block=False
                 )
-            # self.robots[action["robots"]].gotoJointPosition(
-            #     action["coord"]["values"], block=True
-            # )
+
         elif key == "wait":
 
             for r in action["robots"]:
@@ -226,14 +216,13 @@ class SimpleExp(threading.Thread):
 
 
 if __name__ == "__main__":
-    register_experiment(SimpleExp) 
+    register_experiment(SimpleExp)
     initialize()
     exp = SimpleExp([{"name": "test"}, {"name": "test2"}])
-   
-  
-    #exp.set_mode("mode_a")
+
+    exp.set_mode("mode_a")
     time.sleep(10)
-    #exp.set_mode("mode_b")
-   
+    exp.set_mode("mode_b")
+
     time.sleep(10)
-    #exp.emergency_stop()
+    # exp.emergency_stop()

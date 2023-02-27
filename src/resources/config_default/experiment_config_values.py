@@ -29,7 +29,7 @@ class ExpConfigValues(Enum):
             LAB: "",
             EXP_ROBS: [],
             MODE: "Experiment Modus 1",
-            SAVE_POS_ROB: "ex_ip2",
+            SAVE_POS_ROB: [],
             OPEN_GRIPPER_ROB: [],
             CLOSE_GRIPPER_ROB: [],
             SWITCH_GRIPPER_ROB: [],

@@ -157,7 +157,7 @@ class ExperimentConfigHandler(YamlFile, PathObserver):
         self.read()
         return self.data[ExpConfigValues.SAVE_POS_ROB.value]
 
-    def set_position_ip(self, ip: str) -> None:
+    def set_position_ip(self, ip: list[str]) -> None:
         self.read()
         self.data[ExpConfigValues.SAVE_POS_ROB.value] = ip
         self.write()

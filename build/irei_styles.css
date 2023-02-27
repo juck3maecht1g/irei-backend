@@ -1,0 +1,151 @@
+.bar {
+    box-sizing: border-box;
+    position: relative;
+    background: rgb(139,195,74);
+    color: black;
+    height: 64px;
+    width: 100%;
+    padding: 16px;
+}
+.wrapper {
+    box-sizing: border-box;
+    position: absolute;
+    right: 16px;
+}
+.title {
+    text-transform: uppercase;
+    font-size: large;
+}
+.title_wrapper {
+    position: absolute;
+    box-sizing: border-box;
+    left: 16px;
+    top:35%;
+}
+#nav-list-container {
+    right: 0px;
+    top: 32px;
+    /*width: 250px;*/
+    width: 200px;
+    height: 208px;
+}
+#nav-list {
+    /*width: 250px;*/
+    width: 200px;
+}
+.nav-list-item {
+    padding: 0;
+    margin: 0;
+    height: 50px;
+}
+.irei-button {
+    min-width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 40px;
+}
+.grid{
+    display: grid;
+}
+.flexbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.navigation-button{
+    width: 200px;
+    height: 80%;
+    padding: 0;
+    top:0;
+}
+.irei-back-button {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    size: 10%;
+    text-align: center;
+}
+.test {
+    margin-bottom: 200px;
+    height:100%;
+    width: 100%;
+}
+.irei-path {
+    width: fit-content;
+    position: relative;
+    padding-left: 10px;
+    padding-bottom: o;
+    margin: 0;
+    word-break: break-all;
+}
+
+.action-list-grid {
+    display: grid;
+    grid-template-columns: 0fr 1fr;
+}
+
+.delete-button {
+    width: 0px;
+}
+
+.icon-button {
+    width: 0px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 40px;
+}
+
+.header {
+    margin: 0;
+}
+.settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 0fr;
+    
+}
+.form-settings {
+    text-align:center;
+    margin-top: 30px;
+}
+.input {
+    width:200px
+}
+.child{
+    box-sizing: border-box;
+}
+.choose-flexbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+.mapping-grid {
+    display: grid;
+    grid-template-columns: 0fr 0fr 0fr;
+}
+.mapping-index {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: auto;
+}
+.mapping-action {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.ip-button {
+    min-width: 130px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 40px;
+}

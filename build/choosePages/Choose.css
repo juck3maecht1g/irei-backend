@@ -1,0 +1,23 @@
+.chosen {
+    background-color: lightblue;
+    border-width: 5px;
+    border-color: green;
+    text-align: center;
+    margin: 20px;
+    color: green;
+    font-size: xx-large;
+    padding:20px;
+    cursor: pointer;
+}
+
+.not_chosen {
+    background-color: lightblue;
+    border-width: 5px;
+    border-color: midnightblue;
+    text-align: center;
+    margin: 20px;
+    color: midnightblue;
+    font-size: xx-large;
+    padding:20px;
+    cursor: pointer;
+}

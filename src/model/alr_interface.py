@@ -47,10 +47,11 @@ class AlrInterface:
             self.active_experiment.approach_joint(robot, position.get_joint)
 
     def save_posiiton(self, robot, name):
-        print(self.active_experiment)
-        cartesian = self.active_experiment.get_cartesian_position_of(robot)
-        joint = self.active_experiment.get_joint_position_of(robot)
-        cart_dict = {"coord": cartesian, "quat": [1, 0, 0, 0]} # test
+      
+        cartesian = self.active_experiment.get_cartesian_of(robot)
+        joint = self.active_experiment.get_joint_of(robot)
+        quat = self.active_experiment.get_quat_of(robot)
+        cart_dict = {"coord": cartesian, "quat": quat} # test
         joint_dict = {"values": joint}
         var_dict = {name: {"used space": "joint", "cartesian": cart_dict, "joint": joint_dict}}
         position = Variable(var_dict)
@@ -84,6 +85,7 @@ class AlrInterface:
        
 
     def change_gripper_state(self, robot, robots: list[str]):
+        print("robot", robots)
         print("would change state of all chosen gripppers")
         return self.active_experiment.change_grippper_state(robot, robots)
         
